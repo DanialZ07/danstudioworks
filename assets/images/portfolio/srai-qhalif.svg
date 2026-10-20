@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B1120" />
+      <stop offset="50%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#07080E" />
+    </linearGradient>
+    <linearGradient id="cyanAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22D3EE" />
+      <stop offset="100%" stop-color="#818CF8" />
+    </linearGradient>
+    <linearGradient id="goldGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="500" fill="url(#bgGrad)" />
+
+  <!-- Grid mesh background -->
+  <g opacity="0.08" stroke="#FFFFFF" stroke-width="1">
+    <line x1="0" y1="100" x2="800" y2="100" />
+    <line x1="0" y1="200" x2="800" y2="200" />
+    <line x1="0" y1="300" x2="800" y2="300" />
+    <line x1="0" y1="400" x2="800" y2="400" />
+    <line x1="160" y1="0" x2="160" y2="500" />
+    <line x1="320" y1="0" x2="320" y2="500" />
+    <line x1="480" y1="0" x2="480" y2="500" />
+    <line x1="640" y1="0" x2="640" y2="500" />
+  </g>
+
+  <!-- Ambient Glow -->
+  <circle cx="200" cy="180" r="160" fill="#22D3EE" opacity="0.12" filter="blur(40px)" />
+  <circle cx="600" cy="320" r="180" fill="#D946EF" opacity="0.10" filter="blur(50px)" />
+
+  <!-- Mockup Browser Window -->
+  <g transform="translate(100, 60)" filter="url(#shadow)">
+    <!-- Window frame -->
+    <rect width="600" height="380" rx="16" fill="#0A0E1A" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" />
+    
+    <!-- Title bar -->
+    <rect width="600" height="42" rx="16" fill="#131B2E" />
+    <rect y="30" width="600" height="12" fill="#131B2E" />
+    <circle cx="24" cy="21" r="5" fill="#EF4444" opacity="0.8" />
+    <circle cx="40" cy="21" r="5" fill="#F59E0B" opacity="0.8" />
+    <circle cx="56" cy="21" r="5" fill="#10B981" opacity="0.8" />
+
+    <!-- Address pill -->
+    <rect x="90" y="10" width="420" height="22" rx="6" fill="#0B1120" stroke="rgba(255,255,255,0.06)" />
+    <text x="210" y="25" fill="#94A3B8" font-family="sans-serif" font-size="11" font-weight="500">sraiqhalif.edu.my/portal</text>
+
+    <!-- App Content Interior -->
+    <rect x="24" y="60" width="130" height="300" rx="10" fill="#111827" stroke="rgba(255,255,255,0.05)" />
+    <!-- Sidebar items -->
+    <rect x="36" y="80" width="106" height="24" rx="6" fill="url(#cyanAccent)" opacity="0.2" />
+    <rect x="36" y="114" width="80" height="12" rx="3" fill="#334155" />
+    <rect x="36" y="136" width="90" height="12" rx="3" fill="#334155" />
+    <rect x="36" y="158" width="75" height="12" rx="3" fill="#334155" />
+    
+    <!-- Main Dashboard Area -->
+    <rect x="170" y="60" width="406" height="100" rx="12" fill="#1E293B" opacity="0.5" stroke="rgba(255,255,255,0.06)" />
+    <text x="190" y="95" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="700">SRAI Qhalif Integrated System</text>
+    <text x="190" y="118" fill="#22D3EE" font-family="sans-serif" font-size="12" font-weight="600">Student &amp; Yuran Management Engine</text>
+
+    <!-- Metric Cards -->
+    <rect x="170" y="174" width="125" height="80" rx="10" fill="#131B2E" stroke="rgba(34,211,238,0.2)" />
+    <text x="185" y="200" fill="#94A3B8" font-family="sans-serif" font-size="11">Active Students</text>
+    <text x="185" y="232" fill="#FFFFFF" font-family="sans-serif" font-size="20" font-weight="800">1,248</text>
+
+    <rect x="310" y="174" width="125" height="80" rx="10" fill="#131B2E" stroke="rgba(16,185,129,0.2)" />
+    <text x="185" y="200" x="325" fill="#94A3B8" font-family="sans-serif" font-size="11">Collection Rate</text>
+    <text x="325" y="232" fill="#10B981" font-family="sans-serif" font-size="20" font-weight="800">99.4%</text>
+
+    <rect x="450" y="174" width="125" height="80" rx="10" fill="#131B2E" stroke="rgba(217,70,239,0.2)" />
+    <text x="465" y="200" fill="#94A3B8" font-family="sans-serif" font-size="11">Automated Receipt</text>
+    <text x="465" y="232" fill="#D946EF" font-family="sans-serif" font-size="20" font-weight="800">Active</text>
+
+    <!-- Table preview -->
+    <rect x="170" y="268" width="406" height="92" rx="10" fill="#131B2E" opacity="0.8" />
+    <line x1="170" y1="298" x2="576" y2="298" stroke="rgba(255,255,255,0.06)" />
+    <rect x="190" y="280" width="120" height="8" rx="2" fill="#64748B" />
+    <rect x="190" y="312" width="200" height="8" rx="2" fill="#334155" />
+    <rect x="190" y="332" width="160" height="8" rx="2" fill="#334155" />
+    <rect x="490" y="310" width="60" height="14" rx="7" fill="url(#goldGreen)" opacity="0.3" />
+  </g>
+</svg>

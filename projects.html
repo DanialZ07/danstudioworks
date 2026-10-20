@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ======================================================================
+       METADATA & SEO SPECIFICATIONS
+       ====================================================================== -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DanStudio Works Selected Works — A curated showcase of bespoke web design, SaaS platforms, and brand systems.">
+  <meta name="keywords" content="portfolio, web design showcase, Malaysia UI UX, SRAI Qhalif, case study">
+  <meta name="author" content="DanStudio Works">
+
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <title>Selected Works — DanStudio Works</title>
+</head>
+<body data-page="projects">
+
+  <!-- ======================================================================
+       NAVIGATION: Floating Desktop Glass Pill
+       ====================================================================== -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="logo" title="DanStudio Works — Click 5 times for Developer Console">
+      <svg class="logo-icon" viewBox="0 0 120 120" width="32" height="32" fill="none">
+        <path d="M34 24 C34 24, 38 48, 38 60 C38 72, 34 96, 34 96 C34 96, 44 94, 46 88 C48 80, 48 40, 46 32 C44 26, 34 24, 34 24 Z" fill="#22D3EE" />
+        <path d="M42 27 C58 24, 86 28, 92 46 C98 62, 94 78, 80 88 C66 98, 44 95, 38 91 C46 87, 60 85, 72 78 C82 72, 85 60, 81 50 C77 39, 58 35, 42 35 Z" fill="#D946EF" />
+        <circle cx="92" cy="46" r="3" fill="#22D3EE" />
+      </svg>
+      <span class="brand-name">DanStudio<span class="text-cyan">.</span></span>
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="projects.html" class="nav-link active">Selected Works</a>
+      <a href="packages.html" class="nav-link">Packages</a>
+      <a href="contact.html" class="nav-link">Queue Entry</a>
+    </div>
+
+    <a href="contact.html" class="btn btn-primary nav-cta">Start Project</a>
+  </nav>
+
+  <!-- ======================================================================
+       NAVIGATION: Mobile Bottom Thumb-Dock
+       ====================================================================== -->
+  <nav class="mobile-dock" aria-label="Mobile Navigation">
+    <div class="dock-items">
+      <a href="index.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Home</span>
+      </a>
+      <a href="projects.html" class="dock-item active">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+        <span>Works</span>
+      </a>
+      <a href="packages.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
+          <path d="M12 18V6"/>
+        </svg>
+        <span>Pricing</span>
+      </a>
+      <a href="contact.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+        <span>Apply</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ======================================================================
+       HEADER: Gallery Title & Filter Categories
+       ====================================================================== -->
+  <header class="section container" style="padding-top: 8rem; padding-bottom: 2rem;">
+    <div class="text-center reveal">
+      <span class="card-tag">Portfolio Architecture</span>
+      <h1 style="font-size: 3rem; font-weight: 900; margin-top: 0.5rem;">Selected Works</h1>
+      <p style="color: #94A3B8; max-width: 600px; margin: 0.75rem auto 2.5rem; font-size: 1.05rem;">
+        A curated showcase of our finest digital craftsmanship, custom applications, and bespoke web platforms.
+      </p>
+
+      <!-- Category Filter Bar -->
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">All Projects</button>
+        <button class="filter-btn" data-filter="saas">SaaS &amp; Web Apps</button>
+        <button class="filter-btn" data-filter="web-design">Web Design</button>
+        <button class="filter-btn" data-filter="branding">Brand Systems</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       GALLERY GRID: Visual Project Showcase Slots
+       ====================================================================== -->
+  <main class="section container" style="padding-top: 1rem;">
+    <div class="project-grid">
+
+      <!-- PROJECT 01: SRAI Qhalif (Interactive Case Study Trigger) -->
+      <div class="project-card glass-card reveal" data-category="saas" data-project="srai-qhalif" id="srai-qhalif">
+        <div class="card-image" style="background: #0B1120;">
+          <img src="assets/images/portfolio/srai-qhalif.svg" alt="SRAI Qhalif System Preview">
+          <div style="position: absolute; top: 12px; left: 12px; background: rgba(7, 8, 14, 0.85); backdrop-filter: blur(8px); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: #22D3EE; border: 1px solid rgba(34,211,238,0.3);">
+            CASE STUDY AVAILABLE
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">SaaS / Education</div>
+          <h3 style="font-size: 1.35rem; font-weight: 700; margin: 0.5rem 0;">SRAI Qhalif Integrated System</h3>
+          <p style="color: #94A3B8; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+            Full-stack student fee reconciliation engine and digitized portal for Malaysian Islamic schools.
+          </p>
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.75rem;">
+            <span style="font-size: 0.8rem; color: #64748B;">Client: SRAI Qhalif</span>
+            <span style="font-size: 0.85rem; color: #22D3EE; font-weight: 600;">Open Case Study →</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT 02: Artisan Coffee Co. -->
+      <div class="project-card glass-card reveal" data-category="branding">
+        <div class="card-image" style="background: radial-gradient(circle at 50% 50%, #291811, #07080E); display: flex; align-items: center; justify-content: center;">
+          <div style="text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 900; color: rgba(255,255,255,0.15); letter-spacing: 0.2em;">02</div>
+            <div style="font-size: 0.85rem; color: #D946EF; font-weight: 600; margin-top: 4px;">BRAND ARCHITECTURE</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">Brand Systems</div>
+          <h3 style="font-size: 1.35rem; font-weight: 700; margin: 0.5rem 0;">Artisan Coffee Co.</h3>
+          <p style="color: #94A3B8; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+            Complete visual identity, packaging guidelines, and minimalist e-commerce showcase for specialty roasters.
+          </p>
+          <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.75rem;">
+            <span style="font-size: 0.8rem; color: #64748B;">Packaging &amp; Identity System</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT 03: TechVault Dashboard -->
+      <div class="project-card glass-card reveal" data-category="saas">
+        <div class="card-image" style="background: radial-gradient(circle at 50% 50%, #0D2833, #07080E); display: flex; align-items: center; justify-content: center;">
+          <div style="text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 900; color: rgba(34,211,238,0.2); letter-spacing: 0.2em;">03</div>
+            <div style="font-size: 0.85rem; color: #22D3EE; font-weight: 600; margin-top: 4px;">SaaS ANALYTICS</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">SaaS / Cloud</div>
+          <h3 style="font-size: 1.35rem; font-weight: 700; margin: 0.5rem 0;">TechVault Cloud Console</h3>
+          <p style="color: #94A3B8; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+            High-density telemetry dashboard with real-time server metrics, access keys audit, and latency tracking.
+          </p>
+          <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.75rem;">
+            <span style="font-size: 0.8rem; color: #64748B;">Real-time Telemetry UI</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT 04: Bloom & Petal -->
+      <div class="project-card glass-card reveal" data-category="web-design">
+        <div class="card-image" style="background: radial-gradient(circle at 50% 50%, #2A102A, #07080E); display: flex; align-items: center; justify-content: center;">
+          <div style="text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 900; color: rgba(217,70,239,0.2); letter-spacing: 0.2em;">04</div>
+            <div style="font-size: 0.85rem; color: #D946EF; font-weight: 600; margin-top: 4px;">EDITORIAL WEB</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">Web Design</div>
+          <h3 style="font-size: 1.35rem; font-weight: 700; margin: 0.5rem 0;">Bloom &amp; Petal Atelier</h3>
+          <p style="color: #94A3B8; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+            Editorial floral studio boutique with immersive horizontal scroll galleries and instant wedding booking slots.
+          </p>
+          <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.75rem;">
+            <span style="font-size: 0.8rem; color: #64748B;">Boutique Commerce &amp; Booking</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT 05: NexGen Fitness Club -->
+      <div class="project-card glass-card reveal" data-category="web-design">
+        <div class="card-image" style="background: radial-gradient(circle at 50% 50%, #112824, #07080E); display: flex; align-items: center; justify-content: center;">
+          <div style="text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 900; color: rgba(16,185,129,0.2); letter-spacing: 0.2em;">05</div>
+            <div style="font-size: 0.85rem; color: #10B981; font-weight: 600; margin-top: 4px;">HIGH-CONVERSION</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">Web Design</div>
+          <h3 style="font-size: 1.35rem; font-weight: 700; margin: 0.5rem 0;">NexGen Fitness Club</h3>
+          <p style="color: #94A3B8; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+            High-energy dark mode fitness club portal with interactive timetable schedule and membership onboarding.
+          </p>
+          <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.75rem;">
+            <span style="font-size: 0.8rem; color: #64748B;">Lead Capture Architecture</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT 06: CryptoFlow Protocol -->
+      <div class="project-card glass-card reveal" data-category="saas">
+        <div class="card-image" style="background: radial-gradient(circle at 50% 50%, #1E1238, #07080E); display: flex; align-items: center; justify-content: center;">
+          <div style="text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 900; color: rgba(129,140,248,0.25); letter-spacing: 0.2em;">06</div>
+            <div style="font-size: 0.85rem; color: #818CF8; font-weight: 600; margin-top: 4px;">WEB3 INTERFACE</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">SaaS / Web3</div>
+          <h3 style="font-size: 1.35rem; font-weight: 700; margin: 0.5rem 0;">CryptoFlow Protocol</h3>
+          <p style="color: #94A3B8; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+            Decentralized liquidity visualizer featuring responsive chart widgets, wallet connection, and yield calculators.
+          </p>
+          <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.75rem;">
+            <span style="font-size: 0.8rem; color: #64748B;">Financial Data Visualizer</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ======================================================================
+       CASE STUDY MODAL: SRAI QHALIF ARCHITECTURE OVERVIEW
+       ====================================================================== -->
+  <div class="modal-overlay" id="case-study-modal" role="dialog" aria-modal="true" aria-labelledby="modal-case-title">
+    <div class="modal" style="max-width: 760px;">
+      <button class="modal-close" aria-label="Close Case Study">&times;</button>
+      
+      <div style="margin-bottom: 1.5rem;">
+        <span class="card-tag">Case Study Deep-Dive</span>
+        <h2 id="modal-case-title" style="font-size: 2rem; font-weight: 800; margin-top: 0.5rem;">
+          SRAI Qhalif Integrated System
+        </h2>
+        <div style="display: flex; gap: 1.5rem; margin-top: 0.75rem; color: #94A3B8; font-size: 0.85rem; flex-wrap: wrap;">
+          <span><strong>Client:</strong> SRAI Qhalif Academy</span>
+          <span><strong>Timeline:</strong> 4 Weeks</span>
+          <span><strong>Stack:</strong> PHP / MySQL / Tailwind / REST API</span>
+        </div>
+      </div>
+
+      <div style="border-radius: 12px; overflow: hidden; margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.1);">
+        <img src="assets/images/portfolio/srai-qhalif.svg" alt="SRAI Qhalif Preview" style="width: 100%; height: auto; display: block;">
+      </div>
+
+      <div style="display: grid; gap: 1.5rem; margin-bottom: 2rem;">
+        <div>
+          <h4 style="color: #22D3EE; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">The Challenge</h4>
+          <p style="color: #94A3B8; font-size: 0.95rem; line-height: 1.6;">
+            SRAI Qhalif was managing monthly school fees (yuran) and student attendance via scattered physical receipt books and manual spreadsheets. Parents faced long queues during registration, and administrators lost over 30 hours each month manually matching bank statements.
+          </p>
+        </div>
+
+        <div>
+          <h4 style="color: #D946EF; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">The Engineering Solution</h4>
+          <p style="color: #94A3B8; font-size: 0.95rem; line-height: 1.6;">
+            DanStudio Works engineered a bespoke cloud portal with automated FPX payment gateway integration, instant digital WhatsApp receipt dispatch, and an intuitive administrative backend for class teachers to log daily attendance in seconds.
+          </p>
+        </div>
+
+        <div class="glass-card" style="padding: 1.5rem; background: rgba(34,211,238,0.05); border: 1px solid rgba(34,211,238,0.2);">
+          <h4 style="color: #F1F5F9; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem;">Measurable Impact</h4>
+          <ul style="color: #94A3B8; font-size: 0.9rem; line-height: 1.8; padding-left: 1.25rem;">
+            <li><strong style="color: #22D3EE;">1,248 active students</strong> smoothly onboarded into digital records.</li>
+            <li><strong style="color: #22D3EE;">99.4% timely fee collection rate</strong> achieved within first 60 days.</li>
+            <li><strong style="color: #22D3EE;">Zero lost receipts</strong> with automated PDF generation stored on secure cloud.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap;">
+        <button class="btn btn-ghost modal-close">Close Preview</button>
+        <a href="contact.html" class="btn btn-primary">Request Similar System →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       DEVELOPER 2FA AUTHENTICATION MODAL (Easter Egg Trigger)
+       ====================================================================== -->
+  <div class="modal-overlay" id="dev-login-modal" role="dialog" aria-modal="true" aria-label="Developer Authentication">
+    <div class="modal" style="max-width: 440px;">
+      <button class="modal-close" aria-label="Close Modal">&times;</button>
+      <div class="login-step active" data-step="1">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.4rem; font-weight: 700;">Developer Console</h3>
+          <p style="font-size: 0.85rem; color: #94A3B8;">Authorized personnel only.</p>
+        </div>
+        <form id="dev-auth-form">
+          <div class="form-group">
+            <label class="form-label" for="dev-email">Developer Email</label>
+            <input type="email" id="dev-email" class="form-input dev-email" value="danstudioworks@gmail.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="dev-key">Master Security Key</label>
+            <input type="password" id="dev-key" class="form-input dev-key" placeholder="Enter master key" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Authenticate Master Key</button>
+        </form>
+      </div>
+
+      <div class="login-step" data-step="2" style="display: none;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.4rem; font-weight: 700;">2-Step Verification</h3>
+          <p style="font-size: 0.85rem; color: #94A3B8;">Enter OTP sent to <strong style="color: #22D3EE;">019-927-2635</strong></p>
+        </div>
+        <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 1.5rem;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem;">
+        </div>
+        <button type="button" class="btn btn-primary btn-full verify-otp-btn">Verify &amp; Go to Console</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       FOOTER
+       ====================================================================== -->
+  <footer class="footer">
+    <div class="container footer-content" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <svg viewBox="0 0 120 120" width="24" height="24" fill="none">
+          <path d="M34 24 C34 24, 38 48, 38 60 C38 72, 34 96, 34 96 C34 96, 44 94, 46 88 C48 80, 48 40, 46 32 C44 26, 34 24, 34 24 Z" fill="#22D3EE"/>
+          <path d="M42 27 C58 24, 86 28, 92 46 C98 62, 94 78, 80 88 C66 98, 44 95, 38 91 C46 87, 60 85, 72 78 C82 72, 85 60, 81 50 C77 39, 58 35, 42 35 Z" fill="#D946EF"/>
+        </svg>
+        <span style="font-weight: 700; color: #F1F5F9;">DanStudio Works</span>
+      </div>
+      <div class="footer-links" style="display: flex; gap: 1.5rem; font-size: 0.9rem;">
+        <a href="index.html" style="color: #94A3B8;">Home</a>
+        <a href="projects.html" style="color: #94A3B8;">Works</a>
+        <a href="packages.html" style="color: #94A3B8;">Packages</a>
+        <a href="contact.html" style="color: #94A3B8;">Queue Entry</a>
+      </div>
+    </div>
+    <div class="container" style="text-align: center; color: #64748B; font-size: 0.8rem; margin-top: 2rem;">
+      © 2024 DanStudio Works. Precision-crafted in Malaysia 🇲🇾.
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

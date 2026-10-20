@@ -1,0 +1,909 @@
+/**
+ * ============================================================================
+ *  DanStudio Works — Client Application Core Logic
+ *  Architecture: Vanilla Modern JavaScript (ES6+), Strictly Modular IIFE
+ *
+ *  Table of Contents:
+ *  01. Reduced Motion & Performance Utilities
+ *  02. Toast Notification Engine
+ *  03. Navigation Controllers (Desktop Pill & Mobile Dock)
+ *  04. Scroll-Triggered Reveal Animations
+ *  05. Projects Gallery Category Filtering
+ *  06. SRAI Qhalif Case Study Modal
+ *  07. Package Tiers Selection & Cross-Page State
+ *  08. Add-On Subtotal Calculator
+ *  09. Private Application Queue Submission Form
+ *  10. Developer 2FA Authentication (5-Click Easter Egg)
+ *  11. Developer Queue Console Dashboard (State, Filter, Outreach)
+ *  12. Application Bootstrap
+ * ============================================================================
+ */
+
+;(function () {
+  'use strict';
+
+  /* ==========================================================================
+     01. REDUCED MOTION & GENERAL UTILITIES
+     ========================================================================== */
+
+  /** Check if operating system prefers reduced motion */
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /**
+   * Format numbers into Malaysian Ringgit currency string (e.g. "RM 2,500").
+   * @param {number|string} amount
+   * @returns {string}
+   */
+  function formatCurrency(amount) {
+    const num = parseFloat(amount) || 0;
+    return 'RM ' + num.toLocaleString('en-MY', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    });
+  }
+
+  /**
+   * Mask middle characters of client emails to protect privacy in dashboard previews.
+   * Example: "danial@gmail.com" -> "d****l@gmail.com"
+   * @param {string} email
+   * @returns {string}
+   */
+  function maskEmail(email) {
+    if (!email || !email.includes('@')) return email || '';
+    const [user, domain] = email.split('@');
+    if (user.length <= 2) return user[0] + '***@' + domain;
+    return user[0] + '*'.repeat(Math.max(user.length - 2, 3)) + user[user.length - 1] + '@' + domain;
+  }
+
+  /**
+   * Generate human-readable relative time strings for queue request timestamps.
+   * @param {string} dateString ISO 8601 string
+   * @returns {string}
+   */
+  function relativeTime(dateString) {
+    const diffMs = Date.now() - new Date(dateString).getTime();
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHours = Math.floor(diffMin / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffDays > 0) return `${diffDays}d ago`;
+    if (diffHours > 0) return `${diffHours}h ago`;
+    if (diffMin > 0) return `${diffMin}m ago`;
+    return 'Just now';
+  }
+
+  /**
+   * Generate unique alphanumeric reference ID (e.g. "DS-4921").
+   * @returns {string}
+   */
+  function generateId() {
+    return 'DS-' + Math.floor(1000 + Math.random() * 9000);
+  }
+
+  /**
+   * Sanitize string against XSS when rendering user inputs into innerHTML.
+   * @param {string} str
+   * @returns {string}
+   */
+  function sanitizeHTML(str) {
+    const temp = document.createElement('div');
+    temp.textContent = str || '';
+    return temp.innerHTML;
+  }
+
+  /* ==========================================================================
+     02. TOAST NOTIFICATION ENGINE
+     ========================================================================== */
+
+  /**
+   * Displays non-blocking floating notification toasts.
+   * @param {string} message Text to display
+   * @param {'info'|'success'|'error'|'warning'} type
+   * @param {number} duration Timeout before auto-dismissal (ms)
+   */
+  function showToast(message, type = 'info', duration = 3500) {
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+
+    // Color accents
+    const accentColors = {
+      info: '#22D3EE',
+      success: '#10B981',
+      error: '#EF4444',
+      warning: '#F59E0B'
+    };
+    const accent = accentColors[type] || accentColors.info;
+    toast.style.borderLeft = `3px solid ${accent}`;
+
+    toast.innerHTML = `<span>${sanitizeHTML(message)}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(20px)';
+      toast.style.transition = 'all 0.3s ease';
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+  }
+
+  /* ==========================================================================
+     03. NAVIGATION CONTROLLERS (Desktop Pill & Mobile Dock)
+     ========================================================================== */
+
+  function initNavigation() {
+    const navbar = document.querySelector('.navbar');
+
+    /* Adds sticky styling when scrolled past 40px */
+    if (navbar) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 40) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      }, { passive: true });
+    }
+
+    /* Auto-highlight active navigation pill based on current path */
+    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+    const navLinks = document.querySelectorAll('.nav-link, .dock-item');
+
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (!href) return;
+      const targetPage = href.split('/').pop();
+
+      if (targetPage === currentPath || (currentPath === '' && targetPage === 'index.html')) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+
+  /* ==========================================================================
+     04. SCROLL-TRIGGERED REVEAL ANIMATIONS
+     ========================================================================== */
+
+  function initScrollReveal() {
+    const reveals = document.querySelectorAll('.reveal');
+    if (!reveals.length) return;
+
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+      reveals.forEach(el => el.classList.add('revealed'));
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    reveals.forEach(el => observer.observe(el));
+  }
+
+  /* ==========================================================================
+     05. PROJECTS GALLERY CATEGORY FILTERING
+     ========================================================================== */
+
+  function initProjectFilters() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+    if (!filterBtns.length || !projectCards.length) return;
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.getAttribute('data-filter') || 'all';
+
+        projectCards.forEach(card => {
+          const category = card.getAttribute('data-category') || '';
+          if (filter === 'all' || category === filter) {
+            card.style.display = 'flex';
+            setTimeout(() => {
+              card.style.opacity = '1';
+              card.style.transform = 'translateY(0)';
+            }, 20);
+          } else {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(12px)';
+            setTimeout(() => {
+              card.style.display = 'none';
+            }, 250);
+          }
+        });
+      });
+    });
+  }
+
+  /* ==========================================================================
+     06. SRAI QHALIF CASE STUDY MODAL
+     ========================================================================== */
+
+  function initCaseStudyModal() {
+    const modal = document.getElementById('case-study-modal');
+    if (!modal) return;
+
+    const trigger = document.querySelector('.project-card[data-project="srai-qhalif"], [data-trigger="srai-qhalif"]');
+    const closeButtons = modal.querySelectorAll('.modal-close');
+
+    function openModal() {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    if (trigger) {
+      trigger.addEventListener('click', (e) => {
+        if (e.target.closest('a:not(.project-card)')) return;
+        openModal();
+      });
+    }
+
+    closeButtons.forEach(btn => btn.addEventListener('click', closeModal));
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+    // Auto-open modal if URL contains #srai-qhalif
+    if (window.location.hash === '#srai-qhalif') {
+      setTimeout(openModal, 400);
+    }
+  }
+
+  /* ==========================================================================
+     07. PACKAGE TIERS SELECTION & CROSS-PAGE STATE
+     ========================================================================== */
+
+  function initPricingTiers() {
+    /* Handle "Start Project" click on packages.html */
+    document.querySelectorAll('.start-project-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const packageName = btn.getAttribute('data-package') || '';
+        sessionStorage.setItem('dsw_selected_package', packageName);
+        window.location.href = 'contact.html';
+      });
+    });
+
+    /* Auto-select package dropdown option on contact.html if set in sessionStorage */
+    const packageDropdown = document.querySelector('#package, [name="package"]');
+    const storedPackage = sessionStorage.getItem('dsw_selected_package');
+
+    if (packageDropdown && storedPackage) {
+      Array.from(packageDropdown.options).forEach(opt => {
+        if (opt.value.toLowerCase().includes(storedPackage.toLowerCase()) ||
+            storedPackage.toLowerCase().includes(opt.value.toLowerCase())) {
+          opt.selected = true;
+        }
+      });
+      sessionStorage.removeItem('dsw_selected_package');
+    }
+
+    /* Locked Tier 4 inline notification form toggle */
+    const notifyBtn = document.querySelector('.notify-toggle-btn');
+    const notifyContainer = document.querySelector('.notify-form-container');
+    if (notifyBtn && notifyContainer) {
+      notifyBtn.addEventListener('click', () => {
+        const isVisible = notifyContainer.style.display === 'block';
+        notifyContainer.style.display = isVisible ? 'none' : 'block';
+      });
+
+      const notifyForm = notifyContainer.querySelector('form');
+      if (notifyForm) {
+        notifyForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          notifyContainer.style.display = 'none';
+          showToast('You will be notified as soon as enterprise slots open!', 'success');
+        });
+      }
+    }
+  }
+
+  /* ==========================================================================
+     08. ADD-ON SUBTOTAL CALCULATOR
+     ========================================================================== */
+
+  function initAddonCalculator() {
+    const checkboxes = document.querySelectorAll('.addon-item input[type="checkbox"][data-price]');
+    const totalDisplay = document.querySelector('.addon-total-value');
+    const addBtn = document.querySelector('.add-to-request-btn, .addon-add-btn');
+
+    if (!checkboxes.length) return;
+
+    function recalculate() {
+      let total = 0;
+      checkboxes.forEach(cb => {
+        if (cb.checked) {
+          total += parseFloat(cb.getAttribute('data-price')) || 0;
+        }
+      });
+
+      if (totalDisplay) {
+        totalDisplay.textContent = formatCurrency(total);
+      }
+    }
+
+    checkboxes.forEach(cb => cb.addEventListener('change', recalculate));
+    recalculate();
+
+    /* Pass selected add-ons to contact.html via sessionStorage */
+    if (addBtn) {
+      addBtn.addEventListener('click', () => {
+        const selected = [];
+        checkboxes.forEach(cb => {
+          if (cb.checked) {
+            selected.push(cb.getAttribute('data-addon') || cb.value);
+          }
+        });
+        sessionStorage.setItem('dsw_selected_addons', JSON.stringify(selected));
+        window.location.href = 'contact.html';
+      });
+    }
+
+    /* Pre-check add-on checkboxes if user came from packages.html */
+    const storedAddons = sessionStorage.getItem('dsw_selected_addons');
+    if (storedAddons) {
+      try {
+        const list = JSON.parse(storedAddons);
+        const contactCheckboxes = document.querySelectorAll('.addon-item input[type="checkbox"]');
+        contactCheckboxes.forEach(cb => {
+          const val = cb.getAttribute('data-addon') || cb.value;
+          if (list.includes(val)) cb.checked = true;
+        });
+        sessionStorage.removeItem('dsw_selected_addons');
+      } catch (_) {}
+    }
+  }
+
+  /* ==========================================================================
+     09. PRIVATE APPLICATION QUEUE SUBMISSION FORM
+     ========================================================================== */
+
+  function initApplicationForm() {
+    const form = document.getElementById('application-form');
+    if (!form) return;
+
+    const descField = form.querySelector('#description');
+    const charCounter = document.getElementById('char-counter');
+    const dropZone = document.getElementById('file-drop-zone');
+    const fileInput = document.getElementById('file-upload');
+    const fileNameDisplay = dropZone ? dropZone.querySelector('.file-name') : null;
+    const successPanel = document.getElementById('form-success');
+    const successRefId = document.getElementById('success-ref-id');
+
+    /* Live character counter (min 50 chars required) */
+    if (descField && charCounter) {
+      function updateCounter() {
+        const len = descField.value.trim().length;
+        charCounter.textContent = `${len} / 50 min characters`;
+        if (len >= 50) {
+          charCounter.style.color = '#10B981';
+        } else {
+          charCounter.style.color = '#94A3B8';
+        }
+      }
+      descField.addEventListener('input', updateCounter);
+      updateCounter();
+    }
+
+    /* File drop zone handler */
+    if (dropZone && fileInput) {
+      dropZone.addEventListener('click', (e) => {
+        if (e.target !== fileInput) fileInput.click();
+      });
+
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length && fileNameDisplay) {
+          fileNameDisplay.textContent = `Attached: ${fileInput.files[0].name}`;
+        }
+      });
+
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+      });
+
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+          fileInput.files = e.dataTransfer.files;
+          if (fileNameDisplay) {
+            fileNameDisplay.textContent = `Attached: ${e.dataTransfer.files[0].name}`;
+          }
+        }
+      });
+    }
+
+    /* Form Validation & Submission into Private Queue */
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      let isValid = true;
+      const getVal = (selector) => {
+        const el = form.querySelector(selector);
+        return el ? el.value.trim() : '';
+      };
+
+      const name = getVal('[name="name"]');
+      const email = getVal('[name="email"]');
+      const phone = getVal('[name="phone"]');
+      const budget = parseFloat(getVal('[name="budget"]')) || 0;
+      const description = getVal('[name="description"]');
+      const consentBox = form.querySelector('#consent-check, #consent, [name="consent"]');
+
+      if (!name) isValid = false;
+      if (!email || !email.includes('@')) isValid = false;
+      if (!phone) isValid = false;
+      if (budget <= 0) isValid = false;
+      if (description.length < 50) isValid = false;
+      if (consentBox && !consentBox.checked) isValid = false;
+
+      if (!isValid) {
+        showToast('Please complete all required fields and reach at least 50 characters in your description.', 'error');
+        return;
+      }
+
+      /* Collect selected add-ons */
+      const addons = [];
+      form.querySelectorAll('.addon-item input[type="checkbox"]:checked').forEach(cb => {
+        addons.push(cb.getAttribute('data-addon') || cb.value);
+      });
+
+      /* Create structured submission object */
+      const refId = generateId();
+      const newSubmission = {
+        id: refId,
+        name: name,
+        email: email,
+        phone: phone,
+        company: getVal('[name="company"]') || 'Independent',
+        package: getVal('[name="package"]') || 'Essential (RM 800 - 1,200)',
+        budget: budget,
+        description: description,
+        source: getVal('[name="source"]') || 'Direct',
+        addons: addons,
+        date: new Date().toISOString(),
+        status: 'new'
+      };
+
+      /* Store in localStorage for developer console consumption */
+      let existing = [];
+      try {
+        existing = JSON.parse(localStorage.getItem('dsw_requests')) || [];
+      } catch (_) {}
+      existing.unshift(newSubmission);
+      localStorage.setItem('dsw_requests', JSON.stringify(existing));
+
+      /* Hide form and reveal success reference confirmation */
+      form.style.display = 'none';
+      if (successPanel) {
+        if (successRefId) successRefId.textContent = `#${refId}`;
+        successPanel.style.display = 'block';
+      }
+
+      showToast(`Application #${refId} placed in private queue!`, 'success', 5000);
+    });
+  }
+
+  /* ==========================================================================
+     10. DEVELOPER 2FA AUTHENTICATION (5-Click Easter Egg)
+     ========================================================================== */
+
+  function initDevLogin() {
+    const modal = document.getElementById('dev-login-modal');
+    if (!modal) return;
+
+    /* Easter Egg: Track 5 rapid clicks on logo within 3 seconds */
+    const logos = document.querySelectorAll('.logo');
+    let clickTimestamps = [];
+
+    logos.forEach(logo => {
+      logo.addEventListener('click', (e) => {
+        const now = Date.now();
+        clickTimestamps.push(now);
+        clickTimestamps = clickTimestamps.filter(t => now - t <= 3000);
+
+        if (clickTimestamps.length >= 5) {
+          e.preventDefault();
+          clickTimestamps = [];
+          openModal();
+        }
+      });
+    });
+
+    const closeBtn = modal.querySelector('.modal-close');
+    const step1 = modal.querySelector('.login-step[data-step="1"]');
+    const step2 = modal.querySelector('.login-step[data-step="2"]');
+
+    function openModal() {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      if (step1) step1.style.display = 'block';
+      if (step2) step2.style.display = 'none';
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    /* Step 1: Master Key Verification (danstudioworks@gmail.com / 040802) */
+    const devAuthForm = modal.querySelector('#dev-auth-form');
+    let generatedOtp = '';
+
+    function handleMasterAuth() {
+      const emailField = modal.querySelector('#dev-email');
+      const keyField = modal.querySelector('#dev-key');
+
+      const emailVal = emailField ? emailField.value.trim().toLowerCase() : '';
+      const keyVal = keyField ? keyField.value.trim() : '';
+
+      if (emailVal === 'danstudioworks@gmail.com' && keyVal === '040802') {
+        if (step1) step1.style.display = 'none';
+        if (step2) step2.style.display = 'block';
+
+        // Generate 6-digit OTP code and simulate SMS toast to phone 0199272635
+        generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
+        showToast(`[SIMULATED SMS to 0199272635] Verification Code: ${generatedOtp}`, 'info', 10000);
+
+        // Auto-focus first digit field
+        const firstDigit = modal.querySelector('.otp-digit');
+        if (firstDigit) firstDigit.focus();
+      } else {
+        showToast('Invalid credentials. Access restricted.', 'error');
+      }
+    }
+
+    if (devAuthForm) {
+      devAuthForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        handleMasterAuth();
+      });
+    }
+
+    /* Step 2: 6-Digit OTP Verification */
+    const otpInputs = modal.querySelectorAll('.otp-digit');
+    otpInputs.forEach((input, index) => {
+      input.addEventListener('input', () => {
+        if (input.value.length === 1 && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !input.value && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      });
+
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pasted = (e.clipboardData.getData('text') || '').replace(/\D/g, '');
+        pasted.split('').forEach((char, i) => {
+          if (otpInputs[i]) otpInputs[i].value = char;
+        });
+      });
+    });
+
+    const verifyOtpBtn = modal.querySelector('.verify-otp-btn');
+    if (verifyOtpBtn) {
+      verifyOtpBtn.addEventListener('click', () => {
+        const enteredOtp = Array.from(otpInputs).map(i => i.value).join('');
+
+        if (enteredOtp === generatedOtp && generatedOtp !== '') {
+          sessionStorage.setItem('dsw_auth', 'true');
+          closeModal();
+          showToast('Authentication verified. Welcome DanStudio Lead Engineer.', 'success');
+          showDevConsole();
+        } else {
+          showToast('Invalid OTP verification code.', 'error');
+        }
+      });
+    }
+  }
+
+  /* ==========================================================================
+     11. DEVELOPER QUEUE CONSOLE DASHBOARD
+     ========================================================================== */
+
+  /** Retrieve queue submissions or initialize with realistic sample data if empty */
+  function getRequests() {
+    try {
+      const raw = localStorage.getItem('dsw_requests');
+      if (!raw) {
+        const seedData = [
+          {
+            id: 'DS-1082',
+            name: 'Ustaz Haziq Al-Fatah',
+            email: 'haziq@sraiqhalif.edu.my',
+            phone: '0199272635',
+            company: 'SRAI Qhalif Academy',
+            package: 'Catalog / Booking System (RM 3,000 - 4,500)',
+            budget: 4200,
+            description: 'Require automated yuran school fee collection system with instant digital WhatsApp receipts and class attendance logging.',
+            source: 'Client Referral',
+            addons: ['Domain Setup', 'Priority Delivery'],
+            date: new Date(Date.now() - 3600000 * 4).toISOString(),
+            status: 'new'
+          },
+          {
+            id: 'DS-2045',
+            name: 'Sarah Tan',
+            email: 'sarah.tan@artisanroasters.my',
+            phone: '0123884920',
+            company: 'Artisan Coffee Roasters',
+            package: 'SME Corporate (RM 1,800 - 2,500)',
+            budget: 2500,
+            description: 'Overhaul corporate site with dark silk & aurora theme, menu showcase, and lead inquiry form.',
+            source: 'Twitter / X',
+            addons: ['Logo Design', 'Social Media Kit'],
+            date: new Date(Date.now() - 3600000 * 24).toISOString(),
+            status: 'waiting'
+          }
+        ];
+        localStorage.setItem('dsw_requests', JSON.stringify(seedData));
+        return seedData;
+      }
+      return JSON.parse(raw) || [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  let consoleSort = 'newest'; // 'newest' | 'budget'
+  let consoleSearchQuery = '';
+
+  function showDevConsole() {
+    const consoleEl = document.getElementById('dev-console');
+    if (!consoleEl) {
+      window.location.href = 'index.html#console';
+      return;
+    }
+    consoleEl.style.display = 'block';
+    window.location.hash = 'console';
+    renderDevConsole();
+  }
+
+  function hideDevConsole() {
+    const consoleEl = document.getElementById('dev-console');
+    if (consoleEl) consoleEl.style.display = 'none';
+    sessionStorage.removeItem('dsw_auth');
+    history.replaceState(null, '', window.location.pathname);
+  }
+
+  function renderDevConsole() {
+    const consoleEl = document.getElementById('dev-console');
+    if (!consoleEl) return;
+
+    const allRequests = getRequests();
+
+    /* Update Metrics Counters */
+    const counts = { new: 0, waiting: 0, accepted: 0, rejected: 0 };
+    allRequests.forEach(r => {
+      if (counts[r.status] !== undefined) counts[r.status]++;
+    });
+
+    ['new', 'waiting', 'accepted', 'rejected'].forEach(status => {
+      const el = consoleEl.querySelector(`[data-stat="${status}"]`);
+      if (el) el.textContent = counts[status];
+    });
+
+    /* Find Active Tab */
+    const activeTabBtn = consoleEl.querySelector('.console-tab-btn.active');
+    const currentTab = activeTabBtn ? activeTabBtn.getAttribute('data-tab') : 'new';
+
+    /* Filter by tab status */
+    let filtered = allRequests.filter(r => r.status === currentTab);
+
+    /* Search Query Filter */
+    if (consoleSearchQuery) {
+      const q = consoleSearchQuery.toLowerCase();
+      filtered = filtered.filter(r =>
+        (r.name || '').toLowerCase().includes(q) ||
+        (r.email || '').toLowerCase().includes(q) ||
+        (r.id || '').toLowerCase().includes(q) ||
+        (r.company || '').toLowerCase().includes(q)
+      );
+    }
+
+    /* Sort Logic */
+    if (consoleSort === 'budget') {
+      filtered.sort((a, b) => (b.budget || 0) - (a.budget || 0));
+    } else {
+      filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+
+    /* Render HTML inside target tab panel */
+    const contentPanel = consoleEl.querySelector(`.console-tab-content[data-tab="${currentTab}"]`) ||
+                         consoleEl.querySelector('.console-tab-content.active');
+
+    if (!contentPanel) return;
+
+    if (!filtered.length) {
+      contentPanel.innerHTML = `
+        <div style="text-align:center; padding:3rem 1rem; color:#94A3B8;">
+          <p style="font-size:1.1rem; font-weight:600;">No applications in this category.</p>
+        </div>
+      `;
+      return;
+    }
+
+    contentPanel.innerHTML = filtered.map(req => {
+      let actionButtons = '';
+
+      if (req.status === 'new') {
+        actionButtons = `
+          <button class="accept-btn" data-id="${req.id}" data-action="accepted">Accept</button>
+          <button class="hold-btn" data-id="${req.id}" data-action="waiting">Hold in Queue</button>
+          <button class="reject-btn" data-id="${req.id}" data-action="rejected">Reject</button>
+        `;
+      } else if (req.status === 'waiting') {
+        actionButtons = `
+          <button class="accept-btn" data-id="${req.id}" data-action="accepted">Accept</button>
+          <button class="reject-btn" data-id="${req.id}" data-action="rejected">Reject</button>
+        `;
+      } else if (req.status === 'accepted') {
+        const cleanPhone = (req.phone || '').replace(/\D/g, '').replace(/^6/, '');
+        const waText = encodeURIComponent(`Hi ${req.name}, this is DanStudio Works. Your project application #${req.id} for "${req.package}" has been accepted! Let's discuss scope and timeline.`);
+        const waLink = `https://wa.me/6${cleanPhone}?text=${waText}`;
+
+        actionButtons = `
+          <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-btn">💬 Private WhatsApp Outreach</a>
+          <button class="reject-btn" data-id="${req.id}" data-action="rejected">Archive</button>
+        `;
+      } else if (req.status === 'rejected') {
+        actionButtons = `
+          <button class="restore-btn" data-id="${req.id}" data-action="new">Restore to Requests</button>
+        `;
+      }
+
+      return `
+        <div class="request-card" data-id="${sanitizeHTML(req.id)}">
+          <div class="request-header">
+            <span class="request-ref">${sanitizeHTML(req.id)}</span>
+            <span class="request-date">${relativeTime(req.date)}</span>
+          </div>
+          <div class="request-body">
+            <div><strong>Client:</strong> ${sanitizeHTML(req.name)} (${sanitizeHTML(req.company)})</div>
+            <div><strong>Email:</strong> ${maskEmail(req.email)}</div>
+            <div><strong>Phone:</strong> ${sanitizeHTML(req.phone)}</div>
+            <div><strong>Package:</strong> ${sanitizeHTML(req.package)}</div>
+            <div><strong>Budget:</strong> <span style="color:#22D3EE;font-weight:700;">${formatCurrency(req.budget)}</span></div>
+            <div><strong>Description:</strong> ${sanitizeHTML(req.description)}</div>
+            ${req.addons && req.addons.length ? `<div><strong>Add-Ons:</strong> ${req.addons.join(', ')}</div>` : ''}
+          </div>
+          <div class="request-actions">${actionButtons}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function initDevConsole() {
+    const consoleEl = document.getElementById('dev-console');
+    if (!consoleEl) return;
+
+    /* Check session auth or URL hash */
+    if (sessionStorage.getItem('dsw_auth') === 'true' || window.location.hash === '#console') {
+      showDevConsole();
+    }
+
+    /* Logout / Lock Button */
+    const logoutBtn = consoleEl.querySelector('.console-logout');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        hideDevConsole();
+        showToast('Developer console locked.', 'info');
+      });
+    }
+
+    /* Tab Switching */
+    const tabButtons = consoleEl.querySelectorAll('.console-tab-btn');
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const tab = btn.getAttribute('data-tab');
+        consoleEl.querySelectorAll('.console-tab-content').forEach(panel => {
+          if (panel.getAttribute('data-tab') === tab) {
+            panel.classList.add('active');
+          } else {
+            panel.classList.remove('active');
+          }
+        });
+
+        renderDevConsole();
+      });
+    });
+
+    /* Search Input Listener */
+    const searchInput = consoleEl.querySelector('.console-search-input');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        consoleSearchQuery = e.target.value.trim();
+        renderDevConsole();
+      });
+    }
+
+    /* Sort Control Toggles */
+    const sortButtons = consoleEl.querySelectorAll('[data-sort]');
+    sortButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sortButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        consoleSort = btn.getAttribute('data-sort');
+        renderDevConsole();
+      });
+    });
+
+    /* Event Delegation for Card Action Buttons (Accept, Hold, Reject, Restore) */
+    consoleEl.addEventListener('click', (e) => {
+      const actionBtn = e.target.closest('[data-action]');
+      if (!actionBtn) return;
+
+      const reqId = actionBtn.getAttribute('data-id');
+      const newStatus = actionBtn.getAttribute('data-action');
+
+      const requests = getRequests();
+      const targetReq = requests.find(r => r.id === reqId);
+      if (targetReq) {
+        targetReq.status = newStatus;
+        localStorage.setItem('dsw_requests', JSON.stringify(requests));
+        renderDevConsole();
+        showToast(`Request #${reqId} moved to ${newStatus}.`, 'info');
+      }
+    });
+  }
+
+  /* ==========================================================================
+     12. APPLICATION BOOTSTRAP
+     ========================================================================== */
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initNavigation();
+    initScrollReveal();
+    initProjectFilters();
+    initCaseStudyModal();
+    initPricingTiers();
+    initAddonCalculator();
+    initApplicationForm();
+    initDevLogin();
+    initDevConsole();
+  });
+
+})();

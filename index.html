@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ======================================================================
+       METADATA & SEO SPECIFICATIONS
+       ====================================================================== -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DanStudio Works — Precision-Crafted Digital Experiences. High-fidelity web design, bespoke digital product systems, and private client queue.">
+  <meta name="keywords" content="web design, Malaysia, portfolio, digital studio, UI UX, SaaS design, front-end">
+  <meta name="author" content="DanStudio Works">
+
+  <!-- Open Graph Protocol -->
+  <meta property="og:title" content="DanStudio Works — Precision-Crafted Digital Experiences">
+  <meta property="og:description" content="A private design studio specializing in bespoke digital platforms and high-conversion web craftsmanship.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://danstudioworks.com">
+  <meta property="og:image" content="assets/images/branding/logo.svg">
+
+  <!-- Brand Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+
+  <!-- Typography: Google Fonts (Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Global Production Stylesheet -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <title>DanStudio Works — Precision-Crafted Digital Experiences</title>
+</head>
+<body data-page="home">
+
+  <!-- ======================================================================
+       NAVIGATION: Floating Desktop Glass Pill
+       Smoothly adheres to scroll position; desktop viewport only (>768px).
+       ====================================================================== -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <!-- Brand Logo: 5 Rapid Clicks Triggers 2FA Developer Console -->
+    <a href="index.html" class="logo" title="DanStudio Works — Click 5 times for Developer Console">
+      <svg class="logo-icon" viewBox="0 0 120 120" width="32" height="32" fill="none" aria-hidden="true">
+        <path d="M34 24 C34 24, 38 48, 38 60 C38 72, 34 96, 34 96 C34 96, 44 94, 46 88 C48 80, 48 40, 46 32 C44 26, 34 24, 34 24 Z" fill="#22D3EE" />
+        <path d="M42 27 C58 24, 86 28, 92 46 C98 62, 94 78, 80 88 C66 98, 44 95, 38 91 C46 87, 60 85, 72 78 C82 72, 85 60, 81 50 C77 39, 58 35, 42 35 Z" fill="#D946EF" />
+        <circle cx="92" cy="46" r="3" fill="#22D3EE" />
+      </svg>
+      <span class="brand-name">DanStudio<span class="text-cyan">.</span></span>
+    </a>
+
+    <!-- Primary Navigation Links -->
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="projects.html" class="nav-link">Selected Works</a>
+      <a href="packages.html" class="nav-link">Packages</a>
+      <a href="contact.html" class="nav-link">Queue Entry</a>
+    </div>
+
+    <!-- Quick Intake CTA -->
+    <a href="contact.html" class="btn btn-primary nav-cta">Start Project</a>
+  </nav>
+
+  <!-- ======================================================================
+       NAVIGATION: Mobile Bottom Thumb-Dock
+       Accessible one-thumb navigation bar fixed to screen bottom (<=768px).
+       ====================================================================== -->
+  <nav class="mobile-dock" aria-label="Mobile Navigation">
+    <div class="dock-items">
+      <a href="index.html" class="dock-item active">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Home</span>
+      </a>
+      <a href="projects.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+        <span>Works</span>
+      </a>
+      <a href="packages.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
+          <path d="M12 18V6"/>
+        </svg>
+        <span>Pricing</span>
+      </a>
+      <a href="contact.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+        <span>Apply</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ======================================================================
+       HERO SECTION: High-Fidelity Studio Headline & Ambient Aurora
+       ====================================================================== -->
+  <header class="hero">
+    <div class="hero-content container">
+      <!-- Status Badge -->
+      <div class="reveal">
+        <span class="card-tag" style="margin-bottom: 1.5rem; display: inline-flex; align-items: center; gap: 8px;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: #22D3EE; box-shadow: 0 0 8px #22D3EE;"></span>
+          Private Queue Open • Q4 Production Slots Active
+        </span>
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="hero-title reveal">
+        We Build Digital Experiences <br>
+        <span class="gradient-text">That Move.</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="hero-subtitle reveal">
+        DanStudio Works is an elite solo studio based in Malaysia. We architect luminous websites, high-conversion web apps, and bespoke digital identities with uncompromised precision.
+      </p>
+
+      <!-- Action Group -->
+      <div class="reveal" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+        <a href="contact.html" class="btn btn-primary btn-lg">Submit Application →</a>
+        <a href="projects.html" class="btn btn-ghost btn-lg">View Selected Works</a>
+      </div>
+
+      <!-- Studio Trust Metrics -->
+      <div class="reveal" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 4rem; max-width: 850px; margin-left: auto; margin-right: auto;">
+        <div class="glass-card" style="padding: 1.5rem; text-align: center;">
+          <div style="font-size: 1.75rem; font-weight: 800; color: #22D3EE;">100%</div>
+          <div style="font-size: 0.85rem; color: #94A3B8; margin-top: 4px;">Custom Architecture</div>
+        </div>
+        <div class="glass-card" style="padding: 1.5rem; text-align: center;">
+          <div style="font-size: 1.75rem; font-weight: 800; color: #D946EF;">Zero</div>
+          <div style="font-size: 0.85rem; color: #94A3B8; margin-top: 4px;">Bloated Templates</div>
+        </div>
+        <div class="glass-card" style="padding: 1.5rem; text-align: center;">
+          <div style="font-size: 1.75rem; font-weight: 800; color: #F1F5F9;">Private</div>
+          <div style="font-size: 0.85rem; color: #94A3B8; margin-top: 4px;">Direct Dev Queue</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       STUDIO PHILOSOPHY & CORE VALUES
+       ====================================================================== -->
+  <section class="section container">
+    <div class="text-center reveal" style="margin-bottom: 3.5rem;">
+      <span class="card-tag">Studio Philosophy</span>
+      <h2 style="font-size: 2.5rem; font-weight: 800; margin-top: 0.5rem;">Engineered Elegance. Measured Results.</h2>
+      <p style="color: #94A3B8; max-width: 650px; margin: 0.75rem auto 0;">
+        We don't do mass-volume generic sites. Every project accepted into our private queue receives bespoke handcrafted design, sub-second load performance, and modern motion.
+      </p>
+    </div>
+
+    <div class="grid-3 reveal">
+      <div class="glass-card" style="padding: 2.25rem;">
+        <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+            <polyline points="2 17 12 22 22 17"/>
+            <polyline points="2 12 12 17 22 12"/>
+          </svg>
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;">Silk &amp; Aurora Visuals</h3>
+        <p style="color: #94A3B8; font-size: 0.925rem; line-height: 1.6;">
+          Deep midnight foundations infused with luminous cyan and magenta accents. Designed to stop scrollers and make your brand unforgettable.
+        </p>
+      </div>
+
+      <div class="glass-card" style="padding: 2.25rem;">
+        <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(217, 70, 239, 0.1); border: 1px solid rgba(217, 70, 239, 0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D946EF" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;">Private Queue Model</h3>
+        <p style="color: #94A3B8; font-size: 0.925rem; line-height: 1.6;">
+          Zero public WhatsApp spam. Prospective clients submit detailed applications into our queue console. When approved, we open dedicated direct lines.
+        </p>
+      </div>
+
+      <div class="glass-card" style="padding: 2.25rem;">
+        <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;">Sub-Second Speed</h3>
+        <p style="color: #94A3B8; font-size: 0.925rem; line-height: 1.6;">
+          Hand-coded architecture optimized for Cloudflare edge deployment. No heavy plugins, no render bottlenecks — just blazing fast response times.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       FEATURED PROJECT TEASER: SRAI QHALIF
+       ====================================================================== -->
+  <section class="section container">
+    <div class="glass-card reveal" style="padding: 3rem; position: relative; overflow: hidden; border: 1px solid rgba(34, 211, 238, 0.25);">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; align-items: center;">
+        
+        <div>
+          <span class="card-tag">Featured SaaS System</span>
+          <h3 style="font-size: 2.25rem; font-weight: 800; line-height: 1.2; margin: 1rem 0;">
+            SRAI Qhalif <br>
+            <span class="gradient-text">Integrated School Platform</span>
+          </h3>
+          <p style="color: #94A3B8; font-size: 1rem; line-height: 1.6; margin-bottom: 1.5rem;">
+            An end-to-end management engine for Islamic educational institutions. Features automated fee reconciliation, parent payment portals, and digitized student attendance tracking.
+          </p>
+
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 2rem;">
+            <span class="card-tag" style="background:#161822;color:#F1F5F9;border:1px solid rgba(255,255,255,0.08);">Automated Yuran</span>
+            <span class="card-tag" style="background:#161822;color:#F1F5F9;border:1px solid rgba(255,255,255,0.08);">Parent WhatsApp API</span>
+            <span class="card-tag" style="background:#161822;color:#F1F5F9;border:1px solid rgba(255,255,255,0.08);">Cloud Architecture</span>
+          </div>
+
+          <a href="projects.html#srai-qhalif" class="btn btn-primary">
+            Explore Case Study &amp; Live Preview →
+          </a>
+        </div>
+
+        <div style="position: relative; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: var(--shadow-lg);">
+          <img src="assets/images/portfolio/srai-qhalif.svg" alt="SRAI Qhalif Interface Mockup" style="width: 100%; height: auto; display: block;">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       CALL TO ACTION BANNER: INTAKE QUEUE
+       ====================================================================== -->
+  <section class="section container">
+    <div class="glass-card reveal" style="text-align: center; padding: 4rem 2rem; background: radial-gradient(circle at 50% 0%, rgba(34, 211, 238, 0.15), transparent 70%), var(--bg-secondary); border: 1px solid rgba(34, 211, 238, 0.25);">
+      <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem;">
+        Ready to Elevate Your Digital Benchmark?
+      </h2>
+      <p style="color: #94A3B8; max-width: 580px; margin: 0 auto 2rem; font-size: 1.05rem;">
+        We take on a strictly limited roster of 3–4 clients per month to guarantee bespoke attention. Apply directly to our queue to secure your slot.
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="contact.html" class="btn btn-primary btn-lg">Submit Project Application →</a>
+        <a href="packages.html" class="btn btn-ghost btn-lg">Review Pricing Packages</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       DEVELOPER QUEUE CONSOLE (Secured Dashboard)
+       Revealed upon successful 2FA master verification or index.html#console.
+       ====================================================================== -->
+  <div id="dev-console">
+    <!-- Console Sticky Header -->
+    <div class="console-header">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <svg viewBox="0 0 120 120" width="28" height="28" fill="none">
+          <path d="M34 24 C34 24, 38 48, 38 60 C38 72, 34 96, 34 96 C34 96, 44 94, 46 88 C48 80, 48 40, 46 32 C44 26, 34 24, 34 24 Z" fill="#22D3EE"/>
+          <path d="M42 27 C58 24, 86 28, 92 46 C98 62, 94 78, 80 88 C66 98, 44 95, 38 91 C46 87, 60 85, 72 78 C82 72, 85 60, 81 50 C77 39, 58 35, 42 35 Z" fill="#D946EF"/>
+        </svg>
+        <span style="font-weight: 800; color: #F1F5F9; font-size: 1.1rem;">
+          DanStudio Works <span style="font-size: 0.75rem; color: #22D3EE; background: rgba(34,211,238,0.12); padding: 2px 8px; border-radius: 4px; margin-left: 6px;">DEV QUEUE</span>
+        </span>
+      </div>
+      <button class="btn btn-ghost btn-sm console-logout">Lock &amp; Exit</button>
+    </div>
+
+    <!-- Console Main Body -->
+    <div class="container" style="padding: 2.5rem 1.5rem;">
+      <!-- Real-Time Metrics -->
+      <div class="console-stats">
+        <div class="stat-card">
+          <div class="stat-value" data-stat="new">0</div>
+          <div class="stat-label">Pending Requests</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" data-stat="waiting">0</div>
+          <div class="stat-label">Waiting Queue</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" data-stat="accepted">0</div>
+          <div class="stat-label">Accepted Projects</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" data-stat="rejected">0</div>
+          <div class="stat-label">Archived / Rejected</div>
+        </div>
+      </div>
+
+      <!-- Controls: Real-Time Search & Sort Options -->
+      <div style="display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 1.5rem;">
+        <input type="text" class="form-input console-search-input" placeholder="Search by name, email, company, or DS-ID..." style="max-width: 360px;">
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <span style="font-size: 0.85rem; color: #94A3B8;">Sort:</span>
+          <button class="btn btn-sm btn-ghost active" data-sort="newest">Newest First</button>
+          <button class="btn btn-sm btn-ghost" data-sort="budget">Highest Profit (RM)</button>
+        </div>
+      </div>
+
+      <!-- Queue Status Tabs -->
+      <div class="console-tabs">
+        <button class="console-tab-btn active" data-tab="new">Requests</button>
+        <button class="console-tab-btn" data-tab="waiting">Waiting Queue</button>
+        <button class="console-tab-btn" data-tab="accepted">Accepted (Outreach)</button>
+        <button class="console-tab-btn" data-tab="rejected">Rejected</button>
+      </div>
+
+      <!-- Tab Content Cards Container -->
+      <div class="console-tab-content active" data-tab="new"></div>
+      <div class="console-tab-content" data-tab="waiting"></div>
+      <div class="console-tab-content" data-tab="accepted"></div>
+      <div class="console-tab-content" data-tab="rejected"></div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       DEVELOPER 2FA AUTHENTICATION MODAL (Easter Egg Trigger)
+       Trigger: Click the brand logo 5 times rapidly.
+       Validation: danstudioworks@gmail.com / 040802 / phone 0199272635
+       ====================================================================== -->
+  <div class="modal-overlay" id="dev-login-modal" role="dialog" aria-modal="true" aria-label="Developer Authentication">
+    <div class="modal" style="max-width: 440px;">
+      <button class="modal-close" aria-label="Close Modal">&times;</button>
+      
+      <!-- Step 1: Master Email & Security Key -->
+      <div class="login-step active" data-step="1">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.3); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <h3 style="font-size: 1.4rem; font-weight: 700;">Developer Console</h3>
+          <p style="font-size: 0.85rem; color: #94A3B8;">Authorized administrative personnel only.</p>
+        </div>
+
+        <form id="dev-auth-form">
+          <div class="form-group">
+            <label class="form-label" for="dev-email">Developer Email</label>
+            <input type="email" id="dev-email" class="form-input dev-email" value="danstudioworks@gmail.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="dev-key">Master Security Key</label>
+            <input type="password" id="dev-key" class="form-input dev-key" placeholder="Enter master key" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" style="margin-top: 0.5rem;">Authenticate Master Key</button>
+        </form>
+      </div>
+
+      <!-- Step 2: 6-Digit OTP Simulation (0199272635) -->
+      <div class="login-step" data-step="2" style="display: none;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(217, 70, 239, 0.1); border: 1px solid rgba(217, 70, 239, 0.3); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D946EF" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3 style="font-size: 1.4rem; font-weight: 700;">2-Step Verification</h3>
+          <p style="font-size: 0.85rem; color: #94A3B8;">
+            Enter the 6-digit OTP sent to <br>
+            <strong style="color: #22D3EE;">019-927-2635</strong>
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 1.5rem;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
+        </div>
+
+        <button type="button" class="btn btn-primary btn-full verify-otp-btn">Verify &amp; Unlock Console</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       FOOTER
+       ====================================================================== -->
+  <footer class="footer">
+    <div class="container footer-content" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <svg viewBox="0 0 120 120" width="24" height="24" fill="none">
+          <path d="M34 24 C34 24, 38 48, 38 60 C38 72, 34 96, 34 96 C34 96, 44 94, 46 88 C48 80, 48 40, 46 32 C44 26, 34 24, 34 24 Z" fill="#22D3EE"/>
+          <path d="M42 27 C58 24, 86 28, 92 46 C98 62, 94 78, 80 88 C66 98, 44 95, 38 91 C46 87, 60 85, 72 78 C82 72, 85 60, 81 50 C77 39, 58 35, 42 35 Z" fill="#D946EF"/>
+        </svg>
+        <span style="font-weight: 700; color: #F1F5F9;">DanStudio Works</span>
+        <span style="color: #64748B; font-size: 0.85rem;">— Precision Digital Engineering</span>
+      </div>
+
+      <div class="footer-links" style="display: flex; gap: 1.5rem; font-size: 0.9rem;">
+        <a href="index.html" style="color: #94A3B8;">Home</a>
+        <a href="projects.html" style="color: #94A3B8;">Works</a>
+        <a href="packages.html" style="color: #94A3B8;">Packages</a>
+        <a href="contact.html" style="color: #94A3B8;">Queue Entry</a>
+      </div>
+    </div>
+    <div class="container" style="text-align: center; color: #64748B; font-size: 0.8rem; margin-top: 2rem;">
+      © 2024 DanStudio Works. All rights reserved. Precision-crafted in Malaysia 🇲🇾.
+    </div>
+  </footer>
+
+  <!-- Core Client Interaction Scripts -->
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

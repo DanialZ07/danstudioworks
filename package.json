@@ -1,0 +1,21 @@
+{
+  "name": "danstudio-works",
+  "version": "1.0.0",
+  "description": "DanStudio Works — Precision-crafted digital experiences. A private-queue web design studio based in Malaysia.",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Static site — no build step required'",
+    "lint": "echo 'Add linter configuration as needed'"
+  },
+  "keywords": [
+    "web-design",
+    "studio",
+    "portfolio",
+    "malaysia",
+    "danstudio"
+  ],
+  "author": "DanStudio Works <danstudioworks@gmail.com>",
+  "license": "UNLICENSED",
+  "private": true
+}
