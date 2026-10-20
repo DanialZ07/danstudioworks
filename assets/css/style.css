@@ -300,6 +300,12 @@ a {
   cursor: pointer;
 }
 
+.navbar .logo img {
+  height: 45px;
+  width: auto;
+  display: block;
+}
+
 .navbar .logo .brand-name {
   font-weight: 800;
   font-size: 1.1rem;
@@ -1018,4 +1024,10 @@ a {
   background: var(--bg-secondary);
   padding: 3rem 0;
   margin-top: auto;
+}
+
+.footer img {
+  height: 45px;
+  width: auto;
+  display: block;
 }

@@ -153,13 +153,13 @@
     }
 
     /* Auto-highlight active navigation pill based on current path */
-    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+    const currentPath = window.location.pathname.split('/').pop().split('?')[0].split('#')[0] || 'index.html';
     const navLinks = document.querySelectorAll('.nav-link, .dock-item');
 
     navLinks.forEach(link => {
       const href = link.getAttribute('href');
       if (!href) return;
-      const targetPage = href.split('/').pop();
+      const targetPage = href.split('/').pop().split('?')[0].split('#')[0];
 
       if (targetPage === currentPath || (currentPath === '' && targetPage === 'index.html')) {
         link.classList.add('active');
@@ -281,27 +281,59 @@
      ========================================================================== */
 
   function initPricingTiers() {
-    /* Handle "Start Project" click on packages.html */
+    /* Handle "Select" package button click on packages.html with smooth transition */
     document.querySelectorAll('.start-project-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+
         const packageName = btn.getAttribute('data-package') || '';
         sessionStorage.setItem('dsw_selected_package', packageName);
-        window.location.href = 'contact.html';
+
+        // Smooth visual state transition
+        btn.textContent = 'Selected';
+        btn.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+        btn.style.opacity = '0.75';
+        btn.style.transform = 'scale(0.98)';
+        btn.style.borderColor = 'var(--accent-cyan, #22D3EE)';
+        btn.style.boxShadow = '0 0 16px rgba(34, 211, 238, 0.4)';
+        btn.style.pointerEvents = 'none';
+
+        // Derive clean slug for URL parameter
+        let slug = 'essential';
+        const lower = packageName.toLowerCase();
+        if (lower.includes('corporate')) {
+          slug = 'corporate';
+        } else if (lower.includes('catalog') || lower.includes('booking')) {
+          slug = 'catalog';
+        }
+
+        setTimeout(() => {
+          window.location.href = `contact.html?package=${slug}`;
+        }, 600);
       });
     });
 
-    /* Auto-select package dropdown option on contact.html if set in sessionStorage */
+    /* Auto-select package dropdown option on contact.html if set in URL param or sessionStorage */
     const packageDropdown = document.querySelector('#package, [name="package"]');
-    const storedPackage = sessionStorage.getItem('dsw_selected_package');
+    if (packageDropdown) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const pkgParam = urlParams.get('package');
+      const storedPackage = sessionStorage.getItem('dsw_selected_package');
+      const target = pkgParam || storedPackage;
 
-    if (packageDropdown && storedPackage) {
-      Array.from(packageDropdown.options).forEach(opt => {
-        if (opt.value.toLowerCase().includes(storedPackage.toLowerCase()) ||
-            storedPackage.toLowerCase().includes(opt.value.toLowerCase())) {
-          opt.selected = true;
-        }
-      });
-      sessionStorage.removeItem('dsw_selected_package');
+      if (target) {
+        const query = target.toLowerCase();
+        Array.from(packageDropdown.options).forEach(opt => {
+          const val = opt.value.toLowerCase();
+          if (val && (val.includes(query) || query.includes(val) ||
+              (query === 'essential' && val.includes('essential')) ||
+              (query === 'corporate' && val.includes('corporate')) ||
+              (query === 'catalog' && (val.includes('catalog') || val.includes('booking'))))) {
+            opt.selected = true;
+          }
+        });
+        sessionStorage.removeItem('dsw_selected_package');
+      }
     }
 
     /* Locked Tier 4 inline notification form toggle */
