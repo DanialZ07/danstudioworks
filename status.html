@@ -225,6 +225,60 @@
   </main>
 
   <!-- ======================================================================
+       DEVELOPER 2FA AUTHENTICATION MODAL (Easter Egg Trigger)
+       ====================================================================== -->
+  <div class="modal-overlay" id="dev-login-modal" role="dialog" aria-modal="true" aria-label="Developer Authentication">
+    <div class="modal" style="max-width: 440px;">
+      <button class="modal-close" aria-label="Close Modal">&times;</button>
+      
+      <!-- Step 1: Master Email & Security Key -->
+      <div class="login-step active" data-step="1">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <img src="assets/images/branding/logo.png" alt="DanStudio Icon" style="height: 48px; width: auto; display: inline-block; margin-bottom: 0.75rem;">
+          <h3 style="font-size: 1.4rem; font-weight: 700;">Developer Console</h3>
+          <p style="font-size: 0.85rem; color: #94A3B8;">Authorized administrative personnel only.</p>
+        </div>
+
+        <form id="dev-auth-form">
+          <div class="form-group">
+            <label class="form-label" for="dev-email">Developer Email</label>
+            <input type="email" id="dev-email" class="form-input dev-email" value="danstudioworks@gmail.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="dev-key">Master Security Key</label>
+            <input type="password" id="dev-key" class="form-input dev-key" placeholder="Enter master key" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" style="margin-top: 0.5rem;">Authenticate Master Key</button>
+        </form>
+      </div>
+
+      <!-- Step 2: 6-Digit OTP Simulation (0199272635) -->
+      <div class="login-step" data-step="2" style="display: none;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <img src="assets/images/branding/logo.png" alt="DanStudio Icon" style="height: 48px; width: auto; display: inline-block; margin-bottom: 0.75rem;">
+          <h3 style="font-size: 1.4rem; font-weight: 700;">2-Step Verification</h3>
+          <p style="font-size: 0.85rem; color: #94A3B8;">
+            Enter the 6-digit OTP sent to <br>
+            <strong style="color: #22D3EE;">019-927-2635</strong>
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 1.5rem;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
+        </div>
+
+        <button type="button" class="btn btn-primary btn-full verify-otp-btn">Verify &amp; Unlock Console</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================
        FOOTER
        ====================================================================== -->
   <footer class="footer">
@@ -241,7 +295,7 @@
         <a href="admin.html" style="color: #64748B;">Developer Portal</a>
       </div>
     </div>
-    <div class="container" style="text-align: center; color: #64748B; font-size: 0.8rem; margin-top: 2rem;">
+    <div class="container footer-copyright" style="text-align: center; color: #64748B; font-size: 0.8rem; margin-top: 2rem;">
       © 2024 DanStudio Works. All rights reserved. Precision-crafted in Malaysia 🇲🇾.
     </div>
   </footer>

@@ -628,25 +628,26 @@
   }
 
   /* ==========================================================================
-     10. DEVELOPER 2FA AUTHENTICATION (5-Click Easter Egg)
+     11. DEVELOPER 2FA AUTHENTICATION (5-Click Easter Egg)
      ========================================================================== */
 
   function initDevLogin() {
     const modal = document.getElementById('dev-login-modal');
     if (!modal) return;
 
-    /* Easter Egg: Track 5 rapid clicks on logo within 3 seconds */
-    const logos = document.querySelectorAll('.logo');
+    /* Easter Egg: Track 5 rapid clicks on footer copyright text within 3 seconds */
+    const triggers = document.querySelectorAll('.footer-copyright, .copyright, .footer .container:last-child');
     let clickTimestamps = [];
 
-    logos.forEach(logo => {
-      logo.addEventListener('click', (e) => {
+    triggers.forEach(trigger => {
+      trigger.style.cursor = 'pointer';
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
         const now = Date.now();
         clickTimestamps.push(now);
         clickTimestamps = clickTimestamps.filter(t => now - t <= 3000);
 
         if (clickTimestamps.length >= 5) {
-          e.preventDefault();
           clickTimestamps = [];
           openModal();
         }
