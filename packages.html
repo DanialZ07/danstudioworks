@@ -6,13 +6,13 @@
        ====================================================================== -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="DanStudio Works Pricing Packages — Transparent, fixed-scope investment tiers and interactive add-on calculator.">
+  <meta name="description" content="DanStudio Works Pricing Packages — Transparent, fixed-scope investment tiers.">
   <meta name="keywords" content="web design pricing, Malaysia web studio, packages, SME website, booking website">
   <meta name="author" content="DanStudio Works">
 
   <!-- Open Graph Protocol -->
-  <meta property="og:title" content="Pricing Packages &amp; Calculator — DanStudio Works">
-  <meta property="og:description" content="Transparent, fixed-scope investment tiers and interactive add-on calculator.">
+  <meta property="og:title" content="Pricing Packages — DanStudio Works">
+  <meta property="og:description" content="Transparent, fixed-scope investment tiers.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://danstudioworks.com/packages.html">
   <meta property="og:image" content="assets/images/branding/logo_landscape_layout_transparent.png">
@@ -27,7 +27,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 
-  <title>Pricing Packages &amp; Calculator — DanStudio Works</title>
+  <title>Pricing Packages — DanStudio Works</title>
 </head>
 <body data-page="packages">
 
@@ -43,9 +43,10 @@
       <a href="index.html" class="nav-link">Home</a>
       <a href="projects.html" class="nav-link">Projects</a>
       <a href="packages.html" class="nav-link active">Packages</a>
+      <a href="contact.html" class="nav-link">Contact</a>
     </div>
 
-    <a href="contact.html" class="btn btn-primary nav-cta">Start Project</a>
+    <a href="contact.html" class="btn btn-primary nav-cta">Support</a>
   </nav>
 
   <!-- ======================================================================
@@ -77,9 +78,9 @@
       </a>
       <a href="contact.html" class="dock-item">
         <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         </svg>
-        <span>Apply</span>
+        <span>Contact</span>
       </a>
     </div>
   </nav>
@@ -122,7 +123,7 @@
           <li>Fast Cloudflare Deployment</li>
         </ul>
 
-        <button class="btn btn-ghost btn-full start-project-btn" data-package="Starter">
+        <button class="btn btn-ghost btn-full start-project-btn pkg-select-btn" data-package="Starter" data-target="apply.html">
           Select
         </button>
       </div>
@@ -147,7 +148,7 @@
           <li>CMS or Static Architecture Options</li>
         </ul>
 
-        <button class="btn btn-primary btn-full start-project-btn" data-package="Professional">
+        <button class="btn btn-primary btn-full start-project-btn pkg-select-btn" data-package="Professional" data-target="apply.html">
           Select
         </button>
       </div>
@@ -172,7 +173,7 @@
           <li>1 Month Complimentary Post-Launch Support</li>
         </ul>
 
-        <button class="btn btn-ghost btn-full start-project-btn" data-package="Premium">
+        <button class="btn btn-ghost btn-full start-project-btn pkg-select-btn" data-package="Premium" data-target="apply.html">
           Select
         </button>
       </div>
@@ -210,91 +211,6 @@
 
     </div>
   </main>
-
-  <!-- ======================================================================
-       INTERACTIVE ADD-ON CALCULATOR
-       Live running sum passed automatically into the queue application.
-       ====================================================================== -->
-  <section class="section container">
-    <div class="glass-card addon-calculator reveal" style="padding: 3rem 2rem; max-width: 880px; margin: 0 auto; border: 1px solid rgba(34, 211, 238, 0.25);">
-      <div class="text-center" style="margin-bottom: 2.5rem;">
-        <span class="card-tag">A La Carte Extras</span>
-        <h2 style="font-size: 2.25rem; font-weight: 800; margin-top: 0.5rem;">Interactive Add-On Calculator</h2>
-        <p style="color: #94A3B8; font-size: 0.95rem;">
-          Customize your package with optional add-on modules. Your selections will be automatically passed into your application request.
-        </p>
-      </div>
-
-      <div class="addon-list" style="display: grid; gap: 1rem; margin-bottom: 2rem;">
-
-        <!-- Add-on: Logo Design -->
-        <div class="addon-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem; border-radius: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border);">
-          <label style="display: flex; align-items: center; gap: 14px; cursor: pointer; color: #F1F5F9; font-weight: 500;">
-            <input type="checkbox" data-price="300" data-addon="Logo Design" style="accent-color: #22D3EE; width: 18px; height: 18px;">
-            <span>Logo &amp; Brand Identity System <span style="font-size: 0.8rem; color: #94A3B8; display: block;">Vector mark, favicon pack, and brand typography palette</span></span>
-          </label>
-          <span style="font-weight: 800; color: #22D3EE;">+RM 300</span>
-        </div>
-
-        <!-- Add-on: Copywriting -->
-        <div class="addon-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem; border-radius: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border);">
-          <label style="display: flex; align-items: center; gap: 14px; cursor: pointer; color: #F1F5F9; font-weight: 500;">
-            <input type="checkbox" data-price="200" data-addon="Copywriting" style="accent-color: #22D3EE; width: 18px; height: 18px;">
-            <span>High-Conversion Copywriting <span style="font-size: 0.8rem; color: #94A3B8; display: block;">Sales headlines, compelling subtext, and clear CTAs</span></span>
-          </label>
-          <span style="font-weight: 800; color: #22D3EE;">+RM 200</span>
-        </div>
-
-        <!-- Add-on: Social Media Kit -->
-        <div class="addon-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem; border-radius: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border);">
-          <label style="display: flex; align-items: center; gap: 14px; cursor: pointer; color: #F1F5F9; font-weight: 500;">
-            <input type="checkbox" data-price="250" data-addon="Social Media Kit" style="accent-color: #22D3EE; width: 18px; height: 18px;">
-            <span>Social Media Kit &amp; OpenGraph Pack <span style="font-size: 0.8rem; color: #94A3B8; display: block;">Bespoke link preview banners and social banners</span></span>
-          </label>
-          <span style="font-weight: 800; color: #22D3EE;">+RM 250</span>
-        </div>
-
-        <!-- Add-on: Priority Delivery -->
-        <div class="addon-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem; border-radius: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border);">
-          <label style="display: flex; align-items: center; gap: 14px; cursor: pointer; color: #F1F5F9; font-weight: 500;">
-            <input type="checkbox" data-price="400" data-addon="Priority Delivery" style="accent-color: #22D3EE; width: 18px; height: 18px;">
-            <span>Priority Fast-Track Delivery <span style="font-size: 0.8rem; color: #94A3B8; display: block;">Accelerated production schedule (cuts timeline by 40%)</span></span>
-          </label>
-          <span style="font-weight: 800; color: #22D3EE;">+RM 400</span>
-        </div>
-
-        <!-- Add-on: Extra Revision -->
-        <div class="addon-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem; border-radius: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border);">
-          <label style="display: flex; align-items: center; gap: 14px; cursor: pointer; color: #F1F5F9; font-weight: 500;">
-            <input type="checkbox" data-price="150" data-addon="Extra Revision" style="accent-color: #22D3EE; width: 18px; height: 18px;">
-            <span>Extra Iterative Revision Cycle <span style="font-size: 0.8rem; color: #94A3B8; display: block;">1 additional full round of layout and copy revisions</span></span>
-          </label>
-          <span style="font-weight: 800; color: #22D3EE;">+RM 150</span>
-        </div>
-
-        <!-- Add-on: Domain Setup -->
-        <div class="addon-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem; border-radius: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border);">
-          <label style="display: flex; align-items: center; gap: 14px; cursor: pointer; color: #F1F5F9; font-weight: 500;">
-            <input type="checkbox" data-price="180" data-addon="Domain Setup" style="accent-color: #22D3EE; width: 18px; height: 18px;">
-            <span>Custom Domain &amp; Cloudflare Security Setup <span style="font-size: 0.8rem; color: #94A3B8; display: block;">DNS, SSL certificates, and security header configuration</span></span>
-          </label>
-          <span style="font-weight: 800; color: #22D3EE;">+RM 180</span>
-        </div>
-
-      </div>
-
-      <!-- Running Subtotal & Redirection CTA -->
-      <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.75rem; border-radius: 14px; background: rgba(34, 211, 238, 0.08); border: 1px solid rgba(34, 211, 238, 0.25); flex-wrap: wrap; gap: 1rem;">
-        <div>
-          <span style="font-size: 0.85rem; color: #94A3B8; display: block;">Estimated Add-On Subtotal:</span>
-          <div class="addon-total-value" style="font-size: 2.25rem; font-weight: 900; color: #22D3EE;">RM 0</div>
-        </div>
-        <button class="btn btn-primary add-to-request-btn">
-          Add Selected to Project Application →
-        </button>
-      </div>
-    </div>
-  </section>
 
   <!-- ======================================================================
        DEVELOPER 2FA AUTHENTICATION MODAL (Easter Egg Trigger)

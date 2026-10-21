@@ -10,12 +10,14 @@
  *  04. Scroll-Triggered Reveal Animations
  *  05. Projects Gallery Category Filtering
  *  06. SRAI Qhalif Case Study Modal
- *  07. Package Tiers Selection & Cross-Page State
- *  08. Add-On Subtotal Calculator
- *  09. Private Application Queue Submission Form
- *  10. Developer 2FA Authentication (5-Click Easter Egg)
- *  11. Developer Queue Console Dashboard (State, Filter, Outreach)
- *  12. Application Bootstrap
+ *  07. Package Tiers Selection & Cross-Page Routing (packages.html)
+ *  08. Entry Zone Lockdown & Validation (apply.html)
+ *  09. Private Application Queue Submission Form (apply.html)
+ *  10. General Support Inquiry Form (contact.html)
+ *  11. Developer 2FA Authentication (5-Click Easter Egg)
+ *  12. Developer Queue Console Dashboard (State, Filter, Outreach)
+ *  13. Global Project Counter (Homepage)
+ *  14. Application Bootstrap
  * ============================================================================
  */
 
@@ -277,16 +279,17 @@
   }
 
   /* ==========================================================================
-     07. PACKAGE TIERS SELECTION & CROSS-PAGE STATE
+     07. PACKAGE TIERS SELECTION & CROSS-PAGE ROUTING (packages.html)
      ========================================================================== */
 
   function initPricingTiers() {
     /* Handle "Select" package button click on packages.html with smooth transition */
-    document.querySelectorAll('.start-project-btn').forEach(btn => {
+    document.querySelectorAll('.pkg-select-btn, .start-project-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
 
         const packageName = btn.getAttribute('data-package') || '';
+        const targetUrl = btn.getAttribute('data-target') || 'apply.html';
         sessionStorage.setItem('dsw_selected_package', packageName);
 
         // Required 600ms transition:
@@ -315,36 +318,10 @@
         }
 
         setTimeout(() => {
-          window.location.href = `contact.html?package=${selectedTier}`;
+          window.location.href = `${targetUrl}?package=${selectedTier}`;
         }, 600);
       });
     });
-
-    /* Auto-select package dropdown option on contact.html if set in URL param or sessionStorage */
-    const packageDropdown = document.querySelector('#package, [name="package"]');
-    if (packageDropdown) {
-      const urlParams = new URLSearchParams(window.location.search);
-      const pkgParam = urlParams.get('package');
-      const storedPackage = sessionStorage.getItem('dsw_selected_package');
-      const target = pkgParam || storedPackage;
-
-      if (target) {
-        const query = target.toLowerCase();
-        Array.from(packageDropdown.options).forEach(opt => {
-          const val = opt.value.toLowerCase();
-          if (val && (val.includes(query) || query.includes(val) ||
-              (query === 'starter' && val.includes('starter')) ||
-              (query === 'professional' && val.includes('professional')) ||
-              (query === 'premium' && val.includes('premium')) ||
-              (query === 'essential' && val.includes('starter')) ||
-              (query === 'corporate' && val.includes('professional')) ||
-              (query === 'catalog' && val.includes('premium')))) {
-            opt.selected = true;
-          }
-        });
-        sessionStorage.removeItem('dsw_selected_package');
-      }
-    }
 
     /* Locked Tier 4 inline notification form toggle */
     const notifyBtn = document.querySelector('.notify-toggle-btn');
@@ -367,59 +344,61 @@
   }
 
   /* ==========================================================================
-     08. ADD-ON SUBTOTAL CALCULATOR
+     08. ENTRY ZONE LOCKDOWN & VALIDATION (apply.html)
      ========================================================================== */
 
-  function initAddonCalculator() {
-    const checkboxes = document.querySelectorAll('.addon-item input[type="checkbox"][data-price]');
-    const totalDisplay = document.querySelector('.addon-total-value');
-    const addBtn = document.querySelector('.add-to-request-btn, .addon-add-btn');
+  function initEntryZoneLock() {
+    // Check if current page is apply.html
+    const isApplyPage = document.body.getAttribute('data-page') === 'apply' ||
+                        window.location.pathname.split('/').pop().split('?')[0].split('#')[0] === 'apply.html' ||
+                        document.getElementById('selected-package') !== null;
 
-    if (!checkboxes.length) return;
+    if (!isApplyPage) return;
 
-    function recalculate() {
-      let total = 0;
-      checkboxes.forEach(cb => {
-        if (cb.checked) {
-          total += parseFloat(cb.getAttribute('data-price')) || 0;
-        }
-      });
+    const urlParams = new URLSearchParams(window.location.search);
+    const pkgParam = urlParams.get('package');
 
-      if (totalDisplay) {
-        totalDisplay.textContent = formatCurrency(total);
+    // If the ?package= parameter is missing or empty, immediately redirect the user back via window.location.href = 'packages.html'
+    if (!pkgParam || pkgParam.trim() === '') {
+      window.location.href = 'packages.html';
+      return;
+    }
+
+    // If the parameter exists, auto-fill it into the #selected-package input field
+    const selectedPkgInput = document.getElementById('selected-package');
+    if (selectedPkgInput) {
+      const cleanPkg = pkgParam.trim();
+      let formattedTitle = cleanPkg.charAt(0).toUpperCase() + cleanPkg.slice(1).toLowerCase();
+      if (cleanPkg.toLowerCase() === 'starter') {
+        formattedTitle = 'Starter (RM 800 – 1,200)';
+      } else if (cleanPkg.toLowerCase() === 'professional') {
+        formattedTitle = 'Professional (RM 1,800 – 2,500)';
+      } else if (cleanPkg.toLowerCase() === 'premium') {
+        formattedTitle = 'Premium (RM 3,000 – 4,500)';
+      } else if (cleanPkg.toLowerCase().includes('enterprise')) {
+        formattedTitle = 'Tier 4: Enterprise & SaaS Custom';
       }
+      selectedPkgInput.value = formattedTitle;
     }
+  }
 
-    checkboxes.forEach(cb => cb.addEventListener('change', recalculate));
-    recalculate();
+  /* ==========================================================================
+     10. GENERAL SUPPORT FORM (contact.html)
+     ========================================================================== */
 
-    /* Pass selected add-ons to contact.html via sessionStorage */
-    if (addBtn) {
-      addBtn.addEventListener('click', () => {
-        const selected = [];
-        checkboxes.forEach(cb => {
-          if (cb.checked) {
-            selected.push(cb.getAttribute('data-addon') || cb.value);
-          }
-        });
-        sessionStorage.setItem('dsw_selected_addons', JSON.stringify(selected));
-        window.location.href = 'contact.html';
-      });
-    }
+  function initSupportForm() {
+    const supportForm = document.getElementById('support-contact-form');
+    if (!supportForm) return;
 
-    /* Pre-check add-on checkboxes if user came from packages.html */
-    const storedAddons = sessionStorage.getItem('dsw_selected_addons');
-    if (storedAddons) {
-      try {
-        const list = JSON.parse(storedAddons);
-        const contactCheckboxes = document.querySelectorAll('.addon-item input[type="checkbox"]');
-        contactCheckboxes.forEach(cb => {
-          const val = cb.getAttribute('data-addon') || cb.value;
-          if (list.includes(val)) cb.checked = true;
-        });
-        sessionStorage.removeItem('dsw_selected_addons');
-      } catch (_) {}
-    }
+    supportForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const successMsg = document.getElementById('support-success-msg');
+      if (successMsg) {
+        successMsg.style.display = 'block';
+      }
+      supportForm.reset();
+      showToast('Support inquiry dispatched. We will reply to your email shortly.', 'success');
+    });
   }
 
   /* ==========================================================================
@@ -521,12 +500,17 @@
         addons.push(cb.getAttribute('data-addon') || cb.value);
       });
 
+      const selectedPkgInput = document.getElementById('selected-package');
+      const pkgValue = (selectedPkgInput && selectedPkgInput.value)
+        ? selectedPkgInput.value
+        : (getVal('[name="package"]') || 'Starter');
+
       const formDataPayload = {
         name: name,
         email: email,
         phone: phone,
         company: getVal('[name="company"]') || 'Independent Brand',
-        package: getVal('[name="package"]') || 'Starter',
+        package: pkgValue,
         budget: budget,
         description: description,
         source: getVal('[name="source"]') || 'Direct',
@@ -1039,7 +1023,7 @@
   }
 
   /* ==========================================================================
-     12. APPLICATION BOOTSTRAP
+     14. APPLICATION BOOTSTRAP
      ========================================================================== */
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -1048,8 +1032,9 @@
     initProjectFilters();
     initCaseStudyModal();
     initPricingTiers();
-    initAddonCalculator();
+    initEntryZoneLock();
     initApplicationForm();
+    initSupportForm();
     initDevLogin();
     initDevConsole();
     initProjectCounter();

@@ -1,14 +1,297 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- ======================================================================
+       METADATA & SEO SPECIFICATIONS
+       ====================================================================== -->
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Entry Zone — Submit your project info to the DanStudio Works private queue. Direct developer evaluation.">
+  <meta name="keywords" content="hire web designer Malaysia, private queue, DanStudio application, project request, Entry Zone">
+  <meta name="author" content="DanStudio Works">
+
+  <!-- Open Graph Protocol -->
+  <meta property="og:title" content="Entry Zone — DanStudio Works">
+  <meta property="og:description" content="Entry Zone — Submit your project info to the DanStudio Works private queue. Direct developer evaluation.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://danstudioworks.com/apply.html">
+  <meta property="og:image" content="assets/images/branding/logo_landscape_layout_transparent.png">
+
+  <!-- Brand Favicon -->
   <link rel="icon" type="image/png" href="assets/images/branding/logo.png">
   <link rel="shortcut icon" type="image/png" href="assets/images/branding/logo.png">
-  <meta http-equiv="refresh" content="0; url=contact.html">
-  <title>Redirecting to Entry Zone...</title>
-  <script>window.location.href = "contact.html";</script>
+
+  <!-- Typography: Google Fonts (Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <script>
+    // Immediate pre-render gatekeeper for entry zone
+    (function() {
+      const p = new URLSearchParams(window.location.search).get('package');
+      if (!p || p.trim() === '') {
+        window.location.href = 'packages.html';
+      }
+    })();
+  </script>
+
+  <title>Entry Zone — DanStudio Works</title>
 </head>
-<body style="background:#07080E;color:#F1F5F9;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;">
-  <p>Redirecting to <a href="contact.html" style="color:#22D3EE;">Entry Zone</a>...</p>
+<body data-page="apply">
+
+  <!-- ======================================================================
+       NAVIGATION: Floating Desktop Glass Pill
+       ====================================================================== -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="logo" title="DanStudio Works — Click 5 times for Developer Console">
+      <img src="assets/images/branding/logo_landscape_layout_transparent.png" alt="DanStudio Works" style="height: 45px; width: auto; display: block;">
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="projects.html" class="nav-link">Projects</a>
+      <a href="packages.html" class="nav-link">Packages</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+
+    <a href="packages.html" class="btn btn-primary nav-cta">Change Tier</a>
+  </nav>
+
+  <!-- ======================================================================
+       NAVIGATION: Mobile Bottom Thumb-Dock
+       ====================================================================== -->
+  <nav class="mobile-dock" aria-label="Mobile Navigation">
+    <div class="dock-items">
+      <a href="index.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Home</span>
+      </a>
+      <a href="projects.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+        <span>Projects</span>
+      </a>
+      <a href="packages.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
+          <path d="M12 18V6"/>
+        </svg>
+        <span>Pricing</span>
+      </a>
+      <a href="contact.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span>Contact</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ======================================================================
+       HEADER: Entry Zone Title & Anti-Spam Notice
+       ====================================================================== -->
+  <header class="section container" style="padding-top: 8rem; padding-bottom: 2rem;">
+    <div class="text-center reveal">
+      <span class="card-tag">Project Intake Console</span>
+      <h1 style="font-size: 3rem; font-weight: 900; margin-top: 0.5rem;">Entry Zone</h1>
+      <p style="color: #94A3B8; max-width: 620px; margin: 0.75rem auto 1.5rem; font-size: 1.05rem;">
+        Input your project specifications below to enter the DanStudio Works production queue. Direct developer evaluation.
+      </p>
+
+      <!-- Zero Public WhatsApp Explanation Card -->
+      <div class="glass-card" style="max-width: 720px; margin: 0 auto; padding: 1.25rem 1.75rem; border: 1px solid rgba(34, 211, 238, 0.25); text-align: left;">
+        <div style="font-size: 0.875rem; color: #94A3B8; line-height: 1.5;">
+          <strong style="color: #F1F5F9;">Zero Public WhatsApp Policy:</strong> To eliminate automated spam and prioritize genuine projects, our direct WhatsApp link is private. When your project is accepted, you will receive a verified outreach message directly from our developer.
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       APPLICATION FORM SECTION (ENTRY ZONE)
+       ====================================================================== -->
+  <main class="section container" style="padding-top: 1rem; padding-bottom: 6rem;">
+    <div class="glass-card reveal" style="max-width: 760px; margin: 0 auto; padding: 3rem 2.5rem; border: 1px solid rgba(255, 255, 255, 0.08);">
+
+      <!-- Success Notification / Live Link Generation Panel (Revealed post-submission) -->
+      <div id="form-success" style="display: none; text-align: center; padding: 3rem 1.5rem;">
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(34, 211, 238, 0.12); border: 2px solid #22D3EE; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2.5" style="animation: spin 1.5s linear infinite;">
+            <circle cx="12" cy="12" r="10" stroke-opacity="0.2" stroke="#22D3EE" fill="none"></circle>
+            <path d="M12 2a10 10 0 0 1 10 10" stroke="#22D3EE" stroke-linecap="round" fill="none"></path>
+          </svg>
+        </div>
+        <h2 id="queue-status-heading" style="font-size: 1.85rem; font-weight: 800; margin-bottom: 0.75rem; color: #F1F5F9;">Application Completed. Generating your personal live queue link...</h2>
+        <div style="display: inline-flex; align-items: center; gap: 10px; padding: 0.85rem 1.75rem; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(34,211,238,0.3); margin-top: 1rem;">
+          <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #22D3EE; box-shadow: 0 0 10px #22D3EE;"></span>
+          <span style="font-size: 0.9rem; color: #F1F5F9; font-weight: 500;">Securing ticket reference &bull; Redirecting in 3 seconds...</span>
+        </div>
+      </div>
+
+      <!-- Main Submission Form (Queue Entry Form) -->
+      <form id="queue-entry-form" method="POST" novalidate>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label" for="client-name">Full Name <span class="text-cyan">*</span></label>
+            <input type="text" id="client-name" name="name" class="form-input" placeholder="e.g. Danial Azman" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="client-email">Email Address <span class="text-cyan">*</span></label>
+            <input type="email" id="client-email" name="email" class="form-input" placeholder="e.g. danial@example.com" required>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label" for="client-phone">Phone / WhatsApp Number <span class="text-cyan">*</span></label>
+            <input type="tel" id="client-phone" name="phone" class="form-input" placeholder="e.g. 012-3456789" required>
+            <small style="font-size: 0.75rem; color: #64748B;">Used exclusively for private developer outreach if approved.</small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="client-company">Company / Brand Name</label>
+            <input type="text" id="client-company" name="company" class="form-input" placeholder="e.g. Qhalif Edu Systems">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Read-only Selected Package Field (Locked Down) -->
+          <div class="form-group">
+            <label class="form-label" for="selected-package">Selected Package <span class="text-cyan">*</span></label>
+            <input type="text" id="selected-package" name="package" class="form-input" readonly style="background: rgba(34, 211, 238, 0.06); border-color: rgba(34, 211, 238, 0.35); color: #22D3EE; font-weight: 700; cursor: not-allowed;">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="client-budget">Estimated Budget (RM) <span class="text-cyan">*</span></label>
+            <input type="number" id="client-budget" name="budget" class="form-input" placeholder="e.g. 2500" min="500" required>
+          </div>
+        </div>
+
+        <!-- Description with min 50 characters live counter -->
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <label class="form-label" for="description">Project Overview &amp; Goals <span class="text-cyan">*</span></label>
+            <span id="char-counter" style="font-size: 0.75rem; color: #64748B;">0 / 50 min characters</span>
+          </div>
+          <textarea id="description" name="description" class="form-textarea form-input" rows="4" placeholder="Describe what you want to build, target launch date, existing website if any, and core business goals..." minlength="50" required></textarea>
+        </div>
+
+        <!-- Source -->
+        <div class="form-group">
+          <label class="form-label" for="client-source">How did you hear about DanStudio?</label>
+          <select id="client-source" name="source" class="form-select form-input">
+            <option value="Direct / Portfolio">Direct Portfolio Visit</option>
+            <option value="Referral / Client">Client Referral</option>
+            <option value="Twitter / X">Twitter / X</option>
+            <option value="LinkedIn">LinkedIn</option>
+            <option value="Google Search">Google Search</option>
+            <option value="Other">Other Community</option>
+          </select>
+        </div>
+
+        <!-- File Drop Zone -->
+        <div class="form-group">
+          <label class="form-label">Project Brief / Brand Assets (Optional)</label>
+          <div class="file-drop-zone" id="file-drop-zone" style="border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px; padding: 2rem 1rem; text-align: center; cursor: pointer; transition: all 0.3s ease;">
+            <div style="font-size: 0.9rem; color: #F1F5F9; font-weight: 500;">Click or drag brand brief / mockups here</div>
+            <div style="font-size: 0.75rem; color: #64748B; margin-top: 4px;">PNG, JPG, PDF up to 5MB</div>
+            <div class="file-name" style="margin-top: 8px; font-size: 0.85rem; color: #22D3EE; font-weight: 600;"></div>
+            <input type="file" id="file-upload" name="file" accept="image/*,.pdf" style="display: none;">
+          </div>
+        </div>
+
+        <!-- Consent Checkbox -->
+        <div class="form-group" style="margin-top: 1.5rem;">
+          <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 0.85rem; color: #94A3B8; line-height: 1.5;">
+            <input type="checkbox" id="consent-check" name="consent" required style="accent-color: #22D3EE; width: 18px; height: 18px; margin-top: 2px;">
+            <span>I understand that DanStudio Works operates on a private review queue and that submission enters my project into developer evaluation. <span class="text-cyan">*</span></span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-full" style="margin-top: 1.5rem;">
+          Submit Application to Private Queue →
+        </button>
+
+      </form>
+    </div>
+  </main>
+
+  <!-- ======================================================================
+       DEVELOPER 2FA AUTHENTICATION MODAL (Easter Egg Trigger)
+       ====================================================================== -->
+  <div class="modal-overlay" id="dev-login-modal" role="dialog" aria-modal="true" aria-label="Developer Authentication">
+    <div class="modal" style="max-width: 440px;">
+      <button class="modal-close" aria-label="Close Modal">&times;</button>
+      <div class="login-step active" data-step="1">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <img src="assets/images/branding/logo.png" alt="DanStudio Icon" style="height: 48px; width: auto; display: inline-block; margin-bottom: 0.75rem;">
+          <h3 style="font-size: 1.4rem; font-weight: 700;">Developer Console</h3>
+          <p style="font-size: 0.85rem; color: #94A3B8;">Authorized personnel only.</p>
+        </div>
+        <form id="dev-auth-form">
+          <div class="form-group">
+            <label class="form-label" for="dev-email">Developer Email</label>
+            <input type="email" id="dev-email" class="form-input dev-email" value="danstudioworks@gmail.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="dev-key">Master Security Key</label>
+            <input type="password" id="dev-key" class="form-input dev-key" placeholder="Enter master key" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Authenticate Master Key</button>
+        </form>
+      </div>
+
+      <div class="login-step" data-step="2" style="display: none;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <img src="assets/images/branding/logo.png" alt="DanStudio Icon" style="height: 48px; width: auto; display: inline-block; margin-bottom: 0.75rem;">
+          <h3 style="font-size: 1.4rem; font-weight: 700;">2-Step Verification</h3>
+          <p style="font-size: 0.85rem; color: #94A3B8;">Enter OTP sent to <strong style="color: #22D3EE;">019-927-2635</strong></p>
+        </div>
+        <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 1.5rem;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem;">
+          <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem;">
+        </div>
+        <button type="button" class="btn btn-primary btn-full verify-otp-btn">Verify &amp; Go to Console</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       FOOTER
+       ====================================================================== -->
+  <footer class="footer">
+    <div class="container footer-content" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <img src="assets/images/branding/logo_landscape_layout_transparent.png" alt="DanStudio Works" style="height: 45px; width: auto; display: block;">
+        <span style="color: #64748B; font-size: 0.85rem;">— Precision Digital Engineering</span>
+      </div>
+
+      <div class="footer-links" style="display: flex; gap: 1.5rem; font-size: 0.9rem;">
+        <a href="index.html" style="color: #94A3B8;">Home</a>
+        <a href="projects.html" style="color: #94A3B8;">Projects</a>
+        <a href="packages.html" style="color: #94A3B8;">Packages</a>
+        <a href="contact.html" style="color: #94A3B8;">Contact</a>
+      </div>
+    </div>
+    <div class="container" style="text-align: center; color: #64748B; font-size: 0.8rem; margin-top: 2rem;">
+      © 2024 DanStudio Works. Precision-crafted in Malaysia 🇲🇾.
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
 </body>
 </html>
