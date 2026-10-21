@@ -318,7 +318,7 @@
         }
 
         setTimeout(() => {
-          window.location.href = `${targetUrl}?package=${selectedTier}`;
+          window.location.href = 'apply.html?package=' + selectedTier;
         }, 600);
       });
     });
