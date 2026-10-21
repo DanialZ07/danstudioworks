@@ -635,21 +635,11 @@
     const modal = document.getElementById('dev-login-modal');
     if (!modal) return;
 
-    /* Easter Egg: Track 5 rapid clicks on copyright within 3 seconds */
-    const triggers = document.querySelectorAll('.footer-copyright, .copyright');
-    let clickTimestamps = [];
-
-    triggers.forEach(trigger => {
-      trigger.addEventListener('click', (e) => {
-        const now = Date.now();
-        clickTimestamps.push(now);
-        clickTimestamps = clickTimestamps.filter(t => now - t <= 3000);
-
-        if (clickTimestamps.length >= 5) {
-          e.preventDefault();
-          clickTimestamps = [];
-          openModal();
-        }
+    const adminBtns = document.querySelectorAll('#admin-login-btn');
+    adminBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
       });
     });
 
