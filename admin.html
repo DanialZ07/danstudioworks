@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ======================================================================
+       METADATA & SEO SPECIFICATIONS
+       ====================================================================== -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Developer Mode &amp; Master Queue Administration — DanStudio Works.">
+  <meta name="keywords" content="admin, developer console, queue management, DanStudio Works">
+  <meta name="author" content="DanStudio Works">
+
+  <!-- Open Graph Protocol -->
+  <meta property="og:title" content="Developer Mode — DanStudio Works">
+  <meta property="og:description" content="Developer Mode &amp; Master Queue Administration.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://danstudioworks.com/admin.html">
+  <meta property="og:image" content="assets/images/branding/logo_landscape_layout_transparent.png">
+
+  <!-- Brand Favicon -->
+  <link rel="icon" type="image/png" href="assets/images/branding/logo.png">
+  <link rel="shortcut icon" type="image/png" href="assets/images/branding/logo.png">
+
+  <!-- Typography: Google Fonts (Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Global Production Stylesheet (Strictly Unaltered) -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <title>Developer Mode — DanStudio Works</title>
+</head>
+<body data-page="admin">
+
+  <!-- ======================================================================
+       NAVIGATION: Floating Desktop Glass Pill
+       ====================================================================== -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="logo" title="DanStudio Works">
+      <img src="assets/images/branding/logo_landscape_layout_transparent.png" alt="DanStudio Works" style="height: 45px; width: auto; display: block;">
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="projects.html" class="nav-link">Projects</a>
+      <a href="packages.html" class="nav-link">Packages</a>
+      <a href="admin.html" class="nav-link active">Admin</a>
+    </div>
+
+    <a href="contact.html" class="btn btn-primary nav-cta">Start Project</a>
+  </nav>
+
+  <!-- ======================================================================
+       NAVIGATION: Mobile Bottom Thumb-Dock
+       ====================================================================== -->
+  <nav class="mobile-dock" aria-label="Mobile Navigation">
+    <div class="dock-items">
+      <a href="index.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Home</span>
+      </a>
+      <a href="projects.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+        <span>Projects</span>
+      </a>
+      <a href="packages.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
+          <path d="M12 18V6"/>
+        </svg>
+        <span>Pricing</span>
+      </a>
+      <a href="admin.html" class="dock-item active">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        <span>Admin</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ======================================================================
+       HEADER: Developer Mode Title
+       ====================================================================== -->
+  <header class="section container" style="padding-top: 8rem; padding-bottom: 2rem;">
+    <div class="text-center reveal">
+      <span class="card-tag" style="display: inline-flex; align-items: center; gap: 8px;">
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: #22D3EE; box-shadow: 0 0 8px #22D3EE;"></span>
+        Developer Mode
+      </span>
+      <h1 style="font-size: 3rem; font-weight: 900; margin-top: 0.5rem;">Queue Control Console</h1>
+      <p style="color: #94A3B8; max-width: 620px; margin: 0.75rem auto 0; font-size: 1.05rem;">
+        Master key authentication and direct evaluation of pending client applications.
+      </p>
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       MAIN CONTENT: Master Key Login Screen & Admin Dashboard Grid
+       ====================================================================== -->
+  <main class="container" style="padding-bottom: 6rem;">
+
+    <!-- ====================================================================
+         1. MASTER KEY LOGIN SCREEN
+         ==================================================================== -->
+    <section id="master-login-section" class="reveal" style="margin-bottom: 4rem;">
+      <div class="glass-card" style="max-width: 480px; margin: 0 auto; padding: 2.5rem 2rem; border: 1px solid rgba(34, 211, 238, 0.25); text-align: center;">
+        
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(34, 211, 238, 0.12); border: 2px solid #22D3EE; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.25rem;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+
+        <h2 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem;">Master Key Login</h2>
+        <p style="font-size: 0.85rem; color: #94A3B8; margin-bottom: 1.5rem;">
+          Enter master security credentials to verify developer administrative authority.
+        </p>
+
+        <!-- Status message / banner -->
+        <div id="auth-status-banner" style="display: none; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.25rem;"></div>
+
+        <form id="master-key-form">
+          <div class="form-group">
+            <label class="form-label" for="master-email">Developer Email</label>
+            <input type="email" id="master-email" class="form-input" value="danstudioworks@gmail.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="master-key">Master Security Key</label>
+            <input type="password" id="master-key" class="form-input" placeholder="Enter master key (040802)" required>
+          </div>
+
+          <button type="submit" id="master-auth-btn" class="btn btn-primary btn-full" style="margin-top: 0.5rem;">
+            Authenticate Master Key
+          </button>
+        </form>
+
+        <div style="font-size: 0.75rem; color: #64748B; margin-top: 1.25rem;">
+          Default Developer Master Key: <code style="color: #22D3EE; background: rgba(34,211,238,0.1); padding: 2px 6px; border-radius: 4px;">040802</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         2. MOCK ADMIN DASHBOARD GRID (Pending Applications with Accept / Reject)
+         ==================================================================== -->
+    <section id="admin-dashboard-section" class="reveal">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 1.25rem;">
+        <div>
+          <span class="card-tag">Dashboard Console</span>
+          <h2 style="font-size: 2rem; font-weight: 800; margin-top: 0.25rem;">Pending Applications Queue</h2>
+          <p style="color: #94A3B8; font-size: 0.95rem;">Review, accept, or reject candidate submissions.</p>
+        </div>
+
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <span id="pending-count-badge" class="card-tag" style="background: rgba(34, 211, 238, 0.12); color: #22D3EE; font-weight: 700; margin-bottom: 0;">
+            3 Applications Pending
+          </span>
+          <button id="reset-mock-btn" class="btn btn-ghost btn-sm" title="Restore default pending applications">Reset Mock Data</button>
+        </div>
+      </div>
+
+      <!-- Pending Applications Grid -->
+      <div id="applications-grid" class="grid-2">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================================
+       FOOTER
+       ====================================================================== -->
+  <footer class="footer">
+    <div class="container footer-content" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <img src="assets/images/branding/logo_landscape_layout_transparent.png" alt="DanStudio Works" style="height: 45px; width: auto; display: block;">
+        <span style="color: #64748B; font-size: 0.85rem;">— Precision Digital Engineering</span>
+      </div>
+
+      <div class="footer-links" style="display: flex; gap: 1.5rem; font-size: 0.9rem;">
+        <a href="index.html" style="color: #94A3B8;">Home</a>
+        <a href="projects.html" style="color: #94A3B8;">Projects</a>
+        <a href="packages.html" style="color: #94A3B8;">Packages</a>
+        <a href="status.html" style="color: #94A3B8;">Live Status</a>
+      </div>
+    </div>
+    <div class="container" style="text-align: center; color: #64748B; font-size: 0.8rem; margin-top: 2rem;">
+      © 2024 DanStudio Works. Developer Mode Administration Console.
+    </div>
+  </footer>
+
+  <!-- ======================================================================
+       JAVASCRIPT: MASTER KEY AUTH & DASHBOARD LOGIC
+       ====================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* --- Initial Mock Applications Seed Data --- */
+      const DEFAULT_PENDING_APPLICATIONS = [
+        {
+          id: 'DS-1082',
+          ticket: 'DS-1082',
+          name: 'Ustaz Haziq Al-Fatah',
+          email: 'haziq@sraiqhalif.edu.my',
+          phone: '0199272635',
+          company: 'SRAI Qhalif Academy',
+          package: 'Catalog / Booking System (RM 3,000 - 4,500)',
+          budget: 4200,
+          description: 'Require automated yuran school fee collection system with instant digital WhatsApp receipts and class attendance logging.',
+          source: 'Client Referral',
+          addons: ['Domain Setup', 'Priority Delivery'],
+          date: new Date(Date.now() - 3600000 * 3).toISOString(),
+          status: 'pending'
+        },
+        {
+          id: 'DS-2045',
+          ticket: 'DS-2045',
+          name: 'Sarah Tan',
+          email: 'sarah.tan@artisanroasters.my',
+          phone: '0123884920',
+          company: 'Artisan Coffee Roasters',
+          package: 'SME Corporate (RM 1,800 - 2,500)',
+          budget: 2500,
+          description: 'Overhaul corporate site with dark silk & aurora theme, interactive product showcase, and wholesale booking inquiry system.',
+          source: 'Twitter / X',
+          addons: ['Logo Design', 'Social Media Kit'],
+          date: new Date(Date.now() - 3600000 * 18).toISOString(),
+          status: 'pending'
+        },
+        {
+          id: 'DS-3319',
+          ticket: 'DS-3319',
+          name: 'Azlan Shah',
+          email: 'azlan@nexuslogistics.my',
+          phone: '0175548911',
+          company: 'Nexus Freight & Logistics',
+          package: 'Tier 4: Enterprise Custom',
+          budget: 3800,
+          description: 'Client self-service consignment tracking portal with automated status updates, booking notifications, and driver coordination dashboard.',
+          source: 'LinkedIn',
+          addons: ['Domain Setup', 'Copywriting'],
+          date: new Date(Date.now() - 3600000 * 28).toISOString(),
+          status: 'pending'
+        }
+      ];
+
+      /* --- Master Key Authentication Handling --- */
+      const masterForm = document.getElementById('master-key-form');
+      const masterKeyInput = document.getElementById('master-key');
+      const masterEmailInput = document.getElementById('master-email');
+      const authBanner = document.getElementById('auth-status-banner');
+      const authBtn = document.getElementById('master-auth-btn');
+
+      // Check if already authenticated in this session
+      const isAuthenticated = sessionStorage.getItem('dsw_master_auth') === 'true';
+
+      function showAuthSuccess() {
+        authBanner.style.display = 'block';
+        authBanner.style.background = 'rgba(16, 185, 129, 0.12)';
+        authBanner.style.border = '1px solid rgba(16, 185, 129, 0.4)';
+        authBanner.style.color = '#10B981';
+        authBanner.innerHTML = '✓ Master Key Verified — Lead Developer Session Active';
+        authBtn.textContent = 'Authenticated (Session Active)';
+        authBtn.style.background = '#10B981';
+        authBtn.style.borderColor = '#10B981';
+      }
+
+      function showAuthError(msg) {
+        authBanner.style.display = 'block';
+        authBanner.style.background = 'rgba(239, 68, 68, 0.12)';
+        authBanner.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+        authBanner.style.color = '#EF4444';
+        authBanner.textContent = msg || 'Invalid Master Key. Access restricted.';
+      }
+
+      if (isAuthenticated) {
+        showAuthSuccess();
+      }
+
+      if (masterForm) {
+        masterForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const emailVal = masterEmailInput.value.trim().toLowerCase();
+          const keyVal = masterKeyInput.value.trim();
+
+          if (emailVal === 'danstudioworks@gmail.com' && keyVal === '040802') {
+            sessionStorage.setItem('dsw_master_auth', 'true');
+            sessionStorage.setItem('dsw_auth', 'true');
+            showAuthSuccess();
+            renderApplicationsGrid();
+          } else {
+            showAuthError('Invalid Master Key. Please enter "040802".');
+          }
+        });
+      }
+
+      /* --- Data Store Synchronization --- */
+      function getApplications() {
+        let stored = [];
+        try {
+          stored = JSON.parse(localStorage.getItem('dsw_requests')) || [];
+        } catch (_) {}
+
+        if (!stored.length) {
+          localStorage.setItem('dsw_requests', JSON.stringify(DEFAULT_PENDING_APPLICATIONS));
+          return DEFAULT_PENDING_APPLICATIONS;
+        }
+
+        // Merge default mock records if user cleared them
+        const hasDefaults = stored.some(r => r.id === 'DS-1082');
+        if (!hasDefaults) {
+          stored = [...stored, ...DEFAULT_PENDING_APPLICATIONS];
+          localStorage.setItem('dsw_requests', JSON.stringify(stored));
+        }
+
+        return stored;
+      }
+
+      function saveApplications(apps) {
+        localStorage.setItem('dsw_requests', JSON.stringify(apps));
+      }
+
+      /* --- Format Helpers --- */
+      function formatMYR(amount) {
+        const num = parseFloat(amount) || 0;
+        return 'RM ' + num.toLocaleString('en-MY', { minimumFractionDigits: 0 });
+      }
+
+      function escapeHTML(str) {
+        const div = document.createElement('div');
+        div.textContent = str || '';
+        return div.innerHTML;
+      }
+
+      function formatTime(dateStr) {
+        if (!dateStr) return 'Recently';
+        const diff = Date.now() - new Date(dateStr).getTime();
+        const mins = Math.floor(diff / 60000);
+        if (mins < 60) return `${mins}m ago`;
+        const hours = Math.floor(mins / 60);
+        if (hours < 24) return `${hours}h ago`;
+        return `${Math.floor(hours / 24)}d ago`;
+      }
+
+      /* --- Render Mock Admin Dashboard Grid --- */
+      const gridContainer = document.getElementById('applications-grid');
+      const pendingCountBadge = document.getElementById('pending-count-badge');
+
+      function renderApplicationsGrid() {
+        if (!gridContainer) return;
+
+        const applications = getApplications();
+        const pendingApps = applications.filter(a => a.status === 'pending' || a.status === 'new');
+
+        if (pendingCountBadge) {
+          pendingCountBadge.textContent = `${pendingApps.length} Application${pendingApps.length === 1 ? '' : 's'} Pending`;
+        }
+
+        if (!pendingApps.length) {
+          gridContainer.innerHTML = `
+            <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem 1.5rem;">
+              <p style="font-size: 1.15rem; color: #94A3B8; font-weight: 600; margin-bottom: 1rem;">
+                All pending applications have been processed.
+              </p>
+              <button id="reload-mock-cta" class="btn btn-primary btn-sm">Reload Demo Applications</button>
+            </div>
+          `;
+          const reloadCTA = document.getElementById('reload-mock-cta');
+          if (reloadCTA) reloadCTA.addEventListener('click', resetData);
+          return;
+        }
+
+        gridContainer.innerHTML = pendingApps.map(app => {
+          const addonsHTML = (app.addons && app.addons.length)
+            ? `<div style="font-size: 0.8rem; color: #94A3B8; margin-top: 6px;"><strong style="color: #F1F5F9;">Add-Ons:</strong> ${escapeHTML(app.addons.join(', '))}</div>`
+            : '';
+
+          return `
+            <div class="request-card" id="card-${escapeHTML(app.id)}">
+              <div class="request-header">
+                <div>
+                  <span class="request-ref" style="font-size: 1.1rem; color: #22D3EE; font-family: monospace;">${escapeHTML(app.id || app.ticket)}</span>
+                  <span style="font-size: 0.75rem; color: #64748B; margin-left: 8px;">${formatTime(app.date)}</span>
+                </div>
+                <span class="card-tag" style="background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.25); color: #22D3EE; font-size: 0.75rem; margin-bottom: 0;">
+                  Pending Review
+                </span>
+              </div>
+
+              <div class="request-body" style="margin-top: 1rem;">
+                <div><strong style="color: #F1F5F9;">Client:</strong> ${escapeHTML(app.name)} <span style="color: #64748B;">(${escapeHTML(app.company || 'Direct Inquiry')})</span></div>
+                <div><strong style="color: #F1F5F9;">Contact:</strong> <span style="color: #94A3B8;">${escapeHTML(app.email)} &bull; ${escapeHTML(app.phone)}</span></div>
+                <div><strong style="color: #F1F5F9;">Target Package:</strong> ${escapeHTML(app.package || 'Starter')}</div>
+                <div><strong style="color: #F1F5F9;">Budget:</strong> <span style="color: #22D3EE; font-weight: 800; font-size: 1.05rem;">${formatMYR(app.budget)}</span></div>
+                <div style="margin-top: 6px; padding: 0.75rem; background: rgba(0,0,0,0.25); border-radius: 8px; border-left: 2px solid #22D3EE; font-size: 0.85rem; color: #CBD5E1;">
+                  "${escapeHTML(app.description)}"
+                </div>
+                ${addonsHTML}
+              </div>
+
+              <div class="request-actions" style="margin-top: 1.25rem; display: flex; gap: 0.75rem;">
+                <button class="btn btn-primary accept-btn" data-id="${escapeHTML(app.id)}" style="flex: 1;">
+                  ✓ Accept Application
+                </button>
+                <button class="btn btn-ghost reject-btn" data-id="${escapeHTML(app.id)}" style="flex: 1;">
+                  ✕ Reject
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      /* --- Event Delegation: Accept and Reject Actions --- */
+      if (gridContainer) {
+        gridContainer.addEventListener('click', function (e) {
+          const acceptBtn = e.target.closest('.accept-btn');
+          const rejectBtn = e.target.closest('.reject-btn');
+
+          if (!acceptBtn && !rejectBtn) return;
+
+          const appId = (acceptBtn || rejectBtn).getAttribute('data-id');
+          const isAccept = Boolean(acceptBtn);
+
+          const applications = getApplications();
+          const target = applications.find(a => a.id === appId || a.ticket === appId);
+
+          if (target) {
+            target.status = isAccept ? 'accepted' : 'rejected';
+            saveApplications(applications);
+
+            // Animate card transition
+            const cardEl = document.getElementById(`card-${appId}`);
+            if (cardEl) {
+              cardEl.style.transition = 'all 0.3s ease';
+              cardEl.style.transform = 'scale(0.98)';
+              cardEl.style.opacity = '0.5';
+
+              setTimeout(function () {
+                renderApplicationsGrid();
+              }, 300);
+            } else {
+              renderApplicationsGrid();
+            }
+          }
+        });
+      }
+
+      /* --- Reset Mock Data Button --- */
+      function resetData() {
+        localStorage.setItem('dsw_requests', JSON.stringify(DEFAULT_PENDING_APPLICATIONS));
+        renderApplicationsGrid();
+      }
+
+      const resetBtn = document.getElementById('reset-mock-btn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', resetData);
+      }
+
+      // Initial Render
+      renderApplicationsGrid();
+
+    })();
+  </script>
+</body>
+</html>

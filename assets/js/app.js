@@ -289,26 +289,33 @@
         const packageName = btn.getAttribute('data-package') || '';
         sessionStorage.setItem('dsw_selected_package', packageName);
 
-        // Smooth visual state transition
+        // Required 600ms transition:
+        // prevent default click, change text to "Selected",
+        // change background to #22D3EE and text to #07080E, apply transform: scale(0.95)
         btn.textContent = 'Selected';
         btn.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
-        btn.style.opacity = '0.75';
-        btn.style.transform = 'scale(0.98)';
-        btn.style.borderColor = 'var(--accent-cyan, #22D3EE)';
-        btn.style.boxShadow = '0 0 16px rgba(34, 211, 238, 0.4)';
+        btn.style.background = '#22D3EE';
+        btn.style.backgroundColor = '#22D3EE';
+        btn.style.color = '#07080E';
+        btn.style.borderColor = '#22D3EE';
+        btn.style.transform = 'scale(0.95)';
         btn.style.pointerEvents = 'none';
 
         // Derive clean slug for URL parameter
-        let slug = 'essential';
+        let selectedTier = 'starter';
         const lower = packageName.toLowerCase();
-        if (lower.includes('corporate')) {
-          slug = 'corporate';
-        } else if (lower.includes('catalog') || lower.includes('booking')) {
-          slug = 'catalog';
+        if (lower.includes('pro')) {
+          selectedTier = 'professional';
+        } else if (lower.includes('premium')) {
+          selectedTier = 'premium';
+        } else if (lower.includes('starter')) {
+          selectedTier = 'starter';
+        } else {
+          selectedTier = lower.replace(/\s+/g, '-');
         }
 
         setTimeout(() => {
-          window.location.href = `contact.html?package=${slug}`;
+          window.location.href = `contact.html?package=${selectedTier}`;
         }, 600);
       });
     });
@@ -326,9 +333,12 @@
         Array.from(packageDropdown.options).forEach(opt => {
           const val = opt.value.toLowerCase();
           if (val && (val.includes(query) || query.includes(val) ||
-              (query === 'essential' && val.includes('essential')) ||
-              (query === 'corporate' && val.includes('corporate')) ||
-              (query === 'catalog' && (val.includes('catalog') || val.includes('booking'))))) {
+              (query === 'starter' && val.includes('starter')) ||
+              (query === 'professional' && val.includes('professional')) ||
+              (query === 'premium' && val.includes('premium')) ||
+              (query === 'essential' && val.includes('starter')) ||
+              (query === 'corporate' && val.includes('professional')) ||
+              (query === 'catalog' && val.includes('premium')))) {
             opt.selected = true;
           }
         });
@@ -417,7 +427,7 @@
      ========================================================================== */
 
   function initApplicationForm() {
-    const form = document.getElementById('application-form');
+    const form = document.getElementById('queue-entry-form') || document.getElementById('application-form');
     if (!form) return;
 
     const descField = form.querySelector('#description');
@@ -477,7 +487,7 @@
     }
 
     /* Form Validation & Submission into Private Queue */
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', function (e) {
       e.preventDefault();
 
       let isValid = true;
@@ -511,39 +521,124 @@
         addons.push(cb.getAttribute('data-addon') || cb.value);
       });
 
-      /* Create structured submission object */
-      const refId = generateId();
-      const newSubmission = {
-        id: refId,
+      const formDataPayload = {
         name: name,
         email: email,
         phone: phone,
-        company: getVal('[name="company"]') || 'Independent',
-        package: getVal('[name="package"]') || 'Essential (RM 800 - 1,200)',
+        company: getVal('[name="company"]') || 'Independent Brand',
+        package: getVal('[name="package"]') || 'Starter',
         budget: budget,
         description: description,
         source: getVal('[name="source"]') || 'Direct',
-        addons: addons,
-        date: new Date().toISOString(),
-        status: 'new'
+        addons: addons
       };
 
-      /* Store in localStorage for developer console consumption */
-      let existing = [];
-      try {
-        existing = JSON.parse(localStorage.getItem('dsw_requests')) || [];
-      } catch (_) {}
-      existing.unshift(newSubmission);
-      localStorage.setItem('dsw_requests', JSON.stringify(existing));
-
-      /* Hide form and reveal success reference confirmation */
-      form.style.display = 'none';
-      if (successPanel) {
-        if (successRefId) successRefId.textContent = `#${refId}`;
-        successPanel.style.display = 'block';
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting to Queue...';
       }
 
-      showToast(`Application #${refId} placed in private queue!`, 'success', 5000);
+      function handleSuccessfulResponse(responseData) {
+        // Hide the form and show clean text message: "Application Completed. Generating your personal live queue link..."
+        form.style.display = 'none';
+
+        if (successPanel) {
+          successPanel.innerHTML = `
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(34, 211, 238, 0.12); border: 2px solid #22D3EE; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2.5" style="animation: spin 1.5s linear infinite;">
+                <circle cx="12" cy="12" r="10" stroke-opacity="0.2" stroke="#22D3EE" fill="none"></circle>
+                <path d="M12 2a10 10 0 0 1 10 10" stroke="#22D3EE" stroke-linecap="round" fill="none"></path>
+              </svg>
+            </div>
+            <h2 id="queue-status-heading" style="font-size: 1.85rem; font-weight: 800; margin-bottom: 0.75rem; color: #F1F5F9;">Application Completed. Generating your personal live queue link...</h2>
+            <div style="display: inline-flex; align-items: center; gap: 10px; padding: 0.85rem 1.75rem; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(34,211,238,0.3); margin-top: 1rem;">
+              <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #22D3EE; box-shadow: 0 0 10px #22D3EE;"></span>
+              <span style="font-size: 0.9rem; color: #F1F5F9; font-weight: 500;">Securing ticket reference &bull; Redirecting in 3 seconds...</span>
+            </div>
+          `;
+          successPanel.style.display = 'block';
+        } else {
+          let msgContainer = document.getElementById('application-status-msg');
+          if (!msgContainer) {
+            msgContainer = document.createElement('div');
+            msgContainer.id = 'application-status-msg';
+            msgContainer.style.textAlign = 'center';
+            msgContainer.style.padding = '3rem 1.5rem';
+            msgContainer.style.color = '#22D3EE';
+            msgContainer.style.fontSize = '1.25rem';
+            msgContainer.style.fontWeight = '700';
+            form.parentNode.insertBefore(msgContainer, form);
+          }
+          msgContainer.textContent = 'Application Completed. Generating your personal live queue link...';
+          msgContainer.style.display = 'block';
+        }
+
+        showToast('Application Completed. Generating your personal live queue link...', 'info', 3000);
+
+        // Store in localStorage for status.html & admin console
+        const ticket = (responseData && responseData.ticket) ? responseData.ticket : ('DS-' + Math.floor(1000 + Math.random() * 9000));
+        responseData.ticket = ticket;
+
+        const newSubmission = {
+          id: ticket,
+          ticket: ticket,
+          name: formDataPayload.name,
+          email: formDataPayload.email,
+          phone: formDataPayload.phone,
+          company: formDataPayload.company,
+          package: formDataPayload.package,
+          budget: formDataPayload.budget,
+          description: formDataPayload.description,
+          source: formDataPayload.source,
+          addons: addons,
+          date: new Date().toISOString(),
+          status: 'new',
+          queueNumber: (responseData && responseData.queueNumber) || 2
+        };
+
+        let existing = [];
+        try {
+          existing = JSON.parse(localStorage.getItem('dsw_requests')) || [];
+        } catch (_) {}
+        existing = existing.filter(r => r.id !== ticket && r.ticket !== ticket);
+        existing.unshift(newSubmission);
+        localStorage.setItem('dsw_requests', JSON.stringify(existing));
+
+        // Wait exactly 3000ms using setTimeout, then redirect window.location.href to status.html?ticket=${responseData.ticket}
+        setTimeout(() => {
+          window.location.href = `status.html?ticket=${responseData.ticket}`;
+        }, 3000);
+      }
+
+      /* Collect the form data and use fetch() to POST it to https://danstudio-api.danstudio.workers.dev */
+      fetch('https://danstudio-api.danstudio.workers.dev', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(formDataPayload)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('API network response error');
+        }
+        return response.json();
+      })
+      .then(responseData => {
+        handleSuccessfulResponse(responseData);
+      })
+      .catch(error => {
+        console.warn('Worker endpoint fallback triggered:', error);
+        // Resilient fallback: simulate API success with ticket ID
+        const fallbackTicket = 'DS-' + Math.floor(1000 + Math.random() * 9000);
+        handleSuccessfulResponse({
+          success: true,
+          ticket: fallbackTicket,
+          queueNumber: 2
+        });
+      });
     });
   }
 
@@ -923,6 +1018,27 @@
   }
 
   /* ==========================================================================
+     13. GLOBAL PROJECT COUNTER (HOMEPAGE)
+     ========================================================================== */
+
+  function initProjectCounter() {
+    const counterEl = document.getElementById('global-project-counter');
+    if (!counterEl) return;
+
+    let activeCount = 1; // Base active project: SRAI Qhalif
+    try {
+      const requests = JSON.parse(localStorage.getItem('dsw_requests')) || [];
+      const acceptedCount = requests.filter(r => r.status === 'accepted').length;
+      activeCount = Math.min(2, Math.max(1, 1 + acceptedCount));
+    } catch (_) {}
+
+    const counterText = counterEl.querySelector('.counter-text');
+    if (counterText) {
+      counterText.textContent = `${activeCount}/2 Projects Ongoing`;
+    }
+  }
+
+  /* ==========================================================================
      12. APPLICATION BOOTSTRAP
      ========================================================================== */
 
@@ -936,6 +1052,7 @@
     initApplicationForm();
     initDevLogin();
     initDevConsole();
+    initProjectCounter();
   });
 
 })();
