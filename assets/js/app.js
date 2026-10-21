@@ -17,7 +17,8 @@
  *  11. Developer 2FA Authentication (5-Click Easter Egg)
  *  12. Developer Queue Console Dashboard (State, Filter, Outreach)
  *  13. Global Project Counter (Homepage)
- *  14. Application Bootstrap
+ *  14. Live Queue Status Tracker (status.html)
+ *  15. Application Bootstrap
  * ============================================================================
  */
 
@@ -1023,7 +1024,203 @@
   }
 
   /* ==========================================================================
-     14. APPLICATION BOOTSTRAP
+     14. LIVE QUEUE STATUS TRACKER (status.html)
+     ========================================================================== */
+
+  function initStatusPage() {
+    // Check if the current page is status.html. If not, return early.
+    const isStatusPage = document.querySelector('main[data-page="status"]') !== null ||
+                         document.body.getAttribute('data-page') === 'status' ||
+                         window.location.pathname.split('/').pop().split('?')[0].split('#')[0] === 'status.html' ||
+                         window.location.pathname.endsWith('status.html');
+
+    if (!isStatusPage) return;
+
+    // Extract the ?ticket= parameter from the URL. If missing, redirect to index.html.
+    const urlParams = new URLSearchParams(window.location.search);
+    const ticketParam = urlParams.get('ticket');
+
+    if (!ticketParam || ticketParam.trim() === '') {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    const ticketId = ticketParam.trim();
+
+    function renderStatus() {
+      // Read dsw_requests from localStorage to find the matching ticket data
+      let requests = [];
+      try {
+        requests = JSON.parse(localStorage.getItem('dsw_requests')) || [];
+      } catch (_) {
+        requests = [];
+      }
+
+      // Fallback to getRequests() if localStorage is empty
+      if (!requests.length && typeof getRequests === 'function') {
+        requests = getRequests();
+      }
+
+      const ticketData = requests.find(r =>
+        (r.ticket && String(r.ticket).trim().toLowerCase() === ticketId.toLowerCase()) ||
+        (r.id && String(r.id).trim().toLowerCase() === ticketId.toLowerCase())
+      );
+
+      // Determine ID, Package, Status
+      const displayId = (ticketData && (ticketData.ticket || ticketData.id)) ? (ticketData.ticket || ticketData.id) : ticketId;
+      const displayPackage = (ticketData && ticketData.package) ? ticketData.package : 'Starter';
+
+      // Map status to "In Review", "Waiting", or "Accepted"
+      let displayStatus = 'In Review';
+      if (ticketData && ticketData.status) {
+        const s = String(ticketData.status).toLowerCase();
+        if (s === 'accepted' || s === 'approved') {
+          displayStatus = 'Accepted';
+        } else if (s === 'waiting' || s === 'hold') {
+          displayStatus = 'Waiting';
+        } else if (s === 'rejected' || s === 'archived') {
+          displayStatus = 'Archived';
+        } else {
+          displayStatus = 'In Review';
+        }
+      }
+
+      // Inject the ticket data (ID, Package, Status) into the HTML elements created in Step 1
+      const ticketIdEl = document.getElementById('status-ticket-id');
+      if (ticketIdEl) {
+        ticketIdEl.textContent = displayId;
+      }
+
+      const tierEl = document.getElementById('status-tier');
+      if (tierEl) {
+        tierEl.textContent = displayPackage;
+      }
+
+      const stateEl = document.getElementById('status-state');
+      if (stateEl) {
+        stateEl.textContent = displayStatus;
+      }
+
+      // Visual theme sync for dark/glassmorphism design system
+      const statusBadge = document.getElementById('status-badge');
+      const pulseDot = document.getElementById('status-pulse-dot');
+      const stepOutreach = document.getElementById('step-outreach');
+      const stepKickoff = document.getElementById('step-kickoff');
+      const queueNumberEl = document.getElementById('queue-number-display');
+      const subtextEl = document.getElementById('status-subtext');
+
+      if (displayStatus === 'Accepted') {
+        if (statusBadge) {
+          statusBadge.style.background = 'rgba(16, 185, 129, 0.12)';
+          statusBadge.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+          statusBadge.style.color = '#10B981';
+        }
+        if (pulseDot) {
+          pulseDot.style.background = '#10B981';
+          pulseDot.style.boxShadow = '0 0 10px #10B981';
+        }
+        if (queueNumberEl) queueNumberEl.textContent = 'Slot Confirmed';
+        if (subtextEl) subtextEl.textContent = 'Production Slot Secured';
+        if (stepOutreach) stepOutreach.style.borderLeftColor = '#10B981';
+        if (stepKickoff) stepKickoff.style.borderLeftColor = '#10B981';
+      } else if (displayStatus === 'Waiting') {
+        if (statusBadge) {
+          statusBadge.style.background = 'rgba(245, 158, 11, 0.12)';
+          statusBadge.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+          statusBadge.style.color = '#F59E0B';
+        }
+        if (pulseDot) {
+          pulseDot.style.background = '#F59E0B';
+          pulseDot.style.boxShadow = '0 0 10px #F59E0B';
+        }
+        if (queueNumberEl) queueNumberEl.textContent = 'Queue Hold';
+        if (subtextEl) subtextEl.textContent = 'Awaiting Slot Availability';
+      } else if (displayStatus === 'Archived') {
+        if (statusBadge) {
+          statusBadge.style.background = 'rgba(239, 68, 68, 0.12)';
+          statusBadge.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+          statusBadge.style.color = '#EF4444';
+        }
+        if (pulseDot) {
+          pulseDot.style.background = '#EF4444';
+          pulseDot.style.boxShadow = '0 0 10px #EF4444';
+        }
+        if (queueNumberEl) queueNumberEl.textContent = 'Archived';
+        if (subtextEl) subtextEl.textContent = 'Application Closed';
+      } else {
+        // "In Review" default
+        if (statusBadge) {
+          statusBadge.style.background = 'rgba(34, 211, 238, 0.12)';
+          statusBadge.style.borderColor = 'rgba(34, 211, 238, 0.3)';
+          statusBadge.style.color = '#22D3EE';
+        }
+        if (pulseDot) {
+          pulseDot.style.background = '#22D3EE';
+          pulseDot.style.boxShadow = '0 0 10px #22D3EE';
+        }
+        if (queueNumberEl) {
+          queueNumberEl.textContent = (ticketData && ticketData.queueNumber) ? `#${ticketData.queueNumber} in Queue` : '#2 in Queue';
+        }
+        if (subtextEl) subtextEl.textContent = 'Evaluation in Progress';
+      }
+
+      // Inject extra ticket context if present
+      if (ticketData) {
+        const nameEl = document.getElementById('status-name');
+        if (nameEl && ticketData.name) nameEl.textContent = ticketData.name;
+
+        const companyEl = document.getElementById('status-company');
+        if (companyEl && ticketData.company) companyEl.textContent = ticketData.company;
+
+        const budgetEl = document.getElementById('status-budget');
+        if (budgetEl && ticketData.budget) {
+          budgetEl.textContent = formatCurrency(ticketData.budget);
+        }
+
+        const dateEl = document.getElementById('status-date');
+        if (dateEl && ticketData.date) {
+          dateEl.textContent = 'Submitted: ' + new Date(ticketData.date).toLocaleDateString('en-MY', {
+            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+          });
+        }
+      }
+    }
+
+    renderStatus();
+
+    // Live refresh button interaction
+    const refreshBtn = document.getElementById('refresh-status-btn');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', () => {
+        refreshBtn.style.opacity = '0.6';
+        refreshBtn.disabled = true;
+        refreshBtn.textContent = 'Checking Live Edge...';
+        setTimeout(() => {
+          renderStatus();
+          refreshBtn.style.opacity = '1';
+          refreshBtn.disabled = false;
+          refreshBtn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+              <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+            Live Status Synced
+          `;
+          showToast('Status refreshed from live queue.', 'info');
+          setTimeout(() => {
+            refreshBtn.innerHTML = `
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+              Refresh Live Status
+            `;
+          }, 2000);
+        }, 500);
+      });
+    }
+  }
+
+  /* ==========================================================================
+     15. APPLICATION BOOTSTRAP
      ========================================================================== */
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -1038,6 +1235,7 @@
     initDevLogin();
     initDevConsole();
     initProjectCounter();
+    initStatusPage();
   });
 
 })();
