@@ -25,6 +25,11 @@
 ;(function () {
   'use strict';
 
+  /* In-memory Developer Authentication Gate (No client-side sessionStorage bypass) */
+  let isDevAuthenticated = false;
+  let openModal = null;
+  let closeModal = null;
+
   /* ==========================================================================
      01. REDUCED MOTION & GENERAL UTILITIES
      ========================================================================== */
@@ -628,7 +633,7 @@
   }
 
   /* ==========================================================================
-     11. DEVELOPER 2FA AUTHENTICATION (5-Click Easter Egg)
+     11. DEVELOPER 2FA AUTHENTICATION & SECURE LOGIN MODAL
      ========================================================================== */
 
   function initDevLogin() {
@@ -655,11 +660,11 @@
             <form id="dev-auth-form">
               <div class="form-group">
                 <label class="form-label" for="dev-email">Developer Email</label>
-                <input type="email" id="dev-email" class="form-input dev-email" value="danstudioworks@gmail.com" required>
+                <input type="email" id="dev-email" class="form-input dev-email" value="danstudioworks@gmail.com" required autocomplete="username">
               </div>
               <div class="form-group">
                 <label class="form-label" for="dev-key">Master Security Key</label>
-                <input type="password" id="dev-key" class="form-input dev-key" placeholder="Enter master key" required>
+                <input type="password" id="dev-key" class="form-input dev-key" placeholder="Enter master key" required autocomplete="current-password">
               </div>
               <button type="submit" class="btn btn-primary btn-full" style="margin-top: 0.5rem;">Authenticate Master Key</button>
             </form>
@@ -677,12 +682,12 @@
             </div>
 
             <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 1.5rem;">
-              <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
-              <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
-              <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
-              <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
-              <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
-              <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;">
+              <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;" inputmode="numeric">
+              <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;" inputmode="numeric">
+              <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;" inputmode="numeric">
+              <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;" inputmode="numeric">
+              <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;" inputmode="numeric">
+              <input type="text" maxlength="1" class="form-input otp-digit" style="width: 44px; height: 52px; text-align: center; font-size: 1.25rem; font-weight: 700;" inputmode="numeric">
             </div>
 
             <button type="button" class="btn btn-primary btn-full verify-otp-btn">Verify &amp; Unlock Console</button>
@@ -693,43 +698,63 @@
       document.body.appendChild(modal);
     }
 
-    const adminBtns = document.querySelectorAll('#admin-login-btn');
-    adminBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        openModal();
-      });
-    });
-
     const closeBtn = modal.querySelector('.modal-close');
     const step1 = modal.querySelector('.login-step[data-step="1"]');
     const step2 = modal.querySelector('.login-step[data-step="2"]');
+    const emailField = modal.querySelector('#dev-email');
+    const keyField = modal.querySelector('#dev-key');
+    const otpInputs = modal.querySelectorAll('.otp-digit');
+    const verifyOtpBtn = modal.querySelector('.verify-otp-btn');
+    const devAuthForm = modal.querySelector('#dev-auth-form');
 
-    function openModal() {
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
+    let generatedOtp = '';
+
+    openModal = function () {
+      // Ensure modal exists in DOM
+      if (!modal) {
+        modal = document.getElementById('dev-login-modal');
+      }
+      if (!modal) return;
+
+      // Always reset to Step 1 upon opening
       if (step1) step1.style.display = 'block';
       if (step2) step2.style.display = 'none';
-    }
 
-    function closeModal() {
-      modal.classList.remove('active');
+      // Clear sensitive inputs
+      if (emailField) emailField.value = 'danstudioworks@gmail.com';
+      if (keyField) keyField.value = '';
+      otpInputs.forEach(i => { i.value = ''; });
+      generatedOtp = '';
+
+      modal.style.zIndex = '99999';
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      setTimeout(() => {
+        if (keyField) keyField.focus();
+      }, 50);
+    };
+
+    closeModal = function () {
+      if (modal) {
+        modal.classList.remove('active');
+      }
       document.body.style.overflow = '';
-    }
+    };
 
     if (closeBtn) closeBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => {
       if (e.target === modal) closeModal();
     });
 
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
     /* Step 1: Master Key Verification (danstudioworks@gmail.com / 040802) */
-    const devAuthForm = modal.querySelector('#dev-auth-form');
-    let generatedOtp = '';
-
     function handleMasterAuth() {
-      const emailField = modal.querySelector('#dev-email');
-      const keyField = modal.querySelector('#dev-key');
-
       const emailVal = emailField ? emailField.value.trim().toLowerCase() : '';
       const keyVal = keyField ? keyField.value.trim() : '';
 
@@ -742,10 +767,15 @@
         showToast(`[SIMULATED SMS to 0199272635] Verification Code: ${generatedOtp}`, 'info', 10000);
 
         // Auto-focus first digit field
-        const firstDigit = modal.querySelector('.otp-digit');
-        if (firstDigit) firstDigit.focus();
+        if (otpInputs.length > 0) {
+          setTimeout(() => otpInputs[0].focus(), 50);
+        }
       } else {
         showToast('Invalid credentials. Access restricted.', 'error');
+        if (keyField) {
+          keyField.value = '';
+          keyField.focus();
+        }
       }
     }
 
@@ -757,7 +787,6 @@
     }
 
     /* Step 2: 6-Digit OTP Verification */
-    const otpInputs = modal.querySelectorAll('.otp-digit');
     otpInputs.forEach((input, index) => {
       input.addEventListener('input', () => {
         if (input.value.length === 1 && index < otpInputs.length - 1) {
@@ -768,6 +797,9 @@
       input.addEventListener('keydown', (e) => {
         if (e.key === 'Backspace' && !input.value && index > 0) {
           otpInputs[index - 1].focus();
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (verifyOtpBtn) verifyOtpBtn.click();
         }
       });
 
@@ -777,16 +809,20 @@
         pasted.split('').forEach((char, i) => {
           if (otpInputs[i]) otpInputs[i].value = char;
         });
+        if (pasted.length >= otpInputs.length && verifyOtpBtn) {
+          verifyOtpBtn.focus();
+        }
       });
     });
 
-    const verifyOtpBtn = modal.querySelector('.verify-otp-btn');
     if (verifyOtpBtn) {
       verifyOtpBtn.addEventListener('click', () => {
         const enteredOtp = Array.from(otpInputs).map(i => i.value).join('');
 
         if (enteredOtp === generatedOtp && generatedOtp !== '') {
-          sessionStorage.setItem('dsw_auth', 'true');
+          // Strictly set in-memory authentication state (no bypass)
+          isDevAuthenticated = true;
+          sessionStorage.removeItem('dsw_auth');
           closeModal();
           showToast('Authentication verified. Welcome DanStudio Lead Engineer.', 'success');
           showDevConsole();
@@ -795,6 +831,24 @@
         }
       });
     }
+
+    /* Reliable trigger for all #admin-login-btn instances */
+    const adminBtns = document.querySelectorAll('#admin-login-btn');
+    adminBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+      });
+    });
+
+    /* Global event delegation on document to guarantee clicks work across any page state */
+    document.addEventListener('click', (e) => {
+      const adminBtn = e.target.closest('#admin-login-btn');
+      if (adminBtn) {
+        e.preventDefault();
+        openModal();
+      }
+    });
   }
 
   /* ==========================================================================
@@ -848,22 +902,104 @@
   let consoleSort = 'newest'; // 'newest' | 'budget'
   let consoleSearchQuery = '';
 
+  function ensureDevConsoleElement() {
+    let consoleEl = document.getElementById('dev-console');
+    if (consoleEl) return consoleEl;
+
+    consoleEl = document.createElement('div');
+    consoleEl.id = 'dev-console';
+    consoleEl.style.display = 'none';
+    consoleEl.innerHTML = `
+      <!-- Console Sticky Header -->
+      <div class="console-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <img src="assets/images/branding/logo.png" alt="DanStudio Logo Mark" style="height: 30px; width: auto; display: block;">
+          <span style="font-weight: 800; color: #F1F5F9; font-size: 1.1rem;">
+            DanStudio Works <span style="font-size: 0.75rem; color: #22D3EE; background: rgba(34,211,238,0.12); padding: 2px 8px; border-radius: 4px; margin-left: 6px;">DEV QUEUE</span>
+          </span>
+        </div>
+        <button class="btn btn-ghost btn-sm console-logout">Lock &amp; Exit</button>
+      </div>
+
+      <!-- Console Main Body -->
+      <div class="container" style="padding: 2.5rem 1.5rem;">
+        <!-- Real-Time Metrics -->
+        <div class="console-stats">
+          <div class="stat-card">
+            <div class="stat-value" data-stat="new">0</div>
+            <div class="stat-label">Pending Requests</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" data-stat="waiting">0</div>
+            <div class="stat-label">Waiting Queue</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" data-stat="accepted">0</div>
+            <div class="stat-label">Accepted Projects</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" data-stat="rejected">0</div>
+            <div class="stat-label">Archived / Rejected</div>
+          </div>
+        </div>
+
+        <!-- Controls: Real-Time Search & Sort Options -->
+        <div style="display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 1.5rem;">
+          <input type="text" class="form-input console-search-input" placeholder="Search by name, email, company, or DS-ID..." style="max-width: 360px;">
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <span style="font-size: 0.85rem; color: #94A3B8;">Sort:</span>
+            <button class="btn btn-sm btn-ghost active" data-sort="newest">Newest First</button>
+            <button class="btn btn-sm btn-ghost" data-sort="budget">Highest Profit (RM)</button>
+          </div>
+        </div>
+
+        <!-- Queue Status Tabs -->
+        <div class="console-tabs">
+          <button class="console-tab-btn active" data-tab="new">Requests</button>
+          <button class="console-tab-btn" data-tab="waiting">Waiting Queue</button>
+          <button class="console-tab-btn" data-tab="accepted">Accepted (Outreach)</button>
+          <button class="console-tab-btn" data-tab="rejected">Rejected</button>
+        </div>
+
+        <!-- Tab Content Cards Container -->
+        <div class="console-tab-content active" data-tab="new"></div>
+        <div class="console-tab-content" data-tab="waiting"></div>
+        <div class="console-tab-content" data-tab="accepted"></div>
+        <div class="console-tab-content" data-tab="rejected"></div>
+      </div>
+    `;
+    document.body.appendChild(consoleEl);
+    return consoleEl;
+  }
+
   function showDevConsole() {
-    const consoleEl = document.getElementById('dev-console');
-    if (!consoleEl) {
-      window.location.href = 'index.html#console';
+    // Strict authentication check: Must clear 2FA and OTP verification first
+    if (!isDevAuthenticated) {
+      hideDevConsole();
+      if (typeof openModal === 'function') {
+        openModal();
+      }
       return;
     }
-    consoleEl.style.display = 'block';
+
+    const consoleEl = document.getElementById('dev-console') || ensureDevConsoleElement();
+    if (consoleEl) {
+      consoleEl.style.display = 'block';
+    }
     window.location.hash = 'console';
     renderDevConsole();
   }
 
   function hideDevConsole() {
     const consoleEl = document.getElementById('dev-console');
-    if (consoleEl) consoleEl.style.display = 'none';
+    if (consoleEl) {
+      consoleEl.style.display = 'none';
+    }
+    isDevAuthenticated = false;
     sessionStorage.removeItem('dsw_auth');
-    history.replaceState(null, '', window.location.pathname);
+    if (window.location.hash === '#console') {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
   }
 
   function renderDevConsole() {
@@ -974,13 +1110,39 @@
   }
 
   function initDevConsole() {
-    const consoleEl = document.getElementById('dev-console');
+    const consoleEl = document.getElementById('dev-console') || ensureDevConsoleElement();
     if (!consoleEl) return;
 
-    /* Check session auth or URL hash */
-    if (sessionStorage.getItem('dsw_auth') === 'true' || window.location.hash === '#console') {
-      showDevConsole();
+    /* Secure Console Gate: Hide console by default if unauthenticated */
+    if (!isDevAuthenticated) {
+      consoleEl.style.display = 'none';
     }
+
+    /* Check URL hash (#console): Insecure bypass removed. Must clear 2FA and OTP first */
+    if (window.location.hash === '#console') {
+      if (!isDevAuthenticated) {
+        hideDevConsole();
+        if (typeof openModal === 'function') {
+          openModal();
+        }
+      } else {
+        showDevConsole();
+      }
+    }
+
+    /* Hash change event listener to protect client-side navigation */
+    window.addEventListener('hashchange', () => {
+      if (window.location.hash === '#console') {
+        if (!isDevAuthenticated) {
+          hideDevConsole();
+          if (typeof openModal === 'function') {
+            openModal();
+          }
+        } else {
+          showDevConsole();
+        }
+      }
+    });
 
     /* Logout / Lock Button */
     const logoutBtn = consoleEl.querySelector('.console-logout');

@@ -1031,3 +1031,13 @@ a {
   width: auto;
   display: block;
 }
+
+#admin-login-btn {
+  cursor: pointer;
+  transition: opacity var(--transition-fast), color var(--transition-fast);
+}
+
+#admin-login-btn:hover {
+  opacity: 0.9 !important;
+  color: var(--accent-cyan) !important;
+}
