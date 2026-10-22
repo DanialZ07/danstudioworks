@@ -122,6 +122,6 @@ Simply connect the repository to Cloudflare Pages — no build command is needed
 
 ## License
 
-**Private** — All rights reserved © 2024 DanStudio Works
+**Private** — All rights reserved © 2026 DanStudio Works
 
 This project and its source code are proprietary. Unauthorized copying, modification, distribution, or use of any part of this project is strictly prohibited without explicit written permission from DanStudio Works.

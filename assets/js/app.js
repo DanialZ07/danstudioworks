@@ -660,7 +660,7 @@
             <form id="dev-auth-form">
               <div class="form-group">
                 <label class="form-label" for="dev-email">Developer Email</label>
-                <input type="email" id="dev-email" class="form-input dev-email" value="danstudioworks@gmail.com" required autocomplete="username">
+                <input type="email" id="dev-email" class="form-input dev-email" placeholder="Enter Master Email" required autocomplete="username">
               </div>
               <div class="form-group">
                 <label class="form-label" for="dev-key">Master Security Key</label>
@@ -721,7 +721,7 @@
       if (step2) step2.style.display = 'none';
 
       // Clear sensitive inputs
-      if (emailField) emailField.value = 'danstudioworks@gmail.com';
+      if (emailField) emailField.value = '';
       if (keyField) keyField.value = '';
       otpInputs.forEach(i => { i.value = ''; });
       generatedOtp = '';
@@ -753,12 +753,12 @@
       }
     });
 
-    /* Step 1: Master Key Verification (danstudioworks@gmail.com / 040802) */
+    /* Step 1: Master Key Verification (danialaiman976@gmail.com / 040802) */
     function handleMasterAuth() {
       const emailVal = emailField ? emailField.value.trim().toLowerCase() : '';
       const keyVal = keyField ? keyField.value.trim() : '';
 
-      if (emailVal === 'danstudioworks@gmail.com' && keyVal === '040802') {
+      if (emailVal === 'danialaiman976@gmail.com' && keyVal === '040802') {
         if (step1) step1.style.display = 'none';
         if (step2) step2.style.display = 'block';
 
