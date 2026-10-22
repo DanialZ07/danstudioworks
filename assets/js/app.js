@@ -770,9 +770,9 @@
         const tokenP2 = '09vGWjI_uj1LQh2tOa6Y1qCNPVfyq8';
         const botToken = tokenP1 + tokenP2;
         const chatId = '641234550';
-        const text = encodeURIComponent(`🔒 DanStudio Lead Engineer Auth\nYour Verification Code is: ${generatedOtp}`);
+        const text = encodeURIComponent(`🔒 <b>DanStudio Auth</b>\nOTP: <code>${generatedOtp}</code>`);
 
-        fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}`)
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}&parse_mode=HTML`)
           .then(res => {
             if (res.ok) showToast('Verification code dispatched to your secure device.', 'info');
             else showToast('Failed to dispatch code.', 'error');
