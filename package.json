@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "dev": "npx serve .",
-    "build": "vite build",
+    "build": "node build.js",
     "lint": "echo 'Add linter configuration as needed'"
   },
   "keywords": [
