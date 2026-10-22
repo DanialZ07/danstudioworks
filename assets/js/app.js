@@ -762,9 +762,19 @@
         if (step1) step1.style.display = 'none';
         if (step2) step2.style.display = 'block';
 
-        // Generate 6-digit OTP code and simulate SMS toast to phone 0199272635
+        // Generate OTP and send via Telegram Bot API
         generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
-        showToast(`[SIMULATED SMS to 0199272635] Verification Code: ${generatedOtp}`, 'info', 10000);
+
+        const botToken = '8680884767:AAE99l3mv3HZNk_KcyZZ_s6FIiUDBygvi4M';
+        const chatId = '641234550';
+        const text = encodeURIComponent(`🔒 DanStudio Lead Engineer Auth\nYour Verification Code is: ${generatedOtp}`);
+
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}`)
+          .then(res => {
+            if (res.ok) showToast('Verification code dispatched to your secure device.', 'info');
+            else showToast('Failed to dispatch code.', 'error');
+          })
+          .catch(() => showToast('Network error dispatching code.', 'error'));
 
         // Auto-focus first digit field
         if (otpInputs.length > 0) {
