@@ -1704,3 +1704,39 @@ a {
     bottom: 5.5rem; /* Elevates pill safely above mobile bottom thumb-dock */
   }
 }
+
+/* ==========================================================================
+   23. NC CYBER-PULSE ANIMATION & ACTIVE ADMIN INDICATOR
+   ========================================================================== */
+@keyframes nc-cyber-pulse {
+  0% {
+    text-shadow: 0 0 4px #22D3EE;
+    opacity: 0.9;
+  }
+  50% {
+    text-shadow: 0 0 12px #22D3EE, 0 0 20px #22D3EE;
+    opacity: 1;
+  }
+  100% {
+    text-shadow: 0 0 4px #22D3EE;
+    opacity: 0.9;
+  }
+}
+
+.nc-active-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 800;
+  color: #22D3EE;
+  letter-spacing: 0.05em;
+  animation: nc-cyber-pulse 2s ease-in-out infinite;
+  transition: all 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nc-active-indicator {
+    animation: none;
+    text-shadow: 0 0 8px #22D3EE;
+  }
+}

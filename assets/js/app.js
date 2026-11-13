@@ -2433,50 +2433,15 @@
     const isMasterAuth = (localStorage.getItem('dsw_master_auth') === 'true');
     if (!isMasterAuth) return;
 
-    // 1. Transform existing "Admin" links in .navbar, .mobile-dock, footer to "NC"
-    const candidateLinks = document.querySelectorAll('.navbar a, .mobile-dock a, .footer a, a#admin-login-btn, a[href="admin.html"]');
-    candidateLinks.forEach(link => {
-      const text = (link.textContent || '').trim().toLowerCase();
-      if (text === 'admin' || link.id === 'admin-login-btn') {
-        link.textContent = 'NC';
-        link.href = 'admin.html';
-        link.style.color = '#22D3EE';
-        link.style.fontWeight = '800';
-        link.style.opacity = '1';
-        link.removeAttribute('id'); // Direct navigation instead of login modal
-      }
-    });
-
-    // Ensure desktop .navbar has an "NC" link if none exists
-    const navLinks = document.querySelector('.navbar .nav-links');
-    if (navLinks && !navLinks.querySelector('.nc-nav-badge')) {
-      const ncLink = document.createElement('a');
-      ncLink.href = 'admin.html';
-      ncLink.className = 'nav-link nc-nav-badge';
-      ncLink.textContent = 'NC';
-      ncLink.style.color = '#22D3EE';
-      ncLink.style.fontWeight = '800';
-      ncLink.style.letterSpacing = '0.05em';
-      ncLink.title = 'Nexus Command Center';
-      navLinks.appendChild(ncLink);
+    // Strictly target only the exact Admin anchor elements in navigation
+    const navAdminLink = document.querySelector('.nav-links a[href="admin.html"]');
+    if (navAdminLink) {
+      navAdminLink.innerHTML = '<span class="nc-active-indicator">⚡ NC</span>';
     }
 
-    // Ensure mobile .mobile-dock has an "NC" link if none exists
-    const dockItems = document.querySelector('.mobile-dock .dock-items');
-    if (dockItems && !dockItems.querySelector('.nc-dock-badge')) {
-      const ncDock = document.createElement('a');
-      ncDock.href = 'admin.html';
-      ncDock.className = 'dock-item nc-dock-badge';
-      ncDock.innerHTML = `
-        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2">
-          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-          <line x1="8" y1="21" x2="16" y2="21"/>
-          <line x1="12" y1="17" x2="12" y2="21"/>
-        </svg>
-        <span style="color: #22D3EE; font-weight: 800;">NC</span>
-      `;
-      ncDock.title = 'Nexus Command Center';
-      dockItems.appendChild(ncDock);
+    const dockAdminLink = document.querySelector('.dock-items a[href="admin.html"]');
+    if (dockAdminLink) {
+      dockAdminLink.innerHTML = '<span class="nc-active-indicator">⚡ NC</span>';
     }
 
     // 2. Inject sleek glassmorphic floating pill in the bottom-left corner (fixed, z-[9998])
