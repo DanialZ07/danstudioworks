@@ -1567,6 +1567,17 @@
     const overlay = document.getElementById('boot-overlay');
     if (!overlay) return;
 
+    // Check if boot sequence has already played in this browser session
+    if (sessionStorage.getItem('bootPlayed')) {
+      if (typeof overlay.remove === 'function') {
+        overlay.remove();
+      } else if (overlay.parentNode) {
+        overlay.parentNode.removeChild(overlay);
+      }
+      document.body.style.overflow = '';
+      return;
+    }
+
     // Lock page scrolling during boot sequence
     document.body.style.overflow = 'hidden';
 
@@ -1644,6 +1655,7 @@
 
       // Remove from DOM after 800ms fade/scale transition completes
       setTimeout(() => {
+        sessionStorage.setItem('bootPlayed', 'true');
         if (typeof overlay.remove === 'function') {
           overlay.remove();
         } else if (overlay.parentNode) {
