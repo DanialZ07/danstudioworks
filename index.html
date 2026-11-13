@@ -131,8 +131,14 @@
   <!-- ======================================================================
        HERO SECTION: High-Fidelity Studio Headline & Ambient Auror
        ====================================================================== -->
-  <header class="hero">
-    <div class="hero-content container">
+  <header class="hero relative overflow-hidden">
+    <!-- Interactive Aurora Grid Background Container -->
+    <div class="hero-aurora-bg absolute inset-0 overflow-hidden pointer-events-none z-0">
+      <div class="aurora-orb cyan-orb"></div>
+      <div class="aurora-orb magenta-orb"></div>
+    </div>
+
+    <div class="hero-content container relative z-10">
       <!-- Dynamic Project Counter -->
       <div class="reveal" style="display: flex; justify-content: center; align-items: center; margin-bottom: 1.5rem;">
         <span id="global-project-counter" style="display: inline-flex; align-items: center; gap: 8px; color: #94A3B8; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;">

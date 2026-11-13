@@ -2505,9 +2505,95 @@
     }
   }
 
+  /* ==========================================================================
+     15c. INTERACTIVE AURORA GRID PARALLAX (index.html)
+     ========================================================================== */
+
+  function initHeroAuroraParallax() {
+    const heroSection = document.querySelector('.hero');
+    const cyanOrb = document.querySelector('.cyan-orb');
+    const magentaOrb = document.querySelector('.magenta-orb');
+
+    if (!heroSection || !cyanOrb || !magentaOrb) return;
+
+    let targetCyanX = 0;
+    let targetCyanY = 0;
+    let targetMagX = 0;
+    let targetMagY = 0;
+    let currentCyanX = 0;
+    let currentCyanY = 0;
+    let currentMagX = 0;
+    let currentMagY = 0;
+    let isTicking = false;
+
+    function renderParallax() {
+      // Smooth interpolation (lerp)
+      currentCyanX += (targetCyanX - currentCyanX) * 0.08;
+      currentCyanY += (targetCyanY - currentCyanY) * 0.08;
+      currentMagX += (targetMagX - currentMagX) * 0.08;
+      currentMagY += (targetMagY - currentMagY) * 0.08;
+
+      const cyanStr = `translate(${currentCyanX.toFixed(2)}px, ${currentCyanY.toFixed(2)}px)`;
+      const magStr = `translate(${currentMagX.toFixed(2)}px, ${currentMagY.toFixed(2)}px)`;
+
+      // Apply transform and CSS variables for composite drift animation compatibility
+      cyanOrb.style.transform = cyanStr;
+      cyanOrb.style.setProperty('--parallax-x', `${currentCyanX.toFixed(2)}px`);
+      cyanOrb.style.setProperty('--parallax-y', `${currentCyanY.toFixed(2)}px`);
+
+      magentaOrb.style.transform = magStr;
+      magentaOrb.style.setProperty('--parallax-x', `${currentMagX.toFixed(2)}px`);
+      magentaOrb.style.setProperty('--parallax-y', `${currentMagY.toFixed(2)}px`);
+
+      const hasDelta = Math.abs(targetCyanX - currentCyanX) > 0.05 ||
+                       Math.abs(targetCyanY - currentCyanY) > 0.05 ||
+                       Math.abs(targetMagX - currentMagX) > 0.05 ||
+                       Math.abs(targetMagY - currentMagY) > 0.05;
+
+      if (hasDelta) {
+        requestAnimationFrame(renderParallax);
+      } else {
+        isTicking = false;
+      }
+    }
+
+    function requestTick() {
+      if (!isTicking) {
+        isTicking = true;
+        requestAnimationFrame(renderParallax);
+      }
+    }
+
+    heroSection.addEventListener('mousemove', (e) => {
+      // Calculate mouse X/Y percentage relative to screen center (-1.0 to 1.0)
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const percentX = (e.clientX - centerX) / centerX;
+      const percentY = (e.clientY - centerY) / centerY;
+
+      // Move orbs slightly opposite to the mouse pointer for realistic depth
+      targetCyanX = -percentX * 45;
+      targetCyanY = -percentY * 45;
+      targetMagX = -percentX * 25;
+      targetMagY = -percentY * 25;
+
+      requestTick();
+    });
+
+    heroSection.addEventListener('mouseleave', () => {
+      // Smoothly return towards resting center
+      targetCyanX = 0;
+      targetCyanY = 0;
+      targetMagX = 0;
+      targetMagY = 0;
+      requestTick();
+    });
+  }
+
   // Eager initialization if DOM is already ready
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
     initGlobalAuthState();
+    initHeroAuroraParallax();
   }
 
   /* ==========================================================================
@@ -2516,6 +2602,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     initGlobalAuthState();
+    initHeroAuroraParallax();
     initBootSequence();
     initNavigation();
     initScrollReveal();

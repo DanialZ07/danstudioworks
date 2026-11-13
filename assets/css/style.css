@@ -1740,3 +1740,76 @@ a {
     text-shadow: 0 0 8px #22D3EE;
   }
 }
+
+/* ==========================================================================
+   24. INTERACTIVE AURORA GRID BACKGROUND ANIMATION
+   ========================================================================== */
+.hero-aurora-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Subtle Cyber Grid Pattern Overlay with Radial Edge Fade */
+.hero-aurora-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(34, 211, 238, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.08) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.aurora-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  -webkit-filter: blur(120px);
+  opacity: 0.4;
+  pointer-events: none;
+  will-change: transform;
+  animation: slow-drift 18s ease-in-out infinite alternate;
+}
+
+.cyan-orb {
+  background-color: #06b6d4; /* bg-cyan-500 */
+  width: 500px;
+  height: 500px;
+  top: -10%;
+  left: -5%;
+}
+
+.magenta-orb {
+  background-color: #d946ef; /* bg-fuchsia-500 */
+  width: 400px;
+  height: 400px;
+  bottom: -10%;
+  right: -5%;
+  animation-duration: 20s;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes slow-drift {
+  0% {
+    transform: translate(var(--parallax-x, 0px), var(--parallax-y, 0px)) scale(1);
+  }
+  50% {
+    transform: translate(calc(var(--parallax-x, 0px) + 60px), calc(var(--parallax-y, 0px) + 40px)) scale(1.15);
+  }
+  100% {
+    transform: translate(calc(var(--parallax-x, 0px) - 40px), calc(var(--parallax-y, 0px) + 70px)) scale(0.95);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-orb {
+    animation: none;
+  }
+}
