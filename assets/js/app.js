@@ -648,6 +648,111 @@
   }
 
   /* ==========================================================================
+     10b. LOCAL INQUIRY ROUTING & SUPPORT FORM HANDLER
+     ========================================================================== */
+
+  const DEFAULT_INQUIRIES = [
+    {
+      id: 'INQ-4819',
+      name: 'Muhamad Arif',
+      email: 'arif@techvanguard.my',
+      type: 'problem',
+      subject: 'DNS Routing latency on staging preview',
+      message: 'We noticed the DNS propagation for staging.danstudioworks.com is experiencing intermittent TTL timeouts on Telekom Malaysia fiber routes. Could you check the edge DNS config?',
+      timestamp: new Date(Date.now() - 3600000 * 5).toISOString(),
+      status: 'new'
+    },
+    {
+      id: 'INQ-5120',
+      name: 'Melissa Wong',
+      email: 'melissa@lumina-aesthetic.com',
+      type: 'billing',
+      subject: 'Request for official e-Invoicing tax receipt',
+      message: 'Hi DanStudio team, our finance department requires the LHDN-compliant e-invoice receipt for Milestone 1 payment. Please send across the PDF breakdown.',
+      timestamp: new Date(Date.now() - 3600000 * 22).toISOString(),
+      status: 'new'
+    }
+  ];
+
+  function getInquiries() {
+    try {
+      let stored = JSON.parse(localStorage.getItem('danstudio_inquiries'));
+      if (!stored || !Array.isArray(stored) || !stored.length) {
+        localStorage.setItem('danstudio_inquiries', JSON.stringify(DEFAULT_INQUIRIES));
+        return DEFAULT_INQUIRIES;
+      }
+      return stored;
+    } catch (_) {
+      return DEFAULT_INQUIRIES;
+    }
+  }
+
+  function initSupportForm() {
+    const form = document.getElementById('support-contact-form');
+    if (!form) return;
+
+    const successMsg = document.getElementById('support-success-msg');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const typeEl = form.querySelector('#inquiry-type') || form.querySelector('[name="type"]');
+      const nameEl = form.querySelector('#support-name') || form.querySelector('[name="name"]');
+      const emailEl = form.querySelector('#support-email') || form.querySelector('[name="email"]');
+      const subjectEl = form.querySelector('#support-subject') || form.querySelector('[name="subject"]');
+      const messageEl = form.querySelector('#support-message') || form.querySelector('[name="message"]');
+
+      const name = nameEl ? nameEl.value.trim() : '';
+      const email = emailEl ? emailEl.value.trim() : '';
+      const type = typeEl ? typeEl.value : 'general';
+      const subject = subjectEl ? subjectEl.value.trim() : '';
+      const message = messageEl ? messageEl.value.trim() : '';
+
+      if (!name || !email || !email.includes('@') || !subject || !message) {
+        showToast('Please fill out all required fields with a valid email address.', 'error');
+        return;
+      }
+
+      const inquiryId = 'INQ-' + Math.floor(1000 + Math.random() * 9000);
+      const inquiryObj = {
+        id: inquiryId,
+        name: name,
+        email: email,
+        type: type,
+        subject: subject,
+        message: message,
+        timestamp: new Date().toISOString(),
+        status: 'new'
+      };
+
+      // Retrieve existing or initialize defaults
+      let existingInquiries = [];
+      try {
+        existingInquiries = JSON.parse(localStorage.getItem('danstudio_inquiries')) || [];
+      } catch (_) {
+        existingInquiries = [];
+      }
+
+      if (!existingInquiries.length) {
+        existingInquiries = [...DEFAULT_INQUIRIES];
+      }
+
+      // Prepend the new submission
+      existingInquiries.unshift(inquiryObj);
+      localStorage.setItem('danstudio_inquiries', JSON.stringify(existingInquiries));
+
+      // Visual Transition
+      form.style.display = 'none';
+      if (successMsg) {
+        successMsg.style.display = 'block';
+        successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      showToast(`Transmission logged #${inquiryId}. Dispatched to Nexus Command.`, 'success', 3500);
+    });
+  }
+
+  /* ==========================================================================
      11. DEVELOPER 2FA AUTHENTICATION & SECURE LOGIN MODAL
      ========================================================================== */
 
@@ -943,7 +1048,7 @@
         <div style="display: flex; align-items: center; gap: 12px;">
           <img src="assets/images/branding/logo.png" alt="DanStudio Logo Mark" style="height: 30px; width: auto; display: block;">
           <span style="font-weight: 800; color: #F1F5F9; font-size: 1.1rem;">
-            DanStudio Works <span style="font-size: 0.75rem; color: #22D3EE; background: rgba(34,211,238,0.12); padding: 2px 8px; border-radius: 4px; margin-left: 6px;">DEV QUEUE</span>
+            DanStudio Works <span style="font-size: 0.75rem; color: #F43F5E; background: rgba(244,63,94,0.15); border: 1px solid rgba(244,63,94,0.3); padding: 2px 8px; border-radius: 4px; margin-left: 6px;">NEXUS COMMAND</span>
           </span>
         </div>
         <button class="btn btn-ghost btn-sm console-logout">Lock &amp; Exit</button>

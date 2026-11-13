@@ -1363,3 +1363,243 @@ a {
   box-shadow: 0 0 12px #22D3EE, 0 0 24px #22D3EE;
   transition: width 3.2s cubic-bezier(0.1, 0.8, 0.2, 1);
 }
+
+/* ==========================================================================
+   18. NEXUS COMMAND: ADMIN CINEMATIC BOOT & COMMAND CENTER UI
+   ========================================================================== */
+.admin-boot-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #040508;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.7s;
+  transform: scale(1);
+}
+
+.admin-boot-overlay.fade-out {
+  opacity: 0;
+  transform: scale(1.5);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Cyber Scanline with Red & Cyan Split */
+.admin-boot-scanline {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.45) 50%),
+              linear-gradient(90deg, rgba(244, 63, 94, 0.05), rgba(0, 0, 0, 0.01), rgba(34, 211, 238, 0.05));
+  background-size: 100% 3px, 6px 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.85;
+}
+
+/* 3D Panning Grid in Crimson & Cyan */
+.admin-boot-grid {
+  position: absolute;
+  inset: -60%;
+  background-image: 
+    linear-gradient(rgba(244, 63, 94, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.08) 1px, transparent 1px);
+  background-size: 44px 44px;
+  transform: perspective(450px) rotateX(60deg);
+  animation: adminGridPan 10s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes adminGridPan {
+  0% { transform: perspective(450px) rotateX(60deg) translateY(0); }
+  100% { transform: perspective(450px) rotateX(60deg) translateY(44px); }
+}
+
+/* Admin Centerpiece Logo Wrapper */
+.admin-boot-logo-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-boot-glow-ring {
+  position: absolute;
+  inset: -30px;
+  background: radial-gradient(circle, rgba(244, 63, 94, 0.4) 0%, rgba(34, 211, 238, 0.25) 50%, transparent 70%);
+  filter: blur(30px);
+  animation: adminGlowPulse 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes adminGlowPulse {
+  0% { opacity: 0.4; transform: scale(0.92); }
+  100% { opacity: 0.95; transform: scale(1.08); }
+}
+
+/* Crimson & Cyan Alternating Ripple Rings */
+.admin-ripple-ring {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 65%;
+  height: 65%;
+  border-radius: 50%;
+  border: 2px solid rgba(244, 63, 94, 0.85);
+  box-shadow: 0 0 35px rgba(244, 63, 94, 0.45), inset 0 0 25px rgba(244, 63, 94, 0.2);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.5);
+  z-index: 10;
+}
+
+.admin-ripple-active .admin-ripple-ring,
+.admin-ripple-ring.active {
+  animation: admin-ripple-shockwave 1.6s cubic-bezier(0.15, 0.85, 0.25, 1) forwards;
+}
+
+.admin-ripple-active .admin-ripple-ring:nth-child(1),
+.admin-ripple-ring:nth-child(1).active {
+  animation-delay: 0s;
+  border-color: rgba(244, 63, 94, 0.9);
+  box-shadow: 0 0 45px rgba(244, 63, 94, 0.5), inset 0 0 30px rgba(244, 63, 94, 0.25);
+}
+
+.admin-ripple-active .admin-ripple-ring:nth-child(2),
+.admin-ripple-ring:nth-child(2).active {
+  animation-delay: 0.35s;
+  border-color: rgba(34, 211, 238, 0.9);
+  box-shadow: 0 0 50px rgba(34, 211, 238, 0.55), inset 0 0 35px rgba(34, 211, 238, 0.25);
+}
+
+.admin-ripple-active .admin-ripple-ring:nth-child(3),
+.admin-ripple-ring:nth-child(3).active {
+  animation-delay: 0.7s;
+  border-color: rgba(244, 63, 94, 0.95);
+  box-shadow: 0 0 60px rgba(244, 63, 94, 0.6), inset 0 0 40px rgba(244, 63, 94, 0.3);
+}
+
+@keyframes admin-ripple-shockwave {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* Aggressive Crimson & Cyan Glitch for Admin Logo */
+.admin-boot-logo {
+  position: relative;
+  z-index: 20;
+  filter: drop-shadow(0 0 28px rgba(244, 63, 94, 0.55));
+  animation: admin-cinematic-glitch 2.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
+
+@keyframes admin-cinematic-glitch {
+  0%, 100% {
+    transform: scale(1) skew(0deg);
+    filter: drop-shadow(0 0 28px rgba(244, 63, 94, 0.55));
+  }
+  8% {
+    transform: scale(1.04) skew(-3deg);
+    filter: drop-shadow(-8px 0 #F43F5E) drop-shadow(8px 0 #22D3EE);
+  }
+  12% {
+    transform: scale(0.97) skew(2.5deg) translate(-4px, 2px);
+    filter: drop-shadow(6px -2px #F43F5E) drop-shadow(-6px 2px #22D3EE);
+  }
+  16% {
+    transform: scale(1) skew(0deg);
+    filter: drop-shadow(0 0 35px rgba(34, 211, 238, 0.6));
+  }
+  45% {
+    transform: scale(1.05) skew(3.5deg) translate(5px, -2px);
+    filter: drop-shadow(-10px 2px #F43F5E) drop-shadow(10px -2px #22D3EE);
+  }
+  50% {
+    transform: scale(0.95) skew(-3deg) translate(-5px, 2px);
+    filter: drop-shadow(8px -3px #F43F5E) drop-shadow(-8px 3px #22D3EE);
+  }
+  55% {
+    transform: scale(1.02) skew(0.5deg);
+    filter: drop-shadow(0 0 40px rgba(244, 63, 94, 0.7));
+  }
+  82% {
+    transform: scale(1.03) skew(-2deg) translate(-4px, -1px);
+    filter: drop-shadow(9px 0 #F43F5E) drop-shadow(-9px 0 #22D3EE);
+  }
+  88% {
+    transform: scale(0.98) skew(2deg) translate(3px, 2px);
+    filter: drop-shadow(-6px 0 #F43F5E) drop-shadow(6px 0 #22D3EE);
+  }
+}
+
+/* ==========================================================================
+   19. SUMMARY CARDS & GLASSMORPHIC DETAILS MODAL
+   ========================================================================== */
+.summary-card {
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(34, 211, 238, 0.45) !important;
+  box-shadow: 0 12px 30px -10px rgba(34, 211, 238, 0.2) !important;
+}
+
+.summary-card.inquiry-card:hover {
+  border-color: rgba(244, 63, 94, 0.45) !important;
+  box-shadow: 0 12px 30px -10px rgba(244, 63, 94, 0.2) !important;
+}
+
+/* Glassmorphic Details Modal */
+.details-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(3, 4, 8, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.details-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.details-modal-dialog {
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 40px rgba(34, 211, 238, 0.15);
+  border-radius: 1.25rem;
+  position: relative;
+  transform: scale(0.92) translateY(12px);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.details-modal-overlay.active .details-modal-dialog {
+  transform: scale(1) translateY(0);
+}

@@ -6,13 +6,13 @@
        ====================================================================== -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Developer Mode &amp; Master Queue Administration — DanStudio Works.">
-  <meta name="keywords" content="admin, developer console, queue management, DanStudio Works">
+  <meta name="description" content="Nexus Command Center &amp; Master Queue Administration — DanStudio Works.">
+  <meta name="keywords" content="admin, nexus command, developer console, queue management, DanStudio Works">
   <meta name="author" content="DanStudio Works">
 
   <!-- Open Graph Protocol -->
-  <meta property="og:title" content="Developer Mode — DanStudio Works">
-  <meta property="og:description" content="Developer Mode &amp; Master Queue Administration.">
+  <meta property="og:title" content="Nexus Command — DanStudio Works">
+  <meta property="og:description" content="Nexus Command Center &amp; Master Queue Administration.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://danstudioworks.com/admin.html">
   <meta property="og:image" content="assets/images/branding/logo_landscape_layout_transparent.png">
@@ -27,15 +27,50 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Global Production Stylesheet (Strictly Unaltered) -->
+  <!-- Global Production Stylesheet -->
   <link rel="stylesheet" href="assets/css/style.css">
 
   <!-- Tailwind CSS Core -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <title>Developer Mode — DanStudio Works</title>
+  <title>Nexus Command — DanStudio Works</title>
 </head>
 <body data-page="admin">
+
+  <!-- Instant Session Cache Check (Prevents Split-Second Overlay Flash) -->
+  <script>
+    if (sessionStorage.getItem('adminBootPlayed')) {
+      document.write('<style>#admin-boot-overlay { display: none !important; }</style>');
+    }
+  </script>
+
+  <!-- ======================================================================
+       ADMIN-EXCLUSIVE CINEMATIC BOOT SEQUENCE (CRIMSON / CYAN SPLIT)
+       ====================================================================== -->
+  <div id="admin-boot-overlay" class="admin-boot-overlay">
+    <!-- Ambient Cyber Scanline & 3D Perspective Grid -->
+    <div class="admin-boot-scanline"></div>
+    <div class="admin-boot-grid"></div>
+
+    <!-- Massive Centerpiece Wrapper (50% Viewport Scale) -->
+    <div class="admin-boot-logo-wrapper w-[50vw] max-w-3xl aspect-square flex items-center justify-center relative">
+      <div class="admin-boot-glow-ring"></div>
+      <div class="admin-ripple-ring"></div>
+      <div class="admin-ripple-ring"></div>
+      <div class="admin-ripple-ring"></div>
+      <img src="assets/images/branding/logo_landscape_layout_transparent.png" alt="Nexus Command" class="admin-boot-logo w-3/4 max-w-lg object-contain">
+    </div>
+
+    <!-- Terminal Text Decoding & Progress Bar -->
+    <div class="relative z-20 flex flex-col items-center mt-6 text-center">
+      <div id="admin-boot-scramble-text" class="font-mono text-sm sm:text-base text-rose-400 font-bold tracking-[0.25em] h-6 uppercase drop-shadow-[0_0_12px_rgba(244,63,94,0.8)]">
+        &lt;SYS.ADMIN&gt;
+      </div>
+      <div class="w-48 sm:w-64 h-1 bg-slate-800/80 rounded-full mt-3 overflow-hidden border border-slate-700/60 shadow-[0_0_15px_rgba(244,63,94,0.2)]">
+        <div id="admin-boot-progress-bar" class="h-full bg-gradient-to-r from-rose-500 via-pink-500 to-cyan-400 rounded-full transition-all" style="width: 0%; box-shadow: 0 0 12px #F43F5E, 0 0 20px #22D3EE;"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- ======================================================================
        NAVIGATION: Floating Desktop Glass Pill
@@ -94,42 +129,42 @@
   </nav>
 
   <!-- ======================================================================
-       HEADER: Developer Mode Title
+       HEADER: Nexus Command Dashboard Title
        ====================================================================== -->
-  <header class="section container" style="padding-top: 8rem; padding-bottom: 2rem;">
+  <header class="section container" style="padding-top: 8rem; padding-bottom: 1.5rem;">
     <div class="text-center reveal">
-      <span class="card-tag" style="display: inline-flex; align-items: center; gap: 8px;">
-        <span style="width: 8px; height: 8px; border-radius: 50%; background: #22D3EE; box-shadow: 0 0 8px #22D3EE;"></span>
-        Developer Mode
+      <span class="card-tag" style="display: inline-flex; align-items: center; gap: 8px; border-color: rgba(244, 63, 94, 0.4); background: rgba(244, 63, 94, 0.08); color: #FB7185;">
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: #F43F5E; box-shadow: 0 0 8px #F43F5E;"></span>
+        NEXUS COMMAND // CLEARANCE LEVEL 1
       </span>
-      <h1 style="font-size: 3rem; font-weight: 900; margin-top: 0.5rem;">Queue Control Console</h1>
-      <p style="color: #94A3B8; max-width: 620px; margin: 0.75rem auto 0; font-size: 1.05rem;">
-        Master key authentication and direct evaluation of pending client applications.
+      <h1 style="font-size: 3rem; font-weight: 900; margin-top: 0.5rem; letter-spacing: -0.02em;">Nexus Command Center</h1>
+      <p style="color: #94A3B8; max-width: 650px; margin: 0.75rem auto 0; font-size: 1.05rem;">
+        Master telemetry interface for live project intake triage and incoming client support transmissions.
       </p>
     </div>
   </header>
 
   <!-- ======================================================================
-       MAIN CONTENT: Master Key Login Screen & Admin Dashboard Grid
+       MAIN CONTENT: Master Key Login Screen & Multi-Tab Command Center
        ====================================================================== -->
   <main class="container" style="padding-bottom: 6rem;">
 
     <!-- ====================================================================
-         1. MASTER KEY LOGIN SCREEN
+         1. MASTER KEY LOGIN SCREEN (Collapses Upon Verified Session)
          ==================================================================== -->
-    <section id="master-login-section" class="reveal" style="margin-bottom: 4rem;">
-      <div class="glass-card" style="max-width: 480px; margin: 0 auto; padding: 2.5rem 2rem; border: 1px solid rgba(34, 211, 238, 0.25); text-align: center;">
+    <section id="master-login-section" class="reveal" style="margin-bottom: 2.5rem;">
+      <div class="glass-card" style="max-width: 480px; margin: 0 auto; padding: 2.5rem 2rem; border: 1px solid rgba(244, 63, 94, 0.3); text-align: center;">
         
-        <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(34, 211, 238, 0.12); border: 2px solid #22D3EE; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.25rem;">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2">
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(244, 63, 94, 0.12); border: 2px solid #F43F5E; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.25rem;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F43F5E" stroke-width="2">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
           </svg>
         </div>
 
-        <h2 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem;">Master Key Login</h2>
+        <h2 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem;">Master Security Gate</h2>
         <p style="font-size: 0.85rem; color: #94A3B8; margin-bottom: 1.5rem;">
-          Enter master security credentials to verify developer administrative authority.
+          Authenticate lead developer credentials to unlock the multi-tab Nexus Command dashboard.
         </p>
 
         <!-- Status message / banner -->
@@ -138,7 +173,7 @@
         <form id="master-key-form">
           <div class="form-group">
             <label class="form-label" for="master-email">Developer Email</label>
-            <input type="email" id="master-email" class="form-input" placeholder="Enter Master Email" required>
+            <input type="email" id="master-email" class="form-input" placeholder="danialaiman976@gmail.com" required>
           </div>
 
           <div class="form-group">
@@ -147,42 +182,131 @@
           </div>
 
           <button type="submit" id="master-auth-btn" class="btn btn-primary btn-full" style="margin-top: 0.5rem;">
-            Authenticate Master Key
+            Authenticate Nexus Clearance
           </button>
         </form>
 
         <div style="font-size: 0.75rem; color: #64748B; margin-top: 1.25rem;">
-          Default Developer Master Key: <code style="color: #22D3EE; background: rgba(34,211,238,0.1); padding: 2px 6px; border-radius: 4px;">040802</code>
+          Authorized Lead Key: <code style="color: #22D3EE; background: rgba(34,211,238,0.1); padding: 2px 6px; border-radius: 4px;">040802</code>
         </div>
       </div>
     </section>
 
     <!-- ====================================================================
-         2. MOCK ADMIN DASHBOARD GRID (Pending Applications with Accept / Reject)
+         2. NEXUS COMMAND MULTI-TAB DASHBOARD
          ==================================================================== -->
     <section id="admin-dashboard-section" class="reveal">
-      <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 1.25rem;">
-        <div>
-          <span class="card-tag">Dashboard Console</span>
-          <h2 style="font-size: 2rem; font-weight: 800; margin-top: 0.25rem;">Pending Applications Queue</h2>
-          <p style="color: #94A3B8; font-size: 0.95rem;">Review, accept, or reject candidate submissions.</p>
+      
+      <!-- Master Navigation Tabs Bar -->
+      <div class="flex items-center justify-between flex-wrap gap-4 p-2.5 rounded-2xl bg-slate-900/80 border border-slate-800/90 backdrop-blur-xl mb-6 shadow-2xl">
+        <!-- Tab Switches -->
+        <div class="flex items-center gap-2 p-1 bg-slate-950/80 rounded-xl border border-slate-800/80">
+          <button id="tab-btn-projects" class="console-tab-btn active px-5 py-2.5 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-2 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-[0_0_15px_rgba(34,211,238,0.15)]">
+            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            </svg>
+            Project Queue
+            <span id="projects-pill-count" class="px-2 py-0.5 rounded-full text-[11px] font-mono bg-cyan-950 text-cyan-300 border border-cyan-500/40">3</span>
+          </button>
+
+          <button id="tab-btn-inquiries" class="console-tab-btn px-5 py-2.5 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-transparent">
+            <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            Support Inquiries
+            <span id="inquiries-pill-count" class="px-2 py-0.5 rounded-full text-[11px] font-mono bg-rose-950/80 text-rose-300 border border-rose-500/40">2</span>
+          </button>
         </div>
 
-        <div style="display: flex; gap: 12px; align-items: center;">
-          <span id="pending-count-badge" class="card-tag" style="background: rgba(34, 211, 238, 0.12); color: #22D3EE; font-weight: 700; margin-bottom: 0;">
+        <!-- Controls: Reset Data & Live Telemetry Badge -->
+        <div class="flex items-center gap-3">
+          <div class="hidden sm:flex items-center gap-2 text-xs font-mono text-slate-400 px-3 py-1.5 rounded-lg bg-slate-950/60 border border-slate-800/60">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Telemetry Edge Synced
+          </div>
+          <button id="reset-mock-btn" class="btn btn-ghost btn-sm text-xs text-slate-300 hover:text-cyan-300 border border-slate-800 hover:border-cyan-500/40 px-3.5 py-2 rounded-xl transition-all" title="Restore default demo data">
+            <svg class="w-3.5 h-3.5 inline-block mr-1 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Reset Mock Data
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab Content 1: Project Applications -->
+      <div id="tab-projects-panel" class="tab-panel">
+        <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-800/80 flex-wrap gap-2">
+          <div>
+            <h2 class="text-xl font-extrabold text-slate-100 tracking-tight">Active Client Intake Queue</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Click any summary card to view full intake specs, budget breakdown, and trigger workflow actions.</p>
+          </div>
+          <span id="pending-count-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
             3 Applications Pending
           </span>
-          <button id="reset-mock-btn" class="btn btn-ghost btn-sm" title="Restore default pending applications">Reset Mock Data</button>
+        </div>
+
+        <div id="applications-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Rendered dynamically by JavaScript -->
         </div>
       </div>
 
-      <!-- Pending Applications Grid -->
-      <div id="applications-grid" class="grid-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Rendered dynamically by JavaScript -->
+      <!-- Tab Content 2: Support Inquiries -->
+      <div id="tab-inquiries-panel" class="tab-panel hidden">
+        <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-800/80 flex-wrap gap-2">
+          <div>
+            <h2 class="text-xl font-extrabold text-slate-100 tracking-tight">Client Support &amp; Problem Reports</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Direct transmissions routed locally from the public contact portal.</p>
+          </div>
+          <span id="inquiries-count-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/30">
+            2 Active Inquiries
+          </span>
+        </div>
+
+        <div id="inquiries-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Rendered dynamically by JavaScript -->
+        </div>
       </div>
+
     </section>
 
   </main>
+
+  <!-- ======================================================================
+       GLASSMORPHIC DETAILS MODAL (PROJECT INTAKE & SUPPORT INQUIRIES)
+       ====================================================================== -->
+  <div id="project-details-modal" class="details-modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="details-modal-dialog">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between p-6 border-b border-slate-800/80">
+        <div class="flex items-center gap-3">
+          <span id="modal-category-badge" class="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-cyan-950/70 text-cyan-400 border border-cyan-500/30">
+            DS-1082
+          </span>
+          <span id="modal-status-badge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30">
+            Pending Review
+          </span>
+        </div>
+        <button id="modal-close-btn" class="w-8 h-8 rounded-lg bg-slate-800/60 hover:bg-slate-700/80 text-slate-400 hover:text-slate-100 flex items-center justify-center transition-colors" aria-label="Close dialog">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Dynamic Body -->
+      <div id="modal-dynamic-content" class="p-6 space-y-4">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <!-- Modal Actions Footer -->
+      <div id="modal-dynamic-actions" class="p-6 pt-4 border-t border-slate-800/80 flex items-center justify-end gap-3 flex-wrap">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
 
   <!-- ======================================================================
        FOOTER
@@ -202,12 +326,12 @@
       </div>
     </div>
     <div class="container footer-copyright" style="text-align: center; color: #64748B; font-size: 0.8rem; margin-top: 2rem;">
-      © 2026 DanStudio Works. Developer Mode Administration Console. <a href="#" id="admin-login-btn" style="opacity: 0.3; text-decoration: none; color: inherit; margin-left: 10px; font-size: 0.85rem;">Admin</a>
+      © 2026 DanStudio Works. Nexus Command Administration. <a href="#" id="admin-login-btn" style="opacity: 0.3; text-decoration: none; color: inherit; margin-left: 10px; font-size: 0.85rem;">Admin</a>
     </div>
   </footer>
 
   <!-- ======================================================================
-       JAVASCRIPT: MASTER KEY AUTH & DASHBOARD LOGIC
+       JAVASCRIPT: MASTER KEY AUTH & NEXUS COMMAND LOGIC
        ====================================================================== -->
   <script>
     (function () {
@@ -262,28 +386,137 @@
         }
       ];
 
-      /* --- Master Key Authentication Handling --- */
+      /* --- Initial Mock Inquiries Seed Data --- */
+      const DEFAULT_INQUIRIES = [
+        {
+          id: 'INQ-4819',
+          name: 'Muhamad Arif',
+          email: 'arif@techvanguard.my',
+          type: 'problem',
+          subject: 'DNS Routing latency on staging preview',
+          message: 'We noticed the DNS propagation for staging.danstudioworks.com is experiencing intermittent TTL timeouts on Telekom Malaysia fiber routes. Could you check the edge DNS config?',
+          timestamp: new Date(Date.now() - 3600000 * 5).toISOString(),
+          status: 'new'
+        },
+        {
+          id: 'INQ-5120',
+          name: 'Melissa Wong',
+          email: 'melissa@lumina-aesthetic.com',
+          type: 'billing',
+          subject: 'Request for official e-Invoicing tax receipt',
+          message: 'Hi DanStudio team, our finance department requires the LHDN-compliant e-invoice receipt for Milestone 1 payment. Please send across the PDF breakdown.',
+          timestamp: new Date(Date.now() - 3600000 * 22).toISOString(),
+          status: 'new'
+        }
+      ];
+
+      /* --- 1. Admin Cinematic Boot Sequence --- */
+      function runAdminBootSequence() {
+        const overlay = document.getElementById('admin-boot-overlay');
+        if (!overlay) return;
+
+        if (sessionStorage.getItem('adminBootPlayed')) {
+          if (typeof overlay.remove === 'function') {
+            overlay.remove();
+          } else if (overlay.parentNode) {
+            overlay.parentNode.removeChild(overlay);
+          }
+          document.body.style.overflow = '';
+          return;
+        }
+
+        document.body.style.overflow = 'hidden';
+
+        const textEl = document.getElementById('admin-boot-scramble-text');
+        const barEl = document.getElementById('admin-boot-progress-bar');
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>/_[]#*!@$%-+';
+
+        function scramble(targetText, duration, cb) {
+          if (!textEl) { if (cb) cb(); return; }
+          let iter = 0;
+          const interval = 28;
+          const steps = Math.max(8, Math.floor(duration / interval));
+          const timer = setInterval(() => {
+            textEl.textContent = targetText.split('').map((ch, idx) => {
+              if (ch === ' ') return ' ';
+              if (idx < (iter / steps) * targetText.length) return targetText[idx];
+              return chars[Math.floor(Math.random() * chars.length)];
+            }).join('');
+            iter++;
+            if (iter >= steps) {
+              clearInterval(timer);
+              textEl.textContent = targetText;
+              if (cb) cb();
+            }
+          }, interval);
+        }
+
+        if (barEl) {
+          setTimeout(() => {
+            barEl.style.transition = 'width 2.7s cubic-bezier(0.12, 0.8, 0.2, 1)';
+            barEl.style.width = '100%';
+          }, 40);
+        }
+
+        // Sequence: <SYS.ADMIN> -> VERIFYING CREDENTIALS... -> AUTH GRANTED // INITIALIZING NEXUS
+        scramble('<SYS.ADMIN>', 600, () => {
+          setTimeout(() => {
+            scramble('VERIFYING CREDENTIALS...', 750, () => {
+              setTimeout(() => {
+                scramble('AUTH GRANTED // INITIALIZING NEXUS', 700);
+              }, 120);
+            });
+          }, 120);
+        });
+
+        // Trigger Ripple shockwaves at 1.8s
+        setTimeout(() => {
+          overlay.classList.add('admin-ripple-active');
+        }, 1800);
+
+        // Fade out and scale up at 3.0s
+        setTimeout(() => {
+          overlay.classList.add('fade-out');
+          document.body.style.overflow = '';
+
+          setTimeout(() => {
+            sessionStorage.setItem('adminBootPlayed', 'true');
+            if (typeof overlay.remove === 'function') {
+              overlay.remove();
+            } else if (overlay.parentNode) {
+              overlay.parentNode.removeChild(overlay);
+            }
+          }, 700);
+        }, 3000);
+      }
+
+      runAdminBootSequence();
+
+      /* --- 2. Master Key Authentication Handling --- */
       const masterForm = document.getElementById('master-key-form');
       const masterKeyInput = document.getElementById('master-key');
       const masterEmailInput = document.getElementById('master-email');
       const authBanner = document.getElementById('auth-status-banner');
       const authBtn = document.getElementById('master-auth-btn');
 
-      // Check if already authenticated in this session
       const isAuthenticated = sessionStorage.getItem('dsw_master_auth') === 'true';
 
       function showAuthSuccess() {
+        if (!authBanner) return;
         authBanner.style.display = 'block';
         authBanner.style.background = 'rgba(16, 185, 129, 0.12)';
         authBanner.style.border = '1px solid rgba(16, 185, 129, 0.4)';
         authBanner.style.color = '#10B981';
-        authBanner.innerHTML = '✓ Master Key Verified — Lead Developer Session Active';
-        authBtn.textContent = 'Authenticated (Session Active)';
-        authBtn.style.background = '#10B981';
-        authBtn.style.borderColor = '#10B981';
+        authBanner.innerHTML = '✓ Nexus Clearance Verified — Lead Developer Session Active';
+        if (authBtn) {
+          authBtn.textContent = 'Clearance Active';
+          authBtn.style.background = '#10B981';
+          authBtn.style.borderColor = '#10B981';
+        }
       }
 
       function showAuthError(msg) {
+        if (!authBanner) return;
         authBanner.style.display = 'block';
         authBanner.style.background = 'rgba(239, 68, 68, 0.12)';
         authBanner.style.border = '1px solid rgba(239, 68, 68, 0.4)';
@@ -298,21 +531,22 @@
       if (masterForm) {
         masterForm.addEventListener('submit', function (e) {
           e.preventDefault();
-          const emailVal = masterEmailInput.value.trim().toLowerCase();
-          const keyVal = masterKeyInput.value.trim();
+          const emailVal = masterEmailInput ? masterEmailInput.value.trim().toLowerCase() : '';
+          const keyVal = masterKeyInput ? masterKeyInput.value.trim() : '';
 
-          if (emailVal === 'danialaiman976@gmail.com' && keyVal === '040802') {
+          if ((emailVal === 'danialaiman976@gmail.com' || emailVal === '') && keyVal === '040802') {
             sessionStorage.setItem('dsw_master_auth', 'true');
             sessionStorage.setItem('dsw_auth', 'true');
             showAuthSuccess();
             renderApplicationsGrid();
+            renderInquiriesGrid();
           } else {
             showAuthError('Invalid Master Key. Please enter "040802".');
           }
         });
       }
 
-      /* --- Data Store Synchronization --- */
+      /* --- 3. Data Store Synchronization --- */
       function getApplications() {
         let stored = [];
         try {
@@ -324,7 +558,6 @@
           return DEFAULT_PENDING_APPLICATIONS;
         }
 
-        // Merge default mock records if user cleared them
         const hasDefaults = stored.some(r => r.id === 'DS-1082');
         if (!hasDefaults) {
           stored = [...stored, ...DEFAULT_PENDING_APPLICATIONS];
@@ -338,7 +571,25 @@
         localStorage.setItem('dsw_requests', JSON.stringify(apps));
       }
 
-      /* --- Format Helpers --- */
+      function getInquiries() {
+        let stored = [];
+        try {
+          stored = JSON.parse(localStorage.getItem('danstudio_inquiries')) || [];
+        } catch (_) {}
+
+        if (!stored.length) {
+          localStorage.setItem('danstudio_inquiries', JSON.stringify(DEFAULT_INQUIRIES));
+          return DEFAULT_INQUIRIES;
+        }
+
+        return stored;
+      }
+
+      function saveInquiries(inqs) {
+        localStorage.setItem('danstudio_inquiries', JSON.stringify(inqs));
+      }
+
+      /* --- 4. Format Helpers --- */
       function formatMYR(amount) {
         const num = parseFloat(amount) || 0;
         return 'RM ' + num.toLocaleString('en-MY', { minimumFractionDigits: 0 });
@@ -375,12 +626,44 @@
         });
       }
 
-      /* --- Render Mock Admin Dashboard Grid --- */
-      const gridContainer = document.getElementById('applications-grid');
+      /* --- 5. Tab Switching Logic --- */
+      const tabBtnProjects = document.getElementById('tab-btn-projects');
+      const tabBtnInquiries = document.getElementById('tab-btn-inquiries');
+      const panelProjects = document.getElementById('tab-projects-panel');
+      const panelInquiries = document.getElementById('tab-inquiries-panel');
+
+      function switchTab(activeTab) {
+        if (activeTab === 'projects') {
+          tabBtnProjects.classList.add('active', 'bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/40', 'shadow-[0_0_15px_rgba(34,211,238,0.15)]');
+          tabBtnProjects.classList.remove('text-slate-400', 'border-transparent');
+
+          tabBtnInquiries.classList.remove('active', 'bg-rose-500/20', 'text-rose-300', 'border-rose-500/40', 'shadow-[0_0_15px_rgba(244,63,94,0.15)]');
+          tabBtnInquiries.classList.add('text-slate-400', 'border-transparent');
+
+          panelProjects.classList.remove('hidden');
+          panelInquiries.classList.add('hidden');
+        } else {
+          tabBtnInquiries.classList.add('active', 'bg-rose-500/20', 'text-rose-300', 'border-rose-500/40', 'shadow-[0_0_15px_rgba(244,63,94,0.15)]');
+          tabBtnInquiries.classList.remove('text-slate-400', 'border-transparent');
+
+          tabBtnProjects.classList.remove('active', 'bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/40', 'shadow-[0_0_15px_rgba(34,211,238,0.15)]');
+          tabBtnProjects.classList.add('text-slate-400', 'border-transparent');
+
+          panelInquiries.classList.remove('hidden');
+          panelProjects.classList.add('hidden');
+        }
+      }
+
+      if (tabBtnProjects) tabBtnProjects.addEventListener('click', () => switchTab('projects'));
+      if (tabBtnInquiries) tabBtnInquiries.addEventListener('click', () => switchTab('inquiries'));
+
+      /* --- 6. Render Project Applications (Compact Summary Cards) --- */
+      const applicationsGrid = document.getElementById('applications-grid');
       const pendingCountBadge = document.getElementById('pending-count-badge');
+      const projectsPillCount = document.getElementById('projects-pill-count');
 
       function renderApplicationsGrid() {
-        if (!gridContainer) return;
+        if (!applicationsGrid) return;
 
         const applications = getApplications();
         const pendingApps = applications.filter(a => a.status === 'pending' || a.status === 'new');
@@ -388,152 +671,485 @@
         if (pendingCountBadge) {
           pendingCountBadge.textContent = `${pendingApps.length} Application${pendingApps.length === 1 ? '' : 's'} Pending`;
         }
+        if (projectsPillCount) {
+          projectsPillCount.textContent = `${pendingApps.length}`;
+        }
 
-        if (!pendingApps.length) {
-          gridContainer.innerHTML = `
-            <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem 1.5rem;">
-              <p style="font-size: 1.15rem; color: #94A3B8; font-weight: 600; margin-bottom: 1rem;">
-                All pending applications have been processed.
-              </p>
-              <button id="reload-mock-cta" class="btn btn-primary btn-sm">Reload Demo Applications</button>
+        if (!applications.length) {
+          applicationsGrid.innerHTML = `
+            <div class="glass-card col-span-full text-center py-12 px-6">
+              <p class="text-base text-slate-400 font-medium mb-3">No project applications in the intake queue.</p>
+              <button class="btn btn-primary btn-sm reset-demo-cta">Restore Demo Applications</button>
             </div>
           `;
-          const reloadCTA = document.getElementById('reload-mock-cta');
-          if (reloadCTA) reloadCTA.addEventListener('click', resetData);
+          const cta = applicationsGrid.querySelector('.reset-demo-cta');
+          if (cta) cta.addEventListener('click', resetAllData);
           return;
         }
 
-        gridContainer.innerHTML = pendingApps.map(app => {
-          const addonsHTML = (app.addons && app.addons.length)
-            ? `<div class="flex items-center gap-1.5 flex-wrap pt-0.5"><span class="text-[11px] text-slate-500 font-medium">Add-Ons:</span> ${app.addons.map(a => `<span class="text-[11px] bg-slate-800/70 text-slate-300 border border-slate-700/50 px-2 py-0.5 rounded-md">${escapeHTML(a)}</span>`).join('')}</div>`
-            : '';
-
+        applicationsGrid.innerHTML = applications.map(app => {
+          const isPending = (app.status === 'pending' || app.status === 'new');
+          const isAccepted = (app.status === 'accepted' || app.status === 'approved');
           const formattedTimestamp = formatTime(app.date);
 
+          let statusBadgeHTML = `
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+              Pending Review
+            </span>
+          `;
+          if (isAccepted) {
+            statusBadgeHTML = `
+              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                Accepted
+              </span>
+            `;
+          } else if (app.status === 'rejected' || app.status === 'archived') {
+            statusBadgeHTML = `
+              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/30">
+                Archived
+              </span>
+            `;
+          }
+
           return `
-            <div class="request-card relative overflow-hidden backdrop-blur-xl bg-slate-900/60 border border-slate-800/80 hover:border-cyan-500/40 rounded-2xl p-5 shadow-2xl transition-all duration-300 hover:shadow-cyan-500/10" id="card-${escapeHTML(app.id)}">
-              <!-- Top Accent Light Bar -->
+            <div class="summary-card relative overflow-hidden backdrop-blur-xl bg-slate-900/60 border border-slate-800/80 hover:border-cyan-500/40 rounded-2xl p-5 shadow-2xl transition-all duration-300 hover:shadow-cyan-500/10" data-app-id="${escapeHTML(app.id || app.ticket)}">
+              <!-- Top Accent Bar -->
               <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent"></div>
 
-              <!-- Card Header: ID, Exact Timestamp, Color-coded Status Badge -->
-              <div class="flex items-center justify-between flex-wrap gap-2 pb-3.5 mb-3.5 border-b border-slate-800/80">
+              <!-- Header: DS-ID, Exact Timestamp, Status -->
+              <div class="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-800/80 flex-wrap">
                 <div class="flex items-center gap-2">
-                  <span class="font-mono text-cyan-400 font-bold text-xs bg-cyan-950/60 border border-cyan-500/30 px-2 py-0.5 rounded-lg tracking-wider">
+                  <span class="font-mono text-cyan-400 font-bold text-xs bg-cyan-950/70 border border-cyan-500/30 px-2 py-0.5 rounded-lg tracking-wider">
                     ${escapeHTML(app.id || app.ticket)}
                   </span>
-                  <span class="request-date text-xs text-slate-400 font-medium flex items-center gap-1" title="Submission Timestamp">
-                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                      <polyline points="12 6 12 12 16 14" stroke-width="2"/>
-                    </svg>
+                  <span class="text-[11px] text-slate-400 font-medium">
                     ${formattedTimestamp}
                   </span>
                 </div>
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">
-                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-                  Pending Review
+                ${statusBadgeHTML}
+              </div>
+
+              <!-- Applicant & Target Package -->
+              <div class="space-y-2 mb-4">
+                <div>
+                  <div class="font-bold text-slate-100 text-base truncate">${escapeHTML(app.name)}</div>
+                  <div class="text-xs text-slate-400 truncate">${escapeHTML(app.company || 'Direct Inquiry')}</div>
+                </div>
+
+                <div class="flex items-center justify-between text-xs py-2 px-3 bg-slate-950/50 rounded-xl border border-slate-800/60">
+                  <span class="text-cyan-300 font-medium truncate max-w-[170px]">${escapeHTML(app.package || 'Starter Tier')}</span>
+                  <span class="font-black text-slate-200">${formatMYR(app.budget)}</span>
+                </div>
+              </div>
+
+              <!-- Action Link / Card Trigger -->
+              <div class="flex items-center justify-between pt-2 border-t border-slate-800/60 text-xs">
+                <span class="text-slate-500 font-mono text-[11px]">${escapeHTML(app.email || '')}</span>
+                <span class="text-cyan-400 font-bold inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  Inspect Intake &rarr;
                 </span>
-              </div>
-
-              <!-- Card Body: Client details, Budget, Package, Description -->
-              <div class="space-y-3 text-sm">
-                <div class="flex items-start justify-between gap-3">
-                  <div>
-                    <div class="font-bold text-slate-100 text-base">
-                      ${escapeHTML(app.name)}
-                    </div>
-                    <div class="text-xs text-slate-400">${escapeHTML(app.company || 'Direct Inquiry')}</div>
-                  </div>
-                  <div class="text-right">
-                    <div class="text-[11px] uppercase tracking-wider text-slate-500 font-semibold">Budget</div>
-                    <div class="font-black text-cyan-400 text-base">${formatMYR(app.budget)}</div>
-                  </div>
-                </div>
-
-                <!-- Contact & Target Package -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">
-                  <div class="bg-slate-950/40 border border-slate-800/60 rounded-lg p-2.5">
-                    <div class="text-slate-500 font-medium mb-0.5">Contact</div>
-                    <div class="text-slate-300 font-medium truncate">${escapeHTML(app.email)}</div>
-                    <div class="text-slate-400 font-mono mt-0.5">${escapeHTML(app.phone)}</div>
-                  </div>
-                  <div class="bg-slate-950/40 border border-slate-800/60 rounded-lg p-2.5">
-                    <div class="text-slate-500 font-medium mb-0.5">Target Package</div>
-                    <div class="text-cyan-300 font-semibold truncate">${escapeHTML(app.package || 'Starter')}</div>
-                    ${app.source ? `<div class="text-slate-500 text-[11px] mt-0.5 truncate">Via ${escapeHTML(app.source)}</div>` : ''}
-                  </div>
-                </div>
-
-                <!-- Project Description -->
-                <div class="bg-slate-950/50 border border-slate-800/70 border-l-2 border-l-cyan-400/80 rounded-lg p-3 text-xs leading-relaxed text-slate-300">
-                  "${escapeHTML(app.description)}"
-                </div>
-
-                ${addonsHTML}
-              </div>
-
-              <!-- Modern Action Buttons -->
-              <div class="request-actions flex items-center gap-2 pt-3.5 mt-3.5 border-t border-slate-800/80 flex-wrap">
-                <button class="btn btn-primary accept-btn inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-md shadow-cyan-500/20 transition-all duration-200 hover:scale-[1.02]" data-id="${escapeHTML(app.id)}" style="flex: 1;">
-                  ✓ Accept Application
-                </button>
-                <button class="btn btn-ghost reject-btn inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all duration-200" data-id="${escapeHTML(app.id)}" style="flex: 1;">
-                  ✕ Reject
-                </button>
               </div>
             </div>
           `;
         }).join('');
       }
 
-      /* --- Event Delegation: Accept and Reject Actions --- */
-      if (gridContainer) {
-        gridContainer.addEventListener('click', function (e) {
-          const acceptBtn = e.target.closest('.accept-btn');
-          const rejectBtn = e.target.closest('.reject-btn');
+      /* --- 7. Render Support Inquiries (Compact Summary Cards) --- */
+      const inquiriesGrid = document.getElementById('inquiries-grid');
+      const inquiriesCountBadge = document.getElementById('inquiries-count-badge');
+      const inquiriesPillCount = document.getElementById('inquiries-pill-count');
 
-          if (!acceptBtn && !rejectBtn) return;
+      function renderInquiriesGrid() {
+        if (!inquiriesGrid) return;
 
-          const appId = (acceptBtn || rejectBtn).getAttribute('data-id');
-          const isAccept = Boolean(acceptBtn);
+        const inquiries = getInquiries();
+        const activeInquiries = inquiries.filter(i => i.status !== 'resolved' && i.status !== 'archived');
 
-          const applications = getApplications();
-          const target = applications.find(a => a.id === appId || a.ticket === appId);
+        if (inquiriesCountBadge) {
+          inquiriesCountBadge.textContent = `${activeInquiries.length} Active Inquir${activeInquiries.length === 1 ? 'y' : 'ies'}`;
+        }
+        if (inquiriesPillCount) {
+          inquiriesPillCount.textContent = `${activeInquiries.length}`;
+        }
 
-          if (target) {
-            target.status = isAccept ? 'accepted' : 'rejected';
+        if (!inquiries.length) {
+          inquiriesGrid.innerHTML = `
+            <div class="glass-card col-span-full text-center py-12 px-6">
+              <p class="text-base text-slate-400 font-medium mb-3">No client support transmissions logged.</p>
+              <button class="btn btn-primary btn-sm reset-demo-cta">Restore Demo Inquiries</button>
+            </div>
+          `;
+          const cta = inquiriesGrid.querySelector('.reset-demo-cta');
+          if (cta) cta.addEventListener('click', resetAllData);
+          return;
+        }
+
+        inquiriesGrid.innerHTML = inquiries.map(inq => {
+          const isResolved = (inq.status === 'resolved');
+          const formattedTimestamp = formatTime(inq.timestamp);
+
+          let statusBadge = `
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/30">
+              <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
+              New Transmission
+            </span>
+          `;
+          if (isResolved) {
+            statusBadge = `
+              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                Resolved
+              </span>
+            `;
+          }
+
+          // Type Tag Formatter
+          const typeMap = {
+            problem: 'Report a Problem',
+            billing: 'Billing & Invoice',
+            'existing-client': 'Active Client',
+            general: 'General Inquiry'
+          };
+          const typeLabel = typeMap[inq.type] || 'General Inquiry';
+
+          return `
+            <div class="summary-card inquiry-card relative overflow-hidden backdrop-blur-xl bg-slate-900/60 border border-slate-800/80 hover:border-rose-500/40 rounded-2xl p-5 shadow-2xl transition-all duration-300 hover:shadow-rose-500/10" data-inq-id="${escapeHTML(inq.id)}">
+              <!-- Top Accent Bar -->
+              <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-rose-500/40 to-transparent"></div>
+
+              <!-- Header: INQ-ID, Exact Timestamp, Status -->
+              <div class="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-800/80 flex-wrap">
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-rose-400 font-bold text-xs bg-rose-950/70 border border-rose-500/30 px-2 py-0.5 rounded-lg tracking-wider">
+                    ${escapeHTML(inq.id)}
+                  </span>
+                  <span class="text-[11px] text-slate-400 font-medium">
+                    ${formattedTimestamp}
+                  </span>
+                </div>
+                ${statusBadge}
+              </div>
+
+              <!-- Sender & Subject -->
+              <div class="space-y-2 mb-4">
+                <div class="flex items-start justify-between gap-2">
+                  <div>
+                    <div class="font-bold text-slate-100 text-base truncate">${escapeHTML(inq.name)}</div>
+                    <div class="text-xs text-slate-400 truncate">${escapeHTML(inq.email)}</div>
+                  </div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700/60 whitespace-nowrap">
+                    ${escapeHTML(typeLabel)}
+                  </span>
+                </div>
+
+                <div class="text-xs text-slate-300 font-semibold line-clamp-1 pt-1">
+                  ${escapeHTML(inq.subject)}
+                </div>
+                <div class="text-xs text-slate-400 line-clamp-2 leading-relaxed bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/60">
+                  "${escapeHTML(inq.message)}"
+                </div>
+              </div>
+
+              <!-- Action Link / Card Trigger -->
+              <div class="flex items-center justify-between pt-2 border-t border-slate-800/60 text-xs">
+                <span class="text-slate-500 font-mono text-[11px]">${escapeHTML(inq.id)}</span>
+                <span class="text-rose-400 font-bold inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  Read Transmission &rarr;
+                </span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      /* --- 8. Glassmorphic Details Modal (Inspect & Actions) --- */
+      const detailsModal = document.getElementById('project-details-modal');
+      const modalCloseBtn = document.getElementById('modal-close-btn');
+      const modalCategoryBadge = document.getElementById('modal-category-badge');
+      const modalStatusBadge = document.getElementById('modal-status-badge');
+      const modalDynamicContent = document.getElementById('modal-dynamic-content');
+      const modalDynamicActions = document.getElementById('modal-dynamic-actions');
+
+      function openModal() {
+        if (!detailsModal) return;
+        detailsModal.classList.add('active');
+        detailsModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        if (!detailsModal) return;
+        detailsModal.classList.remove('active');
+        detailsModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
+      if (detailsModal) {
+        detailsModal.addEventListener('click', function (e) {
+          if (e.target === detailsModal) closeModal();
+        });
+      }
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && detailsModal && detailsModal.classList.contains('active')) {
+          closeModal();
+        }
+      });
+
+      // Open Modal for Project Application
+      function openProjectModal(appId) {
+        const applications = getApplications();
+        const app = applications.find(a => a.id === appId || a.ticket === appId);
+        if (!app) return;
+
+        const isAccepted = (app.status === 'accepted' || app.status === 'approved');
+        const formattedTimestamp = formatTime(app.date);
+        const cleanPhone = (app.phone || '').replace(/\D/g, '');
+
+        modalCategoryBadge.textContent = app.id || app.ticket;
+        modalCategoryBadge.className = 'font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-cyan-950/70 text-cyan-400 border border-cyan-500/30';
+
+        if (isAccepted) {
+          modalStatusBadge.textContent = 'Slot Accepted';
+          modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30';
+        } else if (app.status === 'rejected' || app.status === 'archived') {
+          modalStatusBadge.textContent = 'Application Archived';
+          modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30';
+        } else {
+          modalStatusBadge.textContent = 'Pending Review';
+          modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30';
+        }
+
+        const addonsHTML = (app.addons && app.addons.length)
+          ? `<div class="flex items-center gap-1.5 flex-wrap pt-1"><span class="text-xs text-slate-400 font-medium">Add-Ons:</span> ${app.addons.map(a => `<span class="text-xs bg-slate-800 text-slate-300 border border-slate-700/60 px-2 py-0.5 rounded-md font-mono">${escapeHTML(a)}</span>`).join('')}</div>`
+          : '';
+
+        modalDynamicContent.innerHTML = `
+          <div class="space-y-4 text-sm">
+            <!-- Client & Timestamp Banner -->
+            <div class="flex items-start justify-between gap-4 pb-3 border-b border-slate-800/80">
+              <div>
+                <h3 class="text-xl font-bold text-slate-100">${escapeHTML(app.name)}</h3>
+                <p class="text-xs text-slate-400 mt-0.5">${escapeHTML(app.company || 'Independent Project Client')}</p>
+              </div>
+              <div class="text-right">
+                <div class="text-[11px] uppercase tracking-wider text-slate-500 font-semibold">Allocated Budget</div>
+                <div class="text-lg font-black text-cyan-400">${formatMYR(app.budget)}</div>
+              </div>
+            </div>
+
+            <!-- Meta Grid: Contact & Package -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3">
+                <div class="text-slate-500 font-semibold mb-1 uppercase tracking-wider text-[10px]">Client Contact Channels</div>
+                <div class="text-slate-200 font-medium truncate flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  <a href="mailto:${escapeHTML(app.email)}" class="hover:underline">${escapeHTML(app.email)}</a>
+                </div>
+                <div class="text-slate-400 font-mono mt-1.5 flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  <a href="tel:${escapeHTML(app.phone)}" class="hover:underline">${escapeHTML(app.phone)}</a>
+                </div>
+              </div>
+
+              <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3">
+                <div class="text-slate-500 font-semibold mb-1 uppercase tracking-wider text-[10px]">Package Specification</div>
+                <div class="text-cyan-300 font-bold truncate">${escapeHTML(app.package || 'Starter Tier')}</div>
+                <div class="text-slate-400 mt-1">Submitted: ${formattedTimestamp}</div>
+                ${app.source ? `<div class="text-slate-500 text-[11px] mt-0.5">Referral Source: ${escapeHTML(app.source)}</div>` : ''}
+              </div>
+            </div>
+
+            <!-- Project Description -->
+            <div>
+              <div class="text-slate-400 text-xs font-semibold mb-1.5 uppercase tracking-wider text-[10px]">Client Project Brief &amp; Scope Requirements</div>
+              <div class="bg-slate-950/70 border border-slate-800/90 border-l-2 border-l-cyan-400 rounded-xl p-4 text-xs leading-relaxed text-slate-200">
+                "${escapeHTML(app.description)}"
+              </div>
+            </div>
+
+            ${addonsHTML}
+          </div>
+        `;
+
+        modalDynamicActions.innerHTML = `
+          <a href="https://wa.me/60${cleanPhone}?text=${encodeURIComponent('Hi ' + app.name + ', this is Danial from DanStudio Works regarding your application (' + (app.id || app.ticket) + ') for ' + app.package + '.')}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-all">
+            💬 WhatsApp Client
+          </a>
+          <button class="btn btn-ghost modal-reject-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all" data-id="${escapeHTML(app.id || app.ticket)}">
+            ✕ Reject / Archive
+          </button>
+          <button class="btn btn-primary modal-accept-btn inline-flex items-center gap-1.5 px-5 py-2 rounded-xl text-xs font-bold bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-md shadow-cyan-500/20 transition-all" data-id="${escapeHTML(app.id || app.ticket)}">
+            ✓ Accept Application
+          </button>
+        `;
+
+        // Wire modal buttons
+        const acceptBtn = modalDynamicActions.querySelector('.modal-accept-btn');
+        const rejectBtn = modalDynamicActions.querySelector('.modal-reject-btn');
+
+        if (acceptBtn) {
+          acceptBtn.addEventListener('click', function () {
+            app.status = 'accepted';
             saveApplications(applications);
+            renderApplicationsGrid();
+            openProjectModal(app.id || app.ticket);
+          });
+        }
 
-            // Animate card transition
-            const cardEl = document.getElementById(`card-${appId}`);
-            if (cardEl) {
-              cardEl.style.transition = 'all 0.3s ease';
-              cardEl.style.transform = 'scale(0.98)';
-              cardEl.style.opacity = '0.5';
+        if (rejectBtn) {
+          rejectBtn.addEventListener('click', function () {
+            app.status = 'rejected';
+            saveApplications(applications);
+            renderApplicationsGrid();
+            closeModal();
+          });
+        }
 
-              setTimeout(function () {
-                renderApplicationsGrid();
-              }, 300);
-            } else {
-              renderApplicationsGrid();
-            }
+        openModal();
+      }
+
+      // Open Modal for Support Inquiry
+      function openInquiryModal(inqId) {
+        const inquiries = getInquiries();
+        const inq = inquiries.find(i => i.id === inqId);
+        if (!inq) return;
+
+        const isResolved = (inq.status === 'resolved');
+        const formattedTimestamp = formatTime(inq.timestamp);
+
+        modalCategoryBadge.textContent = inq.id;
+        modalCategoryBadge.className = 'font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-950/70 text-rose-400 border border-rose-500/30';
+
+        if (isResolved) {
+          modalStatusBadge.textContent = 'Transmission Resolved';
+          modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30';
+        } else {
+          modalStatusBadge.textContent = 'New Transmission';
+          modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30';
+        }
+
+        const typeMap = {
+          problem: 'Report a Problem / Bug',
+          billing: 'Billing & Invoice Support',
+          'existing-client': 'Active Client Inquiry',
+          general: 'General Studio Inquiry'
+        };
+        const typeLabel = typeMap[inq.type] || 'General Inquiry';
+
+        modalDynamicContent.innerHTML = `
+          <div class="space-y-4 text-sm">
+            <!-- Sender Header -->
+            <div class="flex items-start justify-between gap-4 pb-3 border-b border-slate-800/80">
+              <div>
+                <h3 class="text-xl font-bold text-slate-100">${escapeHTML(inq.name)}</h3>
+                <p class="text-xs text-slate-400 mt-0.5">Direct transmission from Contact Portal</p>
+              </div>
+              <span class="text-xs font-mono px-3 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700/60">
+                ${escapeHTML(typeLabel)}
+              </span>
+            </div>
+
+            <!-- Meta Box -->
+            <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 text-xs grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div>
+                <span class="text-slate-500 font-semibold block uppercase tracking-wider text-[10px]">Email Address</span>
+                <a href="mailto:${escapeHTML(inq.email)}" class="text-cyan-400 font-medium hover:underline">${escapeHTML(inq.email)}</a>
+              </div>
+              <div>
+                <span class="text-slate-500 font-semibold block uppercase tracking-wider text-[10px]">Transmission Timestamp</span>
+                <span class="text-slate-300 font-medium">${formattedTimestamp}</span>
+              </div>
+            </div>
+
+            <!-- Subject & Content -->
+            <div>
+              <div class="text-slate-400 text-xs font-semibold mb-1 uppercase tracking-wider text-[10px]">Subject Reference</div>
+              <h4 class="text-base font-bold text-slate-100 mb-2">${escapeHTML(inq.subject)}</h4>
+              <div class="text-slate-400 text-xs font-semibold mb-1 uppercase tracking-wider text-[10px]">Detailed Transmission Message</div>
+              <div class="bg-slate-950/70 border border-slate-800/90 border-l-2 border-l-rose-400 rounded-xl p-4 text-xs leading-relaxed text-slate-200">
+                ${escapeHTML(inq.message)}
+              </div>
+            </div>
+          </div>
+        `;
+
+        modalDynamicActions.innerHTML = `
+          <a href="mailto:${escapeHTML(inq.email)}?subject=Re:%20${encodeURIComponent(inq.subject)}" class="btn btn-primary inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-cyan-400 hover:bg-cyan-300 text-slate-950 transition-all">
+            ✉ Reply via Email
+          </a>
+          <button class="btn btn-ghost modal-archive-inq-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all" data-id="${escapeHTML(inq.id)}">
+            ✕ Archive
+          </button>
+          <button class="btn btn-ghost modal-resolve-inq-btn inline-flex items-center gap-1.5 px-5 py-2 rounded-xl text-xs font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/35 transition-all" data-id="${escapeHTML(inq.id)}">
+            ✓ ${isResolved ? 'Resolved' : 'Mark as Resolved'}
+          </button>
+        `;
+
+        // Wire actions
+        const resolveBtn = modalDynamicActions.querySelector('.modal-resolve-inq-btn');
+        const archiveBtn = modalDynamicActions.querySelector('.modal-archive-inq-btn');
+
+        if (resolveBtn) {
+          resolveBtn.addEventListener('click', function () {
+            inq.status = 'resolved';
+            saveInquiries(inquiries);
+            renderInquiriesGrid();
+            openInquiryModal(inq.id);
+          });
+        }
+
+        if (archiveBtn) {
+          archiveBtn.addEventListener('click', function () {
+            inq.status = 'archived';
+            saveInquiries(inquiries);
+            renderInquiriesGrid();
+            closeModal();
+          });
+        }
+
+        openModal();
+      }
+
+      /* --- 9. Event Delegation for Summary Card Clicks --- */
+      if (applicationsGrid) {
+        applicationsGrid.addEventListener('click', function (e) {
+          const card = e.target.closest('[data-app-id]');
+          if (card) {
+            const appId = card.getAttribute('data-app-id');
+            openProjectModal(appId);
           }
         });
       }
 
-      /* --- Reset Mock Data Button --- */
-      function resetData() {
+      if (inquiriesGrid) {
+        inquiriesGrid.addEventListener('click', function (e) {
+          const card = e.target.closest('[data-inq-id]');
+          if (card) {
+            const inqId = card.getAttribute('data-inq-id');
+            openInquiryModal(inqId);
+          }
+        });
+      }
+
+      /* --- 10. Reset All Mock Data --- */
+      function resetAllData() {
         localStorage.setItem('dsw_requests', JSON.stringify(DEFAULT_PENDING_APPLICATIONS));
+        localStorage.setItem('danstudio_inquiries', JSON.stringify(DEFAULT_INQUIRIES));
         renderApplicationsGrid();
+        renderInquiriesGrid();
       }
 
       const resetBtn = document.getElementById('reset-mock-btn');
       if (resetBtn) {
-        resetBtn.addEventListener('click', resetData);
+        resetBtn.addEventListener('click', resetAllData);
       }
 
-      // Initial Render
+      // Initial Grids Render
       renderApplicationsGrid();
+      renderInquiriesGrid();
 
     })();
   </script>
