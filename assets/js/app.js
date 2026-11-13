@@ -2571,11 +2571,11 @@
       const percentX = (e.clientX - centerX) / centerX;
       const percentY = (e.clientY - centerY) / centerY;
 
-      // Move orbs slightly opposite to the mouse pointer for realistic depth
-      targetCyanX = -percentX * 45;
-      targetCyanY = -percentY * 45;
-      targetMagX = -percentX * 25;
-      targetMagY = -percentY * 25;
+      // Significantly boosted sweeping reaction from cursor movement
+      targetCyanX = -percentX * 135;
+      targetCyanY = -percentY * 110;
+      targetMagX = -percentX * 90;
+      targetMagY = -percentY * 75;
 
       requestTick();
     });

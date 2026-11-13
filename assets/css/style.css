@@ -1750,6 +1750,8 @@ a {
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
 }
 
 /* Subtle Cyber Grid Pattern Overlay with Radial Edge Fade */
@@ -1772,10 +1774,10 @@ a {
   border-radius: 50%;
   filter: blur(120px);
   -webkit-filter: blur(120px);
-  opacity: 0.4;
+  opacity: 0.45;
   pointer-events: none;
   will-change: transform;
-  animation: slow-drift 18s ease-in-out infinite alternate;
+  animation: slow-drift 12s ease-in-out infinite;
 }
 
 .cyan-orb {
@@ -1792,19 +1794,36 @@ a {
   height: 400px;
   bottom: -10%;
   right: -5%;
-  animation-duration: 20s;
-  animation-direction: alternate-reverse;
+  animation: slow-drift-magenta 14s ease-in-out infinite;
 }
 
 @keyframes slow-drift {
   0% {
     transform: translate(var(--parallax-x, 0px), var(--parallax-y, 0px)) scale(1);
   }
-  50% {
-    transform: translate(calc(var(--parallax-x, 0px) + 60px), calc(var(--parallax-y, 0px) + 40px)) scale(1.15);
+  33% {
+    transform: translate(calc(var(--parallax-x, 0px) + 15vw), calc(var(--parallax-y, 0px) - 10vh)) scale(1.25);
+  }
+  66% {
+    transform: translate(calc(var(--parallax-x, 0px) - 15vw), calc(var(--parallax-y, 0px) + 15vh)) scale(0.85);
   }
   100% {
-    transform: translate(calc(var(--parallax-x, 0px) - 40px), calc(var(--parallax-y, 0px) + 70px)) scale(0.95);
+    transform: translate(var(--parallax-x, 0px), var(--parallax-y, 0px)) scale(1);
+  }
+}
+
+@keyframes slow-drift-magenta {
+  0% {
+    transform: translate(var(--parallax-x, 0px), var(--parallax-y, 0px)) scale(1);
+  }
+  33% {
+    transform: translate(calc(var(--parallax-x, 0px) - 12vw), calc(var(--parallax-y, 0px) + 12vh)) scale(0.85);
+  }
+  66% {
+    transform: translate(calc(var(--parallax-x, 0px) + 15vw), calc(var(--parallax-y, 0px) - 10vh)) scale(1.25);
+  }
+  100% {
+    transform: translate(var(--parallax-x, 0px), var(--parallax-y, 0px)) scale(1);
   }
 }
 
