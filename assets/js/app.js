@@ -1467,6 +1467,292 @@
   }
 
   /* ==========================================================================
+     12b. NEXUS COMMAND ADMIN CONSOLE (HORIZONTAL LIST & DELETE WORKFLOW)
+     ========================================================================== */
+
+  let pendingDeleteTargetId = null;
+  let pendingDeleteTargetType = null; // 'application' | 'inquiry'
+
+  function getAdminApplications() {
+    try {
+      const raw = localStorage.getItem('dsw_requests');
+      if (raw) return JSON.parse(raw);
+    } catch (_) {}
+    return [];
+  }
+
+  function saveAdminApplications(data) {
+    try {
+      localStorage.setItem('dsw_requests', JSON.stringify(data));
+    } catch (_) {}
+  }
+
+  function getAdminInquiries() {
+    try {
+      const raw = localStorage.getItem('danstudio_inquiries');
+      if (raw) return JSON.parse(raw);
+    } catch (_) {}
+    return [];
+  }
+
+  function saveAdminInquiries(data) {
+    try {
+      localStorage.setItem('danstudio_inquiries', JSON.stringify(data));
+    } catch (_) {}
+  }
+
+  function renderApplicationsGrid() {
+    const grid = document.getElementById('applications-grid');
+    if (!grid) return;
+
+    const apps = getAdminApplications();
+    if (!apps.length) {
+      grid.innerHTML = `
+        <div class="glass-card text-center py-12 px-6 rounded-2xl border border-slate-800/80 bg-slate-900/40">
+          <p class="text-base text-slate-400 font-medium">No client applications currently in queue.</p>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = apps.map(app => {
+      const formattedTimestamp = relativeTime(app.date || app.timestamp);
+      let statusBadgeHTML = `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+          Pending
+        </span>
+      `;
+      if (app.status === 'accepted') {
+        statusBadgeHTML = `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            Accepted
+          </span>
+        `;
+      } else if (app.status === 'waiting') {
+        statusBadgeHTML = `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+            Waiting
+          </span>
+        `;
+      } else if (app.status === 'rejected' || app.status === 'archived') {
+        statusBadgeHTML = `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/30">
+            Archived
+          </span>
+        `;
+      }
+
+      return `
+        <div class="summary-card flex flex-col md:flex-row items-start md:items-center justify-between p-3.5 sm:p-4 bg-slate-900/50 border border-slate-800/70 hover:border-cyan-500/40 rounded-xl hover:bg-slate-800/40 transition-all duration-200 cursor-pointer gap-3" data-app-id="${sanitizeHTML(app.id || app.ticket)}">
+          <!-- Left Side: ID, Date, Name, Company -->
+          <div class="flex items-center gap-3 sm:gap-4 flex-wrap sm:flex-nowrap min-w-0">
+            <span class="font-mono text-cyan-400 font-bold text-xs bg-cyan-950/70 border border-cyan-500/30 px-2.5 py-1 rounded-lg tracking-wider whitespace-nowrap">
+              ${sanitizeHTML(app.id || app.ticket)}
+            </span>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-bold text-slate-100 text-sm truncate">${sanitizeHTML(app.name)}</span>
+                <span class="text-xs text-slate-400 truncate hidden sm:inline">&bull; ${sanitizeHTML(app.company || 'Direct Inquiry')}</span>
+              </div>
+              <div class="text-[11px] text-slate-500 mt-0.5 flex items-center gap-2">
+                <span>${formattedTimestamp}</span>
+                <span class="text-slate-600 hidden md:inline">|</span>
+                <span class="text-cyan-400/80 hidden md:inline truncate max-w-[200px]">${sanitizeHTML(app.package || 'Starter Tier')}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side: Status Badge, Budget, and Action Arrow -->
+          <div class="flex items-center gap-3 sm:gap-4 self-end md:self-auto flex-shrink-0">
+            <div class="text-right hidden sm:block">
+              <div class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Budget</div>
+              <div class="font-black text-slate-200 text-xs">${formatCurrency(app.budget)}</div>
+            </div>
+            ${statusBadgeHTML}
+            <span class="text-xs text-cyan-400 font-bold inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform pl-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderInquiriesGrid() {
+    const grid = document.getElementById('inquiries-grid');
+    if (!grid) return;
+
+    const inquiries = getAdminInquiries();
+    if (!inquiries.length) {
+      grid.innerHTML = `
+        <div class="glass-card text-center py-12 px-6 rounded-2xl border border-slate-800/80 bg-slate-900/40">
+          <p class="text-base text-slate-400 font-medium">No client support transmissions logged.</p>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = inquiries.map(inq => {
+      const isResolved = (inq.status === 'resolved');
+      const formattedTimestamp = relativeTime(inq.timestamp);
+
+      let statusBadge = `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/30">
+          <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
+          New Transmission
+        </span>
+      `;
+      if (isResolved) {
+        statusBadge = `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            Resolved
+          </span>
+        `;
+      }
+
+      const typeMap = {
+        problem: 'Report a Problem',
+        billing: 'Billing & Invoice',
+        'existing-client': 'Active Client',
+        general: 'General Inquiry'
+      };
+      const typeLabel = typeMap[inq.type] || 'General Inquiry';
+
+      return `
+        <div class="summary-card inquiry-card flex flex-col md:flex-row items-start md:items-center justify-between p-3.5 sm:p-4 bg-slate-900/50 border border-slate-800/70 hover:border-rose-500/40 rounded-xl hover:bg-slate-800/40 transition-all duration-200 cursor-pointer gap-3" data-inq-id="${sanitizeHTML(inq.id)}">
+          <!-- Left Side: ID, Date, Sender Name, Subject -->
+          <div class="flex items-center gap-3 sm:gap-4 flex-wrap sm:flex-nowrap min-w-0">
+            <span class="font-mono text-rose-400 font-bold text-xs bg-rose-950/70 border border-rose-500/30 px-2.5 py-1 rounded-lg tracking-wider whitespace-nowrap">
+              ${sanitizeHTML(inq.id)}
+            </span>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-bold text-slate-100 text-sm truncate">${sanitizeHTML(inq.name)}</span>
+                <span class="text-xs text-slate-400 truncate hidden sm:inline">&bull; ${sanitizeHTML(inq.subject)}</span>
+              </div>
+              <div class="text-[11px] text-slate-500 mt-0.5 flex items-center gap-2">
+                <span>${formattedTimestamp}</span>
+                <span class="text-slate-600 hidden md:inline">|</span>
+                <span class="text-rose-400/80 hidden md:inline truncate max-w-[200px]">${sanitizeHTML(typeLabel)}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side: Status Badge, Classification, and Action Arrow -->
+          <div class="flex items-center gap-3 sm:gap-4 self-end md:self-auto flex-shrink-0">
+            <div class="text-right hidden sm:block">
+              <div class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Classification</div>
+              <div class="font-semibold text-slate-300 text-xs">${sanitizeHTML(typeLabel)}</div>
+            </div>
+            ${statusBadge}
+            <span class="text-xs text-rose-400 font-bold inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform pl-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function initNexusAdminDashboard() {
+    const isNexusAdmin = document.body.getAttribute('data-page') === 'admin' ||
+                         window.location.pathname.endsWith('admin.html') ||
+                         document.getElementById('applications-grid') !== null;
+
+    if (!isNexusAdmin) return;
+
+    const deleteConfirmModal = document.getElementById('delete-confirm-modal');
+    const deleteRecordTargetId = document.getElementById('delete-record-target-id');
+    const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+    const cancelDeleteXBtn = document.getElementById('cancel-delete-x-btn');
+    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+    const detailsModal = document.getElementById('project-details-modal');
+
+    function openDeleteModal(id, type) {
+      pendingDeleteTargetId = id;
+      pendingDeleteTargetType = type;
+      if (deleteRecordTargetId) {
+        deleteRecordTargetId.textContent = id;
+      }
+      if (deleteConfirmModal) {
+        deleteConfirmModal.classList.add('active');
+        deleteConfirmModal.setAttribute('aria-hidden', 'false');
+      }
+    }
+
+    function closeDeleteModal() {
+      pendingDeleteTargetId = null;
+      pendingDeleteTargetType = null;
+      if (deleteConfirmModal) {
+        deleteConfirmModal.classList.remove('active');
+        deleteConfirmModal.setAttribute('aria-hidden', 'true');
+      }
+    }
+
+    // Delegate clicks on .modal-delete-btn
+    document.addEventListener('click', (e) => {
+      const delBtn = e.target.closest('.modal-delete-btn');
+      if (delBtn) {
+        const id = delBtn.getAttribute('data-id');
+        const type = delBtn.getAttribute('data-type') || 'application';
+        openDeleteModal(id, type);
+      }
+    });
+
+    if (cancelDeleteBtn) {
+      cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+    }
+    if (cancelDeleteXBtn) {
+      cancelDeleteXBtn.addEventListener('click', closeDeleteModal);
+    }
+    if (deleteConfirmModal) {
+      deleteConfirmModal.addEventListener('click', (e) => {
+        if (e.target === deleteConfirmModal) closeDeleteModal();
+      });
+    }
+
+    if (confirmDeleteBtn) {
+      confirmDeleteBtn.addEventListener('click', () => {
+        if (!pendingDeleteTargetId || !pendingDeleteTargetType) {
+          closeDeleteModal();
+          return;
+        }
+
+        if (pendingDeleteTargetType === 'application') {
+          const apps = getAdminApplications();
+          const filtered = apps.filter(a => (a.id || a.ticket) !== pendingDeleteTargetId);
+          saveAdminApplications(filtered);
+          if (typeof renderApplicationsGrid === 'function') renderApplicationsGrid();
+          showToast(`Application #${pendingDeleteTargetId} permanently deleted.`, 'info');
+        } else if (pendingDeleteTargetType === 'inquiry') {
+          const inqs = getAdminInquiries();
+          const filtered = inqs.filter(i => i.id !== pendingDeleteTargetId);
+          saveAdminInquiries(filtered);
+          if (typeof renderInquiriesGrid === 'function') renderInquiriesGrid();
+          showToast(`Inquiry #${pendingDeleteTargetId} permanently deleted.`, 'info');
+        }
+
+        closeDeleteModal();
+
+        // Close details modal if open
+        if (detailsModal) {
+          detailsModal.classList.remove('active');
+          detailsModal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        }
+      });
+    }
+  }
+
+  /* ==========================================================================
      13. GLOBAL PROJECT COUNTER (HOMEPAGE)
      ========================================================================== */
 
@@ -1798,6 +2084,7 @@
     initSupportForm();
     initDevLogin();
     initDevConsole();
+    initNexusAdminDashboard();
     initProjectCounter();
     initStatusPage();
   });

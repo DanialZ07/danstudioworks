@@ -1648,3 +1648,23 @@ a {
   transform: scale(1);
   opacity: 1;
 }
+
+/* ==========================================================================
+   21. DOUBLE-CONFIRMATION DELETE MODAL (DANGER THEME)
+   ========================================================================== */
+#delete-confirm-modal {
+  z-index: 100000;
+}
+
+#delete-confirm-modal .details-modal-dialog {
+  max-width: 440px;
+  border-color: rgba(244, 63, 94, 0.4);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 35px rgba(244, 63, 94, 0.25);
+}
+
+.modal-delete-btn:hover {
+  background-color: rgba(244, 63, 94, 0.22) !important;
+  border-color: rgba(244, 63, 94, 0.5) !important;
+  color: #fda4af !important;
+  transform: translateY(-1px);
+}
