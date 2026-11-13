@@ -1568,7 +1568,6 @@
     if (!overlay) return;
 
     // Lock page scrolling during boot sequence
-    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
     const textEl = document.getElementById('boot-scramble-text');
@@ -1633,7 +1632,7 @@
     // Fade out overlay after exactly 2.5 seconds
     setTimeout(() => {
       overlay.classList.add('fade-out');
-      document.body.style.overflow = previousOverflow || '';
+      document.body.style.overflow = '';
 
       // Remove from DOM after fade-out transition completes
       setTimeout(() => {

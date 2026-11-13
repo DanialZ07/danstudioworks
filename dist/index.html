@@ -37,11 +37,11 @@
   <!-- ======================================================================
        SCI-FI / CYBER BOOT SEQUENCE ENTRY OVERLAY
        ====================================================================== -->
-  <div id="boot-overlay" class="boot-sequence-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#07080E] select-none" role="presentation" aria-hidden="true">
+  <div id="boot-overlay" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#07080E] w-screen h-screen overflow-hidden boot-sequence-overlay select-none" role="presentation" aria-hidden="true">
     <div class="boot-scanline"></div>
     <div class="boot-grid-bg"></div>
 
-    <div class="boot-content relative z-10 flex flex-col items-center text-center px-4">
+    <div class="boot-content relative z-10 flex flex-col items-center justify-center w-full max-w-md mx-auto px-4 text-center">
       <div class="boot-logo-wrapper mb-6 relative">
         <div class="boot-glow-ring"></div>
         <img src="/assets/logo_landscape_layout_transparent-CbUDZ6jn.png" alt="DanStudio Works" class="boot-logo h-12 md:h-14 w-auto object-contain">
