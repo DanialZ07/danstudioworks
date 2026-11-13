@@ -2114,10 +2114,6 @@
      ========================================================================== */
 
   function syncPublicCapacityBadge() {
-    const textEl = document.getElementById('live-capacity-text');
-    const dotEl = document.getElementById('capacity-indicator-dot');
-    if (!textEl && !dotEl) return;
-
     let requests = [];
     try {
       const raw = localStorage.getItem('dsw_requests');
@@ -2141,31 +2137,90 @@
       return s === 'pending' || s === 'new';
     }).length;
 
-    const MAX_ACTIVE = 1;
-    const MAX_QUEUE = 3;
-
-    // Evaluate capacity limit
-    const isFull = (activeCount >= MAX_ACTIVE && queueCount >= MAX_QUEUE);
-
-    if (isFull) {
-      if (textEl) {
-        textEl.textContent = 'PRODUCTION QUEUE FULL';
-        textEl.style.color = '#F43F5E';
+    // Optional legacy fallback for elements if present
+    const legacyTextEl = document.getElementById('live-capacity-text');
+    const legacyDotEl = document.getElementById('capacity-indicator-dot');
+    if (legacyTextEl || legacyDotEl) {
+      const isLegacyFull = (activeCount >= 1 && queueCount >= 3);
+      if (legacyTextEl) {
+        legacyTextEl.textContent = isLegacyFull
+          ? 'PRODUCTION QUEUE FULL'
+          : `ACTIVE: [${activeCount}/1]  QUEUE: [${queueCount}/3]`;
+        legacyTextEl.style.color = isLegacyFull ? '#F43F5E' : '';
       }
-      if (dotEl) {
-        dotEl.style.background = '#F43F5E';
-        dotEl.style.boxShadow = '0 0 10px #F43F5E';
-      }
-    } else {
-      if (textEl) {
-        textEl.textContent = `ACTIVE: [${activeCount}/${MAX_ACTIVE}]  QUEUE: [${queueCount}/${MAX_QUEUE}]`;
-        textEl.style.color = '';
-      }
-      if (dotEl) {
-        dotEl.style.background = '#22D3EE';
-        dotEl.style.boxShadow = '0 0 8px #22D3EE';
+      if (legacyDotEl) {
+        legacyDotEl.style.background = isLegacyFull ? '#F43F5E' : '#22D3EE';
+        legacyDotEl.style.boxShadow = isLegacyFull ? '0 0 10px #F43F5E' : '0 0 8px #22D3EE';
       }
     }
+
+    const hud = document.getElementById('telemetry-hud');
+    if (!hud) return;
+
+    // Update count labels
+    const activeCountEl = document.getElementById('hud-active-count');
+    if (activeCountEl) {
+      activeCountEl.textContent = activeCount;
+    }
+
+    const queueCountEl = document.getElementById('hud-queue-count');
+    if (queueCountEl) {
+      queueCountEl.textContent = queueCount;
+    }
+
+    // Active Bar Fill: If activeCount >= 1, set width to 100%, else 0%
+    const activeBar = document.getElementById('hud-active-bar');
+    if (activeBar) {
+      activeBar.style.width = activeCount >= 1 ? '100%' : '0%';
+    }
+
+    // Queue Segments Fill: Select all .hud-queue-segment. If index < queueCount, fill with cyan and shadow
+    const queueSegments = hud.querySelectorAll('.hud-queue-segment');
+    queueSegments.forEach((segment, index) => {
+      if (index < queueCount) {
+        segment.classList.remove('bg-slate-800');
+        segment.classList.add('bg-cyan-400', 'shadow-[0_0_8px_#22D3EE]');
+      } else {
+        segment.classList.remove(
+          'bg-cyan-400',
+          'bg-rose-500',
+          'shadow-[0_0_8px_#22D3EE]',
+          'shadow-[0_0_8px_#F43F5E]'
+        );
+        segment.classList.add('bg-slate-800');
+      }
+    });
+
+    // Full Capacity Overrides: If activeCount >= 1 AND queueCount >= 3, switch cyan classes to red/rose variants
+    const isFull = (activeCount >= 1 && queueCount >= 3);
+    const colorReplacements = [
+      ['text-cyan-400', 'text-rose-400'],
+      ['bg-cyan-400', 'bg-rose-500'],
+      ['border-cyan-400', 'border-rose-500'],
+      ['border-cyan-500/30', 'border-rose-500/30'],
+      ['via-cyan-400/10', 'via-rose-500/10'],
+      ['shadow-[0_0_15px_#22D3EE]', 'shadow-[0_0_15px_#F43F5E]'],
+      ['shadow-[0_0_10px_#22D3EE]', 'shadow-[0_0_10px_#F43F5E]'],
+      ['shadow-[0_0_8px_#22D3EE]', 'shadow-[0_0_8px_#F43F5E]'],
+      ['shadow-[0_0_40px_rgba(34,211,238,0.1)]', 'shadow-[0_0_40px_rgba(244,63,94,0.15)]']
+    ];
+
+    const allHudElements = [hud, ...hud.querySelectorAll('*')];
+    allHudElements.forEach(el => {
+      colorReplacements.forEach(([cyanClass, roseClass]) => {
+        if (isFull) {
+          if (el.classList.contains(cyanClass)) {
+            el.classList.remove(cyanClass);
+            el.classList.add(roseClass);
+          }
+        } else {
+          if (el.classList.contains(roseClass)) {
+            el.classList.remove(roseClass);
+            el.classList.add(cyanClass);
+          }
+        }
+      });
+    });
   }
 
   function initProjectCounter() {

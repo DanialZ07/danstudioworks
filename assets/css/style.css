@@ -1832,3 +1832,31 @@ a {
     animation: none;
   }
 }
+
+/* ==========================================================================
+   25. TELEMETRY HUD HOLOGRAPHIC SCANNER SWEEP ANIMATION
+   ========================================================================== */
+@keyframes hologram-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(50%);
+  }
+}
+
+.animate-hologram-sweep {
+  animation: hologram-sweep 3s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hologram-sweep {
+    animation: none;
+  }
+}
+
+/* Telemetry HUD Glow & Status Color Overrides */
+.shadow-\[0_0_15px_\#F43F5E\] { box-shadow: 0 0 15px #F43F5E !important; }
+.shadow-\[0_0_10px_\#F43F5E\] { box-shadow: 0 0 10px #F43F5E !important; }
+.shadow-\[0_0_8px_\#F43F5E\] { box-shadow: 0 0 8px #F43F5E !important; }
+.shadow-\[0_0_40px_rgba\(244\,63\,94\,0\.15\)\] { box-shadow: 0 0 40px rgba(244, 63, 94, 0.15) !important; }
