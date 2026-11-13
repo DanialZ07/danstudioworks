@@ -28,6 +28,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 
+  <!-- Tailwind CSS Core -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
   <title>Projects — DanStudio Works</title>
 </head>
 <body data-page="projects">
@@ -129,7 +132,7 @@
         <div class="card-body">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
             <div class="card-tag">Education Portal / Web Architecture</div>
-            <span style="font-size: 0.75rem; color: #10B981; font-weight: 700;">● Live/Deployed</span>
+            <span style="font-size: 0.75rem; color: #10B981; font-weight: 700;">Live/Deployed</span>
           </div>
           <h3 style="font-size: 1.35rem; font-weight: 700; margin: 0.5rem 0;">SRAI Qhalif Official Educational Portal</h3>
           <p style="color: #94A3B8; font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.75rem;">
@@ -140,9 +143,9 @@
           </div>
           <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.75rem; flex-wrap: wrap; gap: 8px;">
             <a href="https://srai.qhalif.edu.my/" target="_blank" rel="noopener noreferrer" style="font-size: 0.85rem; color: #10B981; font-weight: 600; text-decoration: none;" onclick="event.stopPropagation();">
-              Visit Live: srai.qhalif.edu.my ↗
+              Visit Live: srai.qhalif.edu.my
             </a>
-            <span style="font-size: 0.85rem; color: #22D3EE; font-weight: 600;">Open Case Study →</span>
+            <span style="font-size: 0.85rem; color: #22D3EE; font-weight: 600;">Open Case Study</span>
           </div>
         </div>
       </div>
@@ -154,8 +157,12 @@
        CASE STUDY MODAL: SRAI QHALIF ARCHITECTURE OVERVIEW
        ====================================================================== -->
   <div class="modal-overlay" id="case-study-modal" role="dialog" aria-modal="true" aria-labelledby="modal-case-title">
-    <div class="modal" style="max-width: 760px;">
-      <button class="modal-close" aria-label="Close Case Study">&times;</button>
+    <div class="modal" style="max-width: 760px; position: relative;">
+      <button class="modal-close" aria-label="Close Case Study">
+        <svg class="w-8 h-8 text-white hover:text-cyan-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
       
       <div style="margin-bottom: 1.5rem;">
         <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
@@ -230,11 +237,10 @@
       </div>
 
       <div style="display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap; align-items: center;">
-        <button class="btn btn-ghost modal-close">Close Preview</button>
         <a href="https://srai.qhalif.edu.my/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="background: linear-gradient(135deg, #10B981, #059669); border-color: #10B981;">
-          Visit Official Live Portal (srai.qhalif.edu.my) ↗
+          Visit Official Live Portal (srai.qhalif.edu.my)
         </a>
-        <a href="packages.html" class="btn btn-ghost">Request Similar System →</a>
+        <a href="packages.html" class="btn btn-ghost">Request Similar System</a>
       </div>
 
     </div>
@@ -259,7 +265,7 @@
       </div>
     </div>
     <div class="container footer-copyright" style="text-align: center; color: #64748B; font-size: 0.8rem; margin-top: 2rem;">
-      © 2026 DanStudio Works. Precision-crafted in Malaysia 🇲🇾. <a href="#" id="admin-login-btn" style="opacity: 0.3; text-decoration: none; color: inherit; margin-left: 10px; font-size: 0.85rem;">Admin</a>
+      © 2026 DanStudio Works. Precision-crafted in Malaysia. <a href="#" id="admin-login-btn" style="opacity: 0.3; text-decoration: none; color: inherit; margin-left: 10px; font-size: 0.85rem;">Admin</a>
     </div>
   </footer>
 

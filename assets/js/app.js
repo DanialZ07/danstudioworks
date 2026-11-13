@@ -18,7 +18,8 @@
  *  12. Developer Queue Console Dashboard (State, Filter, Outreach)
  *  13. Global Project Counter (Homepage)
  *  14. Live Queue Status Tracker (status.html)
- *  15. Application Bootstrap
+ *  15. Sci-Fi / Cyber Boot Sequence Entry Animation
+ *  16. Application Bootstrap
  * ============================================================================
  */
 
@@ -1356,16 +1357,9 @@
     const counterEl = document.getElementById('global-project-counter');
     if (!counterEl) return;
 
-    let activeCount = 1; // Base active project: SRAI Qhalif
-    try {
-      const requests = JSON.parse(localStorage.getItem('dsw_requests')) || [];
-      const acceptedCount = requests.filter(r => r.status === 'accepted').length;
-      activeCount = Math.min(2, Math.max(1, 1 + acceptedCount));
-    } catch (_) {}
-
     const counterText = counterEl.querySelector('.counter-text');
     if (counterText) {
-      counterText.textContent = `${activeCount}/2 Projects Ongoing`;
+      counterText.textContent = '1 Project Ongoing';
     }
   }
 
@@ -1566,10 +1560,96 @@
   }
 
   /* ==========================================================================
-     15. APPLICATION BOOTSTRAP
+     15. SCI-FI / CYBER BOOT SEQUENCE ENTRY ANIMATION
+     ========================================================================== */
+
+  function initBootSequence() {
+    const overlay = document.getElementById('boot-overlay');
+    if (!overlay) return;
+
+    // Lock page scrolling during boot sequence
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const textEl = document.getElementById('boot-scramble-text');
+    const barEl = document.getElementById('boot-progress-bar');
+
+    const sequences = [
+      { text: '<SYS.INIT>', duration: 500 },
+      { text: 'DECRYPTING...', duration: 650 },
+      { text: 'ACCESS GRANTED', duration: 550 }
+    ];
+
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>/_[]#*!@';
+
+    function scrambleText(targetText, duration, callback) {
+      if (!textEl) {
+        if (callback) callback();
+        return;
+      }
+      let iteration = 0;
+      const intervalTime = 30;
+      const totalSteps = Math.max(8, Math.floor(duration / intervalTime));
+
+      const timer = setInterval(() => {
+        textEl.textContent = targetText
+          .split('')
+          .map((char, idx) => {
+            if (char === ' ') return ' ';
+            if (idx < (iteration / totalSteps) * targetText.length) {
+              return targetText[idx];
+            }
+            return chars[Math.floor(Math.random() * chars.length)];
+          })
+          .join('');
+
+        iteration++;
+        if (iteration >= totalSteps) {
+          clearInterval(timer);
+          textEl.textContent = targetText;
+          if (callback) callback();
+        }
+      }, intervalTime);
+    }
+
+    // Fill progress bar smoothly across 2.2s
+    if (barEl) {
+      setTimeout(() => {
+        barEl.style.width = '100%';
+      }, 50);
+    }
+
+    // Sequence the phases
+    scrambleText(sequences[0].text, 500, () => {
+      setTimeout(() => {
+        scrambleText(sequences[1].text, 650, () => {
+          setTimeout(() => {
+            scrambleText(sequences[2].text, 550);
+          }, 150);
+        });
+      }, 150);
+    });
+
+    // Fade out overlay after exactly 2.5 seconds
+    setTimeout(() => {
+      overlay.classList.add('fade-out');
+      document.body.style.overflow = previousOverflow || '';
+
+      // Remove from DOM after fade-out transition completes
+      setTimeout(() => {
+        if (overlay.parentNode) {
+          overlay.parentNode.removeChild(overlay);
+        }
+      }, 650);
+    }, 2500);
+  }
+
+  /* ==========================================================================
+     16. APPLICATION BOOTSTRAP
      ========================================================================== */
 
   document.addEventListener('DOMContentLoaded', () => {
+    initBootSequence();
     initNavigation();
     initScrollReveal();
     initProjectFilters();

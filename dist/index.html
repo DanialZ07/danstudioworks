@@ -35,6 +35,33 @@
 <body data-page="home">
 
   <!-- ======================================================================
+       SCI-FI / CYBER BOOT SEQUENCE ENTRY OVERLAY
+       ====================================================================== -->
+  <div id="boot-overlay" class="boot-sequence-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#07080E] select-none" role="presentation" aria-hidden="true">
+    <div class="boot-scanline"></div>
+    <div class="boot-grid-bg"></div>
+
+    <div class="boot-content relative z-10 flex flex-col items-center text-center px-4">
+      <div class="boot-logo-wrapper mb-6 relative">
+        <div class="boot-glow-ring"></div>
+        <img src="/assets/logo_landscape_layout_transparent-CbUDZ6jn.png" alt="DanStudio Works" class="boot-logo h-12 md:h-14 w-auto object-contain">
+      </div>
+
+      <div class="boot-terminal-box font-mono">
+        <div class="boot-status-badge text-[10px] tracking-[0.25em] text-cyan-400 uppercase mb-2">
+          &lt;SYS.INIT // CORE_ONLINE&gt;
+        </div>
+        <div id="boot-scramble-text" class="text-xs md:text-sm text-slate-300 font-mono tracking-widest uppercase min-h-[1.5rem]">
+          &lt;SYS.INIT&gt;
+        </div>
+        <div class="boot-progress-bar-track mt-4 w-48 h-1 bg-slate-800/80 rounded-full overflow-hidden border border-cyan-500/30">
+          <div id="boot-progress-bar" class="boot-progress-bar-fill h-full bg-cyan-400"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
        NAVIGATION: Floating Desktop Glass Pill
        Smoothly adheres to scroll position; desktop viewport only (>768px).
        ====================================================================== -->
@@ -97,15 +124,11 @@
        ====================================================================== -->
   <header class="hero">
     <div class="hero-content container">
-      <!-- Status Badge & Dynamic Project Counter -->
-      <div class="reveal" style="display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
-        <span class="card-tag" style="display: inline-flex; align-items: center; gap: 8px;">
-          <span style="width: 8px; height: 8px; border-radius: 50%; background: #22D3EE; box-shadow: 0 0 8px #22D3EE;"></span>
-          Private Queue Open • Q4 Production Slots Active
-        </span>
-        <span class="card-tag" id="global-project-counter" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(34, 211, 238, 0.08); border: 1px solid rgba(34, 211, 238, 0.3); color: #22D3EE; font-weight: 700;">
-          <span style="width: 8px; height: 8px; border-radius: 50%; background: #22D3EE; box-shadow: 0 0 8px #22D3EE;"></span>
-          <span class="counter-text">1/2 Projects Ongoing</span>
+      <!-- Dynamic Project Counter -->
+      <div class="reveal" style="display: flex; justify-content: center; align-items: center; margin-bottom: 1.5rem;">
+        <span id="global-project-counter" style="display: inline-flex; align-items: center; gap: 8px; color: #94A3B8; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;">
+          <span style="width: 6px; height: 6px; border-radius: 50%; background: #22D3EE; box-shadow: 0 0 8px #22D3EE;"></span>
+          <span class="counter-text">1 Project Ongoing</span>
         </span>
       </div>
 
@@ -122,7 +145,7 @@
 
       <!-- Action Group -->
       <div class="reveal" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
-        <a href="packages.html" class="btn btn-primary btn-lg">Submit Application →</a>
+        <a href="packages.html" class="btn btn-primary btn-lg">Submit Application</a>
         <a href="projects.html" class="btn btn-ghost btn-lg">View Projects</a>
       </div>
 
@@ -212,10 +235,10 @@
 
           <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
             <a href="https://srai.qhalif.edu.my/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="background: linear-gradient(135deg, #10B981, #059669); border-color: #10B981;">
-              Visit Live Portal ↗
+              Visit Live Portal
             </a>
             <a href="projects.html#srai-qhalif" class="btn btn-ghost">
-              Explore Case Study →
+              Explore Case Study
             </a>
           </div>
         </div>
@@ -240,7 +263,7 @@
         We take on a strictly limited roster of 3–4 clients per month to guarantee bespoke attention. Apply directly to our queue to secure your slot.
       </p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="packages.html" class="btn btn-primary btn-lg">Submit Project Application →</a>
+        <a href="packages.html" class="btn btn-primary btn-lg">Submit Project Application</a>
         <a href="packages.html" class="btn btn-ghost btn-lg">Review Pricing Packages</a>
       </div>
     </div>
@@ -329,7 +352,7 @@
       </div>
     </div>
     <div class="container footer-copyright" style="text-align: center; color: #64748B; font-size: 0.8rem; margin-top: 2rem;">
-      © 2026 DanStudio Works. All rights reserved. Precision-crafted in Malaysia 🇲🇾. <a href="#" id="admin-login-btn" style="opacity: 0.3; text-decoration: none; color: inherit; margin-left: 10px; font-size: 0.85rem;">Admin</a>
+      © 2026 DanStudio Works. All rights reserved. Precision-crafted in Malaysia. <a href="#" id="admin-login-btn" style="opacity: 0.3; text-decoration: none; color: inherit; margin-left: 10px; font-size: 0.85rem;">Admin</a>
     </div>
   </footer>
 
