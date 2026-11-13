@@ -2110,17 +2110,66 @@
   }
 
   /* ==========================================================================
-     13. GLOBAL PROJECT COUNTER (HOMEPAGE)
+     13. GLOBAL PROJECT COUNTER & CAPACITY TELEMETRY (HOMEPAGE)
      ========================================================================== */
 
-  function initProjectCounter() {
-    const counterEl = document.getElementById('global-project-counter');
-    if (!counterEl) return;
+  function syncPublicCapacityBadge() {
+    const textEl = document.getElementById('live-capacity-text');
+    const dotEl = document.getElementById('capacity-indicator-dot');
+    if (!textEl && !dotEl) return;
 
-    const counterText = counterEl.querySelector('.counter-text');
-    if (counterText) {
-      counterText.textContent = '1 Project Ongoing';
+    let requests = [];
+    try {
+      const raw = localStorage.getItem('dsw_requests');
+      if (raw) {
+        requests = JSON.parse(raw);
+      } else if (typeof getRequests === 'function') {
+        requests = getRequests();
+      }
+    } catch (_) {
+      requests = [];
     }
+
+    // Calculate active and queue counts from Nexus Command telemetry
+    const activeCount = requests.filter(r => {
+      const s = (r.status || '').toLowerCase();
+      return s === 'accepted' || s === 'approved';
+    }).length;
+
+    const queueCount = requests.filter(r => {
+      const s = (r.status || '').toLowerCase();
+      return s === 'pending' || s === 'new';
+    }).length;
+
+    const MAX_ACTIVE = 1;
+    const MAX_QUEUE = 3;
+
+    // Evaluate capacity limit
+    const isFull = (activeCount >= MAX_ACTIVE && queueCount >= MAX_QUEUE);
+
+    if (isFull) {
+      if (textEl) {
+        textEl.textContent = 'PRODUCTION QUEUE FULL';
+        textEl.style.color = '#F43F5E';
+      }
+      if (dotEl) {
+        dotEl.style.background = '#F43F5E';
+        dotEl.style.boxShadow = '0 0 10px #F43F5E';
+      }
+    } else {
+      if (textEl) {
+        textEl.textContent = `ACTIVE: [${activeCount}/${MAX_ACTIVE}]  QUEUE: [${queueCount}/${MAX_QUEUE}]`;
+        textEl.style.color = '';
+      }
+      if (dotEl) {
+        dotEl.style.background = '#22D3EE';
+        dotEl.style.boxShadow = '0 0 8px #22D3EE';
+      }
+    }
+  }
+
+  function initProjectCounter() {
+    syncPublicCapacityBadge();
   }
 
   /* ==========================================================================
@@ -2594,6 +2643,7 @@
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
     initGlobalAuthState();
     initHeroAuroraParallax();
+    syncPublicCapacityBadge();
   }
 
   /* ==========================================================================
@@ -2603,6 +2653,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     initGlobalAuthState();
     initHeroAuroraParallax();
+    syncPublicCapacityBadge();
     initBootSequence();
     initNavigation();
     initScrollReveal();
