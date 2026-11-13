@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>if (sessionStorage.getItem('dsw_master_auth') !== 'true') { window.location.href = 'index.html'; }</script>
   <!-- ======================================================================
        METADATA & SEO SPECIFICATIONS
        ====================================================================== -->
@@ -37,13 +38,10 @@
 </head>
 <body data-page="admin">
 
-  <!-- Instant Session Cache Check (Prevents Split-Second Overlay & Login Flash) -->
+  <!-- Instant Session Cache Check (Prevents Split-Second Overlay Flash) -->
   <script>
     if (sessionStorage.getItem('adminBootPlayed')) {
       document.write('<style>#admin-boot-overlay { display: none !important; }</style>');
-    }
-    if (sessionStorage.getItem('dsw_master_auth') === 'true') {
-      document.write('<style>#master-login-section { display: none !important; }</style>');
     }
   </script>
 
@@ -148,55 +146,12 @@
   </header>
 
   <!-- ======================================================================
-       MAIN CONTENT: Master Key Login Screen & Multi-Tab Command Center
+       MAIN CONTENT: Multi-Tab Nexus Command Dashboard
        ====================================================================== -->
   <main class="container" style="padding-bottom: 6rem;">
 
     <!-- ====================================================================
-         1. MASTER KEY LOGIN SCREEN (Collapses Upon Verified Session)
-         ==================================================================== -->
-    <section id="master-login-section" class="reveal" style="margin-bottom: 2.5rem;">
-      <div class="glass-card" style="max-width: 480px; margin: 0 auto; padding: 2.5rem 2rem; border: 1px solid rgba(244, 63, 94, 0.3); text-align: center;">
-        
-        <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(244, 63, 94, 0.12); border: 2px solid #F43F5E; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.25rem;">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F43F5E" stroke-width="2">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-          </svg>
-        </div>
-
-        <h2 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem;">Master Security Gate</h2>
-        <p style="font-size: 0.85rem; color: #94A3B8; margin-bottom: 1.5rem;">
-          Authenticate lead developer credentials to unlock the multi-tab Nexus Command dashboard.
-        </p>
-
-        <!-- Status message / banner -->
-        <div id="auth-status-banner" style="display: none; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.25rem;"></div>
-
-        <form id="master-key-form">
-          <div class="form-group">
-            <label class="form-label" for="master-email">Developer Email</label>
-            <input type="email" id="master-email" class="form-input" placeholder="danialaiman976@gmail.com" required>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="master-key">Master Security Key</label>
-            <input type="password" id="master-key" class="form-input" placeholder="Enter master key (040802)" required>
-          </div>
-
-          <button type="submit" id="master-auth-btn" class="btn btn-primary btn-full" style="margin-top: 0.5rem;">
-            Authenticate Nexus Clearance
-          </button>
-        </form>
-
-        <div style="font-size: 0.75rem; color: #64748B; margin-top: 1.25rem;">
-          Authorized Lead Key: <code style="color: #22D3EE; background: rgba(34,211,238,0.1); padding: 2px 6px; border-radius: 4px;">040802</code>
-        </div>
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         2. NEXUS COMMAND MULTI-TAB DASHBOARD
+         NEXUS COMMAND MULTI-TAB DASHBOARD
          ==================================================================== -->
     <section id="admin-dashboard-section" class="reveal">
       
@@ -495,65 +450,7 @@
 
       runAdminBootSequence();
 
-      /* --- 2. Master Key Authentication Handling --- */
-      const masterForm = document.getElementById('master-key-form');
-      const masterKeyInput = document.getElementById('master-key');
-      const masterEmailInput = document.getElementById('master-email');
-      const authBanner = document.getElementById('auth-status-banner');
-      const authBtn = document.getElementById('master-auth-btn');
-
-      const isAuthenticated = sessionStorage.getItem('dsw_master_auth') === 'true';
-
-      function showAuthSuccess() {
-        const loginSec = document.getElementById('master-login-section');
-        if (loginSec) {
-          loginSec.style.display = 'none';
-        }
-        if (!authBanner) return;
-        authBanner.style.display = 'block';
-        authBanner.style.background = 'rgba(16, 185, 129, 0.12)';
-        authBanner.style.border = '1px solid rgba(16, 185, 129, 0.4)';
-        authBanner.style.color = '#10B981';
-        authBanner.innerHTML = '✓ Nexus Clearance Verified — Lead Developer Session Active';
-        if (authBtn) {
-          authBtn.textContent = 'Clearance Active';
-          authBtn.style.background = '#10B981';
-          authBtn.style.borderColor = '#10B981';
-        }
-      }
-
-      function showAuthError(msg) {
-        if (!authBanner) return;
-        authBanner.style.display = 'block';
-        authBanner.style.background = 'rgba(239, 68, 68, 0.12)';
-        authBanner.style.border = '1px solid rgba(239, 68, 68, 0.4)';
-        authBanner.style.color = '#EF4444';
-        authBanner.textContent = msg || 'Invalid Master Key. Access restricted.';
-      }
-
-      if (isAuthenticated) {
-        showAuthSuccess();
-      }
-
-      if (masterForm) {
-        masterForm.addEventListener('submit', function (e) {
-          e.preventDefault();
-          const emailVal = masterEmailInput ? masterEmailInput.value.trim().toLowerCase() : '';
-          const keyVal = masterKeyInput ? masterKeyInput.value.trim() : '';
-
-          if ((emailVal === 'danialaiman976@gmail.com' || emailVal === '') && keyVal === '040802') {
-            sessionStorage.setItem('dsw_master_auth', 'true');
-            sessionStorage.setItem('dsw_auth', 'true');
-            showAuthSuccess();
-            renderApplicationsGrid();
-            renderInquiriesGrid();
-          } else {
-            showAuthError('Invalid Master Key. Please enter "040802".');
-          }
-        });
-      }
-
-      /* --- 3. Data Store Synchronization --- */
+      /* --- 2. Data Store Synchronization --- */
       function getApplications() {
         let stored = [];
         try {
