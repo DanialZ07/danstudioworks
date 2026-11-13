@@ -65,13 +65,27 @@
 
   /**
    * Format queue request timestamp into exact Malaysian date and time.
+   * Safely parses ISO strings, database strings, 10-digit UNIX timestamps, and millisecond integers.
    * Output example: "13 Nov 2026, 11:28 AM"
    * @param {string|number|Date} timestamp
    * @returns {string}
    */
   function relativeTime(timestamp) {
     if (!timestamp) return '—';
-    return new Date(timestamp).toLocaleString('en-MY', {
+    let d = new Date(timestamp);
+    if (isNaN(d.getTime())) {
+      d = new Date(Number(timestamp) * (String(timestamp).length === 10 ? 1000 : 1));
+    }
+    if (isNaN(d.getTime()) || (typeof timestamp === 'number' && String(timestamp).length === 10)) {
+      d = new Date(Number(timestamp) * (String(timestamp).length === 10 ? 1000 : 1));
+    }
+    if (isNaN(d.getTime())) {
+      d = new Date(String(timestamp).replace(/-/g, '/'));
+    }
+    if (isNaN(d.getTime())) {
+      return String(timestamp);
+    }
+    return d.toLocaleString('en-MY', {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
@@ -975,10 +989,10 @@
         </div>
 
         <!-- Tab Content Cards Container -->
-        <div class="console-tab-content grid grid-cols-1 md:grid-cols-2 gap-4 active" data-tab="new"></div>
-        <div class="console-tab-content grid grid-cols-1 md:grid-cols-2 gap-4" data-tab="waiting"></div>
-        <div class="console-tab-content grid grid-cols-1 md:grid-cols-2 gap-4" data-tab="accepted"></div>
-        <div class="console-tab-content grid grid-cols-1 md:grid-cols-2 gap-4" data-tab="rejected"></div>
+        <div class="console-tab-content active" data-tab="new"></div>
+        <div class="console-tab-content hidden" data-tab="waiting"></div>
+        <div class="console-tab-content hidden" data-tab="accepted"></div>
+        <div class="console-tab-content hidden" data-tab="rejected"></div>
       </div>
     `;
     document.body.appendChild(consoleEl);
@@ -1056,6 +1070,17 @@
     } else {
       filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
     }
+
+    /* Update Tab Visibility & Dynamic Grid/Hidden Classes */
+    consoleEl.querySelectorAll('.console-tab-content').forEach(panel => {
+      if (panel.getAttribute('data-tab') === currentTab) {
+        panel.classList.add('active', 'grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-4');
+        panel.classList.remove('hidden');
+      } else {
+        panel.classList.remove('active', 'grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-4');
+        panel.classList.add('hidden');
+      }
+    });
 
     /* Render HTML inside target tab panel */
     const contentPanel = consoleEl.querySelector(`.console-tab-content[data-tab="${currentTab}"]`) ||
@@ -1142,7 +1167,7 @@
         `;
       }
 
-      const formattedTimestamp = new Date(req.date).toLocaleString('en-MY', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+      const formattedTimestamp = relativeTime(req.date);
 
       return `
         <div class="request-card relative overflow-hidden backdrop-blur-xl bg-slate-900/60 border border-slate-800/80 hover:border-cyan-500/40 rounded-2xl p-5 shadow-2xl transition-all duration-300 hover:shadow-cyan-500/10" data-id="${sanitizeHTML(req.id)}">
@@ -1272,9 +1297,11 @@
         const tab = btn.getAttribute('data-tab');
         consoleEl.querySelectorAll('.console-tab-content').forEach(panel => {
           if (panel.getAttribute('data-tab') === tab) {
-            panel.classList.add('active');
+            panel.classList.add('active', 'grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-4');
+            panel.classList.remove('hidden');
           } else {
-            panel.classList.remove('active');
+            panel.classList.remove('active', 'grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-4');
+            panel.classList.add('hidden');
           }
         });
 

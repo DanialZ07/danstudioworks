@@ -350,9 +350,22 @@
         return div.innerHTML;
       }
 
-      function formatTime(dateStr) {
-        if (!dateStr) return '—';
-        return new Date(dateStr).toLocaleString('en-MY', {
+      function formatTime(timestamp) {
+        if (!timestamp) return '—';
+        let d = new Date(timestamp);
+        if (isNaN(d.getTime())) {
+          d = new Date(Number(timestamp) * (String(timestamp).length === 10 ? 1000 : 1));
+        }
+        if (isNaN(d.getTime()) || (typeof timestamp === 'number' && String(timestamp).length === 10)) {
+          d = new Date(Number(timestamp) * (String(timestamp).length === 10 ? 1000 : 1));
+        }
+        if (isNaN(d.getTime())) {
+          d = new Date(String(timestamp).replace(/-/g, '/'));
+        }
+        if (isNaN(d.getTime())) {
+          return String(timestamp);
+        }
+        return d.toLocaleString('en-MY', {
           day: '2-digit',
           month: 'short',
           year: 'numeric',
@@ -395,14 +408,7 @@
             ? `<div class="flex items-center gap-1.5 flex-wrap pt-0.5"><span class="text-[11px] text-slate-500 font-medium">Add-Ons:</span> ${app.addons.map(a => `<span class="text-[11px] bg-slate-800/70 text-slate-300 border border-slate-700/50 px-2 py-0.5 rounded-md">${escapeHTML(a)}</span>`).join('')}</div>`
             : '';
 
-          const formattedTimestamp = new Date(app.date).toLocaleString('en-MY', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-          });
+          const formattedTimestamp = formatTime(app.date);
 
           return `
             <div class="request-card relative overflow-hidden backdrop-blur-xl bg-slate-900/60 border border-slate-800/80 hover:border-cyan-500/40 rounded-2xl p-5 shadow-2xl transition-all duration-300 hover:shadow-cyan-500/10" id="card-${escapeHTML(app.id)}">

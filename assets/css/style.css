@@ -859,10 +859,15 @@ a {
   display: none;
 }
 
+.console-tab-content.hidden {
+  display: none !important;
+}
+
 .console-tab-content.active {
   display: block;
 }
 
+.console-tab-content.active.grid,
 .console-tab-content.grid.active {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
