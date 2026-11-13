@@ -41,20 +41,25 @@
     <div class="boot-scanline"></div>
     <div class="boot-grid-bg"></div>
 
-    <div class="boot-content relative z-10 flex flex-col items-center justify-center w-full max-w-md mx-auto px-4 text-center">
-      <div class="boot-logo-wrapper mb-6 relative">
+    <div class="boot-content relative z-10 flex flex-col items-center justify-center w-full max-w-5xl mx-auto px-4 text-center">
+      <!-- Massive 50% Viewport Scale Centerpiece -->
+      <div class="boot-logo-wrapper w-[50vw] max-w-3xl aspect-square flex items-center justify-center relative mb-4">
+        <!-- Ripple Shockwave Rings -->
+        <div class="ripple-ring"></div>
+        <div class="ripple-ring"></div>
+        <div class="ripple-ring"></div>
         <div class="boot-glow-ring"></div>
-        <img src="/assets/logo_landscape_layout_transparent-CbUDZ6jn.png" alt="DanStudio Works" class="boot-logo h-12 md:h-14 w-auto object-contain">
+        <img src="/assets/logo_landscape_layout_transparent-CbUDZ6jn.png" alt="DanStudio Works" class="boot-logo relative z-20 w-4/5 max-w-2xl h-auto object-contain">
       </div>
 
-      <div class="boot-terminal-box font-mono">
-        <div class="boot-status-badge text-[10px] tracking-[0.25em] text-cyan-400 uppercase mb-2">
+      <div class="boot-terminal-box font-mono relative z-20">
+        <div class="boot-status-badge text-[10px] md:text-xs tracking-[0.25em] text-cyan-400 uppercase mb-2">
           &lt;SYS.INIT // CORE_ONLINE&gt;
         </div>
         <div id="boot-scramble-text" class="text-xs md:text-sm text-slate-300 font-mono tracking-widest uppercase min-h-[1.5rem]">
           &lt;SYS.INIT&gt;
         </div>
-        <div class="boot-progress-bar-track mt-4 w-48 h-1 bg-slate-800/80 rounded-full overflow-hidden border border-cyan-500/30">
+        <div class="boot-progress-bar-track mt-4 w-48 md:w-64 h-1 bg-slate-800/80 rounded-full overflow-hidden border border-cyan-500/30">
           <div id="boot-progress-bar" class="boot-progress-bar-fill h-full bg-cyan-400"></div>
         </div>
       </div>

@@ -1141,7 +1141,8 @@ a {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+  transform: scale(1);
 }
 
 .boot-content {
@@ -1152,13 +1153,14 @@ a {
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 28rem;
+  max-width: 64rem;
   margin-left: auto;
   margin-right: auto;
 }
 
 .boot-sequence-overlay.fade-out {
   opacity: 0;
+  transform: scale(1.5);
   visibility: hidden;
   pointer-events: none;
 }
@@ -1194,7 +1196,7 @@ a {
   100% { transform: perspective(450px) rotateX(60deg) translateY(40px); }
 }
 
-/* Centered Logo Wrapper with Glow Ring & Subtle Glitch */
+/* Centered Logo Wrapper with Glow Ring */
 .boot-logo-wrapper {
   position: relative;
   display: inline-flex;
@@ -1215,27 +1217,131 @@ a {
   100% { opacity: 0.95; transform: scale(1.06); }
 }
 
-.boot-logo {
-  position: relative;
-  z-index: 2;
-  filter: drop-shadow(0 0 18px rgba(34, 211, 238, 0.45));
-  animation: bootLogoGlitch 2.2s infinite;
+/* Cinematic Ripple Shockwave Rings */
+.ripple-ring {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 65%;
+  height: 65%;
+  border-radius: 50%;
+  border: 2px solid rgba(34, 211, 238, 0.85);
+  box-shadow: 0 0 35px rgba(34, 211, 238, 0.45), inset 0 0 25px rgba(34, 211, 238, 0.25);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.5);
+  z-index: 10;
 }
 
-@keyframes bootLogoGlitch {
-  0%, 100% { transform: translate(0, 0); opacity: 1; }
-  12% { transform: translate(-2px, 1px); }
-  14% { transform: translate(2px, -1px); }
-  30% { transform: translate(0, 0); }
-  68% { transform: translate(1px, -2px); opacity: 0.95; }
-  70% { transform: translate(-1px, 2px); opacity: 1; }
-  85% { transform: translate(0, 0); }
+.ripple-active .ripple-ring,
+.ripple-ring.active {
+  animation: ripple-shockwave 1.6s cubic-bezier(0.15, 0.85, 0.25, 1) forwards;
+}
+
+.ripple-active .ripple-ring:nth-child(1),
+.ripple-ring:nth-child(1).active {
+  animation-delay: 0s;
+}
+
+.ripple-active .ripple-ring:nth-child(2),
+.ripple-ring:nth-child(2).active {
+  animation-delay: 0.4s;
+  border-color: rgba(217, 70, 239, 0.8);
+  box-shadow: 0 0 45px rgba(217, 70, 239, 0.4), inset 0 0 30px rgba(217, 70, 239, 0.2);
+}
+
+.ripple-active .ripple-ring:nth-child(3),
+.ripple-ring:nth-child(3).active {
+  animation-delay: 0.8s;
+  border-color: rgba(34, 211, 238, 0.95);
+  box-shadow: 0 0 55px rgba(34, 211, 238, 0.6), inset 0 0 40px rgba(34, 211, 238, 0.3);
+}
+
+@keyframes ripple-shockwave {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* High-Intensity Cinematic Glitch for Logo */
+.boot-logo {
+  position: relative;
+  z-index: 20;
+  filter: drop-shadow(0 0 24px rgba(34, 211, 238, 0.5));
+  animation: cinematic-glitch 2.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
+
+@keyframes cinematic-glitch {
+  0% {
+    transform: scale(1) skew(0deg);
+    filter: drop-shadow(0 0 24px rgba(34, 211, 238, 0.5));
+  }
+  10% {
+    transform: scale(1.03) skew(-2deg);
+    filter: drop-shadow(-6px 0 #FF0055) drop-shadow(6px 0 #00FFFF);
+  }
+  14% {
+    transform: scale(0.97) skew(1.5deg) translate(-3px, 2px);
+    filter: drop-shadow(5px -2px #FF0055) drop-shadow(-5px 2px #00FFFF);
+  }
+  18% {
+    transform: scale(1) skew(0deg);
+    filter: drop-shadow(0 0 30px rgba(34, 211, 238, 0.6));
+  }
+  48% {
+    transform: scale(1) skew(0deg);
+    filter: drop-shadow(0 0 24px rgba(34, 211, 238, 0.5));
+  }
+  52% {
+    transform: scale(1.05) skew(3deg) translate(4px, -2px);
+    filter: drop-shadow(-8px 2px #FF0055) drop-shadow(8px -2px #00FFFF);
+  }
+  55% {
+    transform: scale(0.96) skew(-2.5deg) translate(-4px, 1px);
+    filter: drop-shadow(6px -3px #FF0055) drop-shadow(-6px 3px #00FFFF);
+  }
+  60% {
+    transform: scale(1.02) skew(0.5deg);
+    filter: drop-shadow(0 0 35px rgba(34, 211, 238, 0.75));
+  }
+  64% {
+    transform: scale(1) skew(0deg);
+    filter: drop-shadow(0 0 24px rgba(34, 211, 238, 0.5));
+  }
+  82% {
+    transform: scale(1) skew(0deg);
+    filter: drop-shadow(0 0 24px rgba(34, 211, 238, 0.5));
+  }
+  86% {
+    transform: scale(1.04) skew(-3deg) translate(-5px, -2px);
+    filter: drop-shadow(8px 0 #FF0055) drop-shadow(-8px 0 #00FFFF);
+  }
+  90% {
+    transform: scale(0.98) skew(2deg) translate(3px, 2px);
+    filter: drop-shadow(-5px 0 #FF0055) drop-shadow(5px 0 #00FFFF);
+  }
+  94% {
+    transform: scale(1) skew(0deg);
+    filter: drop-shadow(0 0 28px rgba(34, 211, 238, 0.6));
+  }
+  100% {
+    transform: scale(1) skew(0deg);
+    filter: drop-shadow(0 0 24px rgba(34, 211, 238, 0.5));
+  }
 }
 
 /* Terminal Box & Decoding Text Effect */
 .boot-terminal-box {
   position: relative;
-  z-index: 2;
+  z-index: 20;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1255,5 +1361,5 @@ a {
 .boot-progress-bar-fill {
   width: 0%;
   box-shadow: 0 0 12px #22D3EE, 0 0 24px #22D3EE;
-  transition: width 2.2s cubic-bezier(0.1, 0.8, 0.2, 1);
+  transition: width 3.2s cubic-bezier(0.1, 0.8, 0.2, 1);
 }

@@ -1611,14 +1611,15 @@
       }, intervalTime);
     }
 
-    // Fill progress bar smoothly across 2.2s
+    // Stage 1: Massive logo glitches in with terminal text decoding & progress bar
     if (barEl) {
       setTimeout(() => {
+        barEl.style.transition = 'width 3.2s cubic-bezier(0.1, 0.8, 0.2, 1)';
         barEl.style.width = '100%';
       }, 50);
     }
 
-    // Sequence the phases
+    // Sequence the terminal decoding phases
     scrambleText(sequences[0].text, 500, () => {
       setTimeout(() => {
         scrambleText(sequences[1].text, 650, () => {
@@ -1629,18 +1630,27 @@
       }, 150);
     });
 
-    // Fade out overlay after exactly 2.5 seconds
+    // Stage 2 (at 2.0s): Trigger the cinematic ripple shockwaves
+    setTimeout(() => {
+      overlay.classList.add('ripple-active');
+      const rings = overlay.querySelectorAll('.ripple-ring');
+      rings.forEach(ring => ring.classList.add('active'));
+    }, 2000);
+
+    // Stage 3 (at 3.5s): Entire overlay scales up (1.5x) and fades to opacity: 0
     setTimeout(() => {
       overlay.classList.add('fade-out');
       document.body.style.overflow = '';
 
-      // Remove from DOM after fade-out transition completes
+      // Remove from DOM after 800ms fade/scale transition completes
       setTimeout(() => {
-        if (overlay.parentNode) {
+        if (typeof overlay.remove === 'function') {
+          overlay.remove();
+        } else if (overlay.parentNode) {
           overlay.parentNode.removeChild(overlay);
         }
-      }, 650);
-    }, 2500);
+      }, 800);
+    }, 3500);
   }
 
   /* ==========================================================================
