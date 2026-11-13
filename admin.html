@@ -37,10 +37,13 @@
 </head>
 <body data-page="admin">
 
-  <!-- Instant Session Cache Check (Prevents Split-Second Overlay Flash) -->
+  <!-- Instant Session Cache Check (Prevents Split-Second Overlay & Login Flash) -->
   <script>
     if (sessionStorage.getItem('adminBootPlayed')) {
       document.write('<style>#admin-boot-overlay { display: none !important; }</style>');
+    }
+    if (sessionStorage.getItem('dsw_master_auth') === 'true') {
+      document.write('<style>#master-login-section { display: none !important; }</style>');
     }
   </script>
 
@@ -502,6 +505,10 @@
       const isAuthenticated = sessionStorage.getItem('dsw_master_auth') === 'true';
 
       function showAuthSuccess() {
+        const loginSec = document.getElementById('master-login-section');
+        if (loginSec) {
+          loginSec.style.display = 'none';
+        }
         if (!authBanner) return;
         authBanner.style.display = 'block';
         authBanner.style.background = 'rgba(16, 185, 129, 0.12)';

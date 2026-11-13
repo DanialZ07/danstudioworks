@@ -953,12 +953,13 @@
         const enteredOtp = Array.from(otpInputs).map(i => i.value).join('');
 
         if (enteredOtp === generatedOtp && generatedOtp !== '') {
-          // Strictly set in-memory authentication state (no bypass)
+          // Strictly set in-memory authentication state and route to Nexus Command
           isDevAuthenticated = true;
           sessionStorage.removeItem('dsw_auth');
           closeModal();
           showToast('Authentication verified. Welcome DanStudio Lead Engineer.', 'success');
-          showDevConsole();
+          sessionStorage.setItem('dsw_master_auth', 'true');
+          window.location.href = 'admin.html';
         } else {
           showToast('Invalid OTP verification code.', 'error');
         }
