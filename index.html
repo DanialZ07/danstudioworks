@@ -329,22 +329,18 @@
         <form id="dev-auth-form" class="space-y-4">
           <div class="form-group text-left">
             <label class="form-label text-xs font-semibold text-slate-300" for="dev-email">Developer Email</label>
-            <input type="email" id="dev-email" class="form-input dev-email w-full" placeholder="danialaiman976@gmail.com" required autocomplete="username">
+            <input type="email" id="dev-email" class="form-input dev-email w-full" placeholder="Enter developer email" required autocomplete="username">
           </div>
 
           <div class="form-group text-left">
             <label class="form-label text-xs font-semibold text-slate-300" for="dev-key">Master Security Key</label>
-            <input type="password" id="dev-key" class="form-input dev-key w-full" placeholder="Enter Master Key (040802)" required autocomplete="current-password">
+            <input type="password" id="dev-key" class="form-input dev-key w-full" placeholder="Enter master security key" required autocomplete="current-password">
           </div>
 
           <button type="submit" class="btn btn-primary btn-full w-full py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-md shadow-cyan-500/25 transition-all">
             Authenticate &amp; Dispatch OTP
           </button>
         </form>
-
-        <div class="text-center mt-4">
-          <span class="text-[11px] text-slate-500 font-mono">Lead Clearance Key: <code class="text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-500/30">040802</code></span>
-        </div>
       </div>
 
       <!-- Step 2: 6-Digit Telegram OTP Verification -->

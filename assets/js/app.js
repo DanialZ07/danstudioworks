@@ -780,11 +780,11 @@
             <form id="dev-auth-form">
               <div class="form-group">
                 <label class="form-label" for="dev-email">Developer Email</label>
-                <input type="email" id="dev-email" class="form-input dev-email" placeholder="danialaiman976@gmail.com" required autocomplete="username">
+                <input type="email" id="dev-email" class="form-input dev-email" placeholder="Enter developer email" required autocomplete="username">
               </div>
               <div class="form-group">
                 <label class="form-label" for="dev-key">Master Security Key</label>
-                <input type="password" id="dev-key" class="form-input dev-key" placeholder="Enter master key (040802)" required autocomplete="current-password">
+                <input type="password" id="dev-key" class="form-input dev-key" placeholder="Enter master security key" required autocomplete="current-password">
               </div>
               <button type="submit" class="btn btn-primary btn-full" style="margin-top: 0.5rem;">Authenticate Master Key</button>
             </form>
@@ -1387,13 +1387,23 @@
     });
 
     /* Logout / Lock Button */
-    const logoutBtn = consoleEl.querySelector('.console-logout');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => {
-        hideDevConsole();
-        showToast('Developer console locked.', 'info');
+    const logoutBtns = document.querySelectorAll('.console-logout');
+    logoutBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sessionStorage.removeItem('dsw_master_auth');
+        sessionStorage.removeItem('dsw_auth');
+        window.location.replace('index.html');
       });
-    }
+    });
+
+    document.addEventListener('click', (e) => {
+      const logoutBtn = e.target.closest('.console-logout');
+      if (logoutBtn) {
+        sessionStorage.removeItem('dsw_master_auth');
+        sessionStorage.removeItem('dsw_auth');
+        window.location.replace('index.html');
+      }
+    });
 
     /* Tab Switching */
     const tabButtons = consoleEl.querySelectorAll('.console-tab-btn');
