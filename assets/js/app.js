@@ -2433,18 +2433,43 @@
     const isMasterAuth = (localStorage.getItem('dsw_master_auth') === 'true');
     if (!isMasterAuth) return;
 
-    // Strictly target only the exact Admin anchor elements in navigation
-    const navAdminLink = document.querySelector('.nav-links a[href="admin.html"]');
-    if (navAdminLink) {
-      navAdminLink.innerHTML = '<span class="nc-active-indicator">⚡ NC</span>';
+    // 1. Dynamic Desktop Navbar Injection / Update
+    const desktopNav = document.querySelector('.nav-links');
+    if (desktopNav) {
+      const existingNavAdmin = desktopNav.querySelector('a[href="admin.html"]');
+      if (existingNavAdmin) {
+        existingNavAdmin.innerHTML = '<span class="nc-active-indicator">⚡ NC</span>';
+      } else {
+        const ncLink = document.createElement('a');
+        ncLink.href = 'admin.html';
+        ncLink.className = 'nav-link';
+        ncLink.innerHTML = '<span class="nc-active-indicator">⚡ NC</span>';
+        desktopNav.appendChild(ncLink);
+      }
     }
 
-    const dockAdminLink = document.querySelector('.dock-items a[href="admin.html"]');
-    if (dockAdminLink) {
-      dockAdminLink.innerHTML = '<span class="nc-active-indicator">⚡ NC</span>';
+    // 2. Dynamic Mobile Dock Injection / Update
+    const mobileDock = document.querySelector('.dock-items');
+    if (mobileDock) {
+      const existingDockAdmin = mobileDock.querySelector('a[href="admin.html"]');
+      if (existingDockAdmin) {
+        existingDockAdmin.innerHTML = '<span class="nc-active-indicator">⚡ NC</span>';
+      } else {
+        const dockNcLink = document.createElement('a');
+        dockNcLink.href = 'admin.html';
+        dockNcLink.className = 'dock-item';
+        dockNcLink.innerHTML = `
+          <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span class="nc-active-indicator">⚡ NC</span>
+        `;
+        mobileDock.appendChild(dockNcLink);
+      }
     }
 
-    // 2. Inject sleek glassmorphic floating pill in the bottom-left corner (fixed, z-[9998])
+    // 3. Inject sleek glassmorphic floating pill in the bottom-left corner (fixed, z-[9998])
     if (!document.getElementById('nc-floating-pill')) {
       const pill = document.createElement('div');
       pill.id = 'nc-floating-pill';
