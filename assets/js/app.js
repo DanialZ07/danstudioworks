@@ -64,21 +64,21 @@
   }
 
   /**
-   * Generate human-readable relative time strings for queue request timestamps.
-   * @param {string} dateString ISO 8601 string
+   * Format queue request timestamp into exact Malaysian date and time.
+   * Output example: "13 Nov 2026, 11:28 AM"
+   * @param {string|number|Date} timestamp
    * @returns {string}
    */
-  function relativeTime(dateString) {
-    const diffMs = Date.now() - new Date(dateString).getTime();
-    const diffSec = Math.floor(diffMs / 1000);
-    const diffMin = Math.floor(diffSec / 60);
-    const diffHours = Math.floor(diffMin / 60);
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffDays > 0) return `${diffDays}d ago`;
-    if (diffHours > 0) return `${diffHours}h ago`;
-    if (diffMin > 0) return `${diffMin}m ago`;
-    return 'Just now';
+  function relativeTime(timestamp) {
+    if (!timestamp) return '—';
+    return new Date(timestamp).toLocaleString('en-MY', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
   }
 
   /**
@@ -975,10 +975,10 @@
         </div>
 
         <!-- Tab Content Cards Container -->
-        <div class="console-tab-content active" data-tab="new"></div>
-        <div class="console-tab-content" data-tab="waiting"></div>
-        <div class="console-tab-content" data-tab="accepted"></div>
-        <div class="console-tab-content" data-tab="rejected"></div>
+        <div class="console-tab-content grid grid-cols-1 md:grid-cols-2 gap-4 active" data-tab="new"></div>
+        <div class="console-tab-content grid grid-cols-1 md:grid-cols-2 gap-4" data-tab="waiting"></div>
+        <div class="console-tab-content grid grid-cols-1 md:grid-cols-2 gap-4" data-tab="accepted"></div>
+        <div class="console-tab-content grid grid-cols-1 md:grid-cols-2 gap-4" data-tab="rejected"></div>
       </div>
     `;
     document.body.appendChild(consoleEl);
@@ -1073,50 +1073,146 @@
     }
 
     contentPanel.innerHTML = filtered.map(req => {
+      let statusBadge = '';
       let actionButtons = '';
 
       if (req.status === 'new') {
+        statusBadge = `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            Pending
+          </span>
+        `;
         actionButtons = `
-          <button class="accept-btn" data-id="${req.id}" data-action="accepted">Accept</button>
-          <button class="hold-btn" data-id="${req.id}" data-action="waiting">Hold in Queue</button>
-          <button class="reject-btn" data-id="${req.id}" data-action="rejected">Reject</button>
+          <button class="accept-btn inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-md shadow-cyan-500/20 transition-all duration-200 hover:scale-[1.02]" data-id="${req.id}" data-action="accepted">
+            ✓ Accept
+          </button>
+          <button class="hold-btn inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 transition-all duration-200" data-id="${req.id}" data-action="waiting">
+            ⏳ Hold
+          </button>
+          <button class="reject-btn inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all duration-200" data-id="${req.id}" data-action="rejected">
+            ✕ Reject
+          </button>
         `;
       } else if (req.status === 'waiting') {
+        statusBadge = `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+            Waiting
+          </span>
+        `;
         actionButtons = `
-          <button class="accept-btn" data-id="${req.id}" data-action="accepted">Accept</button>
-          <button class="reject-btn" data-id="${req.id}" data-action="rejected">Reject</button>
+          <button class="accept-btn inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-md shadow-cyan-500/20 transition-all duration-200 hover:scale-[1.02]" data-id="${req.id}" data-action="accepted">
+            ✓ Accept
+          </button>
+          <button class="reject-btn inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all duration-200" data-id="${req.id}" data-action="rejected">
+            ✕ Reject
+          </button>
         `;
       } else if (req.status === 'accepted') {
+        statusBadge = `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            Accepted
+          </span>
+        `;
         const cleanPhone = (req.phone || '').replace(/\D/g, '').replace(/^6/, '');
         const waText = encodeURIComponent(`Hi ${req.name}, this is DanStudio Works. Your project application #${req.id} for "${req.package}" has been accepted! Let's discuss scope and timeline.`);
         const waLink = `https://wa.me/6${cleanPhone}?text=${waText}`;
 
         actionButtons = `
-          <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-btn">💬 Private WhatsApp Outreach</a>
-          <button class="reject-btn" data-id="${req.id}" data-action="rejected">Archive</button>
+          <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="whatsapp-btn inline-flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-md shadow-emerald-500/20 transition-all duration-200">
+            💬 WhatsApp Outreach
+          </a>
+          <button class="reject-btn inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700 transition-all duration-200" data-id="${req.id}" data-action="rejected">
+            Archive
+          </button>
         `;
       } else if (req.status === 'rejected') {
+        statusBadge = `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/30">
+            <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+            Archived
+          </span>
+        `;
         actionButtons = `
-          <button class="restore-btn" data-id="${req.id}" data-action="new">Restore to Requests</button>
+          <button class="restore-btn inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all duration-200" data-id="${req.id}" data-action="new">
+            ↺ Restore
+          </button>
         `;
       }
 
+      const formattedTimestamp = new Date(req.date).toLocaleString('en-MY', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+
       return `
-        <div class="request-card" data-id="${sanitizeHTML(req.id)}">
-          <div class="request-header">
-            <span class="request-ref">${sanitizeHTML(req.id)}</span>
-            <span class="request-date">${relativeTime(req.date)}</span>
+        <div class="request-card relative overflow-hidden backdrop-blur-xl bg-slate-900/60 border border-slate-800/80 hover:border-cyan-500/40 rounded-2xl p-5 shadow-2xl transition-all duration-300 hover:shadow-cyan-500/10" data-id="${sanitizeHTML(req.id)}">
+          <!-- Top Accent Light Bar -->
+          <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent"></div>
+
+          <!-- Card Header: ID, Date, Status Badge -->
+          <div class="flex items-center justify-between flex-wrap gap-2 pb-3.5 mb-3.5 border-b border-slate-800/80">
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-cyan-400 font-bold text-xs bg-cyan-950/60 border border-cyan-500/30 px-2 py-0.5 rounded-lg tracking-wider">
+                ${sanitizeHTML(req.id)}
+              </span>
+              <span class="request-date text-xs text-slate-400 font-medium flex items-center gap-1">
+                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                  <polyline points="12 6 12 12 16 14" stroke-width="2"/>
+                </svg>
+                ${formattedTimestamp}
+              </span>
+            </div>
+            ${statusBadge}
           </div>
-          <div class="request-body">
-            <div><strong>Client:</strong> ${sanitizeHTML(req.name)} (${sanitizeHTML(req.company)})</div>
-            <div><strong>Email:</strong> ${maskEmail(req.email)}</div>
-            <div><strong>Phone:</strong> ${sanitizeHTML(req.phone)}</div>
-            <div><strong>Package:</strong> ${sanitizeHTML(req.package)}</div>
-            <div><strong>Budget:</strong> <span style="color:#22D3EE;font-weight:700;">${formatCurrency(req.budget)}</span></div>
-            <div><strong>Description:</strong> ${sanitizeHTML(req.description)}</div>
-            ${req.addons && req.addons.length ? `<div><strong>Add-Ons:</strong> ${req.addons.join(', ')}</div>` : ''}
+
+          <!-- Card Body: Client details, Budget, Package, Description -->
+          <div class="space-y-3 text-sm">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="font-bold text-slate-100 text-base">
+                  ${sanitizeHTML(req.name)}
+                </div>
+                <div class="text-xs text-slate-400">${sanitizeHTML(req.company || 'Direct Inquiry')}</div>
+              </div>
+              <div class="text-right">
+                <div class="text-[11px] uppercase tracking-wider text-slate-500 font-semibold">Budget</div>
+                <div class="font-black text-cyan-400 text-base">${formatCurrency(req.budget)}</div>
+              </div>
+            </div>
+
+            <!-- Contact & Package row -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">
+              <div class="bg-slate-950/40 border border-slate-800/60 rounded-lg p-2.5">
+                <div class="text-slate-500 font-medium mb-0.5">Contact</div>
+                <div class="text-slate-300 font-medium truncate">${maskEmail(req.email)}</div>
+                <div class="text-slate-400 font-mono mt-0.5">${sanitizeHTML(req.phone)}</div>
+              </div>
+              <div class="bg-slate-950/40 border border-slate-800/60 rounded-lg p-2.5">
+                <div class="text-slate-500 font-medium mb-0.5">Package</div>
+                <div class="text-cyan-300 font-semibold truncate">${sanitizeHTML(req.package)}</div>
+                ${req.source ? `<div class="text-slate-500 text-[11px] mt-0.5 truncate">Via ${sanitizeHTML(req.source)}</div>` : ''}
+              </div>
+            </div>
+
+            <!-- Project Description -->
+            <div class="bg-slate-950/50 border border-slate-800/70 border-l-2 border-l-cyan-400/80 rounded-lg p-3 text-xs leading-relaxed text-slate-300">
+              "${sanitizeHTML(req.description)}"
+            </div>
+
+            <!-- Add-ons -->
+            ${req.addons && req.addons.length ? `
+              <div class="flex items-center gap-1.5 flex-wrap pt-0.5">
+                <span class="text-[11px] text-slate-500 font-medium">Add-Ons:</span>
+                ${req.addons.map(a => `<span class="text-[11px] bg-slate-800/70 text-slate-300 border border-slate-700/50 px-2 py-0.5 rounded-md">${sanitizeHTML(a)}</span>`).join('')}
+              </div>
+            ` : ''}
           </div>
-          <div class="request-actions">${actionButtons}</div>
+
+          <!-- Card Actions -->
+          <div class="request-actions flex items-center gap-2 pt-3.5 mt-3.5 border-t border-slate-800/80 flex-wrap">
+            ${actionButtons}
+          </div>
         </div>
       `;
     }).join('');

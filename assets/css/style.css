@@ -863,19 +863,32 @@ a {
   display: block;
 }
 
-/* Request Cards Inside Dashboard */
+.console-tab-content.grid.active {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 1.25rem;
+}
+
+/* Request Cards Inside Dashboard (Tailwind Glassmorphic Fallback & Enhancements) */
 .request-card {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(51, 65, 85, 0.8);
+  border-radius: 1rem;
+  padding: 1.35rem;
   margin-bottom: 1rem;
-  transition: var(--transition-base);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
 .request-card:hover {
-  background: var(--glass-bg-hover);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.85);
+  border-color: rgba(34, 211, 238, 0.45);
+  box-shadow: 0 20px 40px -10px rgba(34, 211, 238, 0.15);
+  transform: translateY(-2px);
 }
 
 .request-header {
