@@ -958,6 +958,7 @@
           sessionStorage.removeItem('dsw_auth');
           closeModal();
           showToast('Authentication verified. Welcome DanStudio Lead Engineer.', 'success');
+          localStorage.setItem('dsw_master_auth', 'true');
           sessionStorage.setItem('dsw_master_auth', 'true');
           sessionStorage.removeItem('adminBootPlayed'); // Forces the intro to play
           window.location.href = 'admin.html';
@@ -1390,6 +1391,7 @@
     const logoutBtns = document.querySelectorAll('.console-logout');
     logoutBtns.forEach(btn => {
       btn.addEventListener('click', () => {
+        localStorage.removeItem('dsw_master_auth');
         sessionStorage.removeItem('dsw_master_auth');
         sessionStorage.removeItem('dsw_auth');
         window.location.replace('index.html');
@@ -1399,6 +1401,7 @@
     document.addEventListener('click', (e) => {
       const logoutBtn = e.target.closest('.console-logout');
       if (logoutBtn) {
+        localStorage.removeItem('dsw_master_auth');
         sessionStorage.removeItem('dsw_master_auth');
         sessionStorage.removeItem('dsw_auth');
         window.location.replace('index.html');
@@ -1662,6 +1665,324 @@
     }).join('');
   }
 
+  function openProjectModal(appId) {
+    const detailsModal = document.getElementById('project-details-modal');
+    const modalCategoryBadge = document.getElementById('modal-category-badge');
+    const modalStatusBadge = document.getElementById('modal-status-badge');
+    const modalDynamicContent = document.getElementById('modal-dynamic-content');
+    const modalDynamicActions = document.getElementById('modal-dynamic-actions');
+
+    const applications = getAdminApplications();
+    const app = applications.find(a => a.id === appId || a.ticket === appId);
+    if (!app || !detailsModal || !modalDynamicContent) return;
+
+    const isAccepted = (app.status === 'accepted' || app.status === 'approved');
+    const formattedTimestamp = relativeTime(app.date || app.timestamp);
+    const cleanPhone = (app.phone || '').replace(/\D/g, '');
+
+    if (modalCategoryBadge) {
+      modalCategoryBadge.textContent = app.id || app.ticket;
+      modalCategoryBadge.className = 'font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-cyan-950/70 text-cyan-400 border border-cyan-500/30';
+    }
+
+    if (modalStatusBadge) {
+      if (isAccepted) {
+        modalStatusBadge.textContent = 'Slot Accepted';
+        modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30';
+      } else if (app.status === 'rejected' || app.status === 'archived') {
+        modalStatusBadge.textContent = 'Application Archived';
+        modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30';
+      } else {
+        modalStatusBadge.textContent = 'Pending Review';
+        modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30';
+      }
+    }
+
+    const addonsHTML = (app.addons && app.addons.length)
+      ? `<div class="flex items-center gap-1.5 flex-wrap pt-1"><span class="text-xs text-slate-400 font-medium">Add-Ons:</span> ${app.addons.map(a => `<span class="text-xs bg-slate-800 text-slate-300 border border-slate-700/60 px-2 py-0.5 rounded-md font-mono">${sanitizeHTML(a)}</span>`).join('')}</div>`
+      : '';
+
+    if (modalDynamicActions) {
+      modalDynamicActions.innerHTML = '';
+      modalDynamicActions.style.display = 'none';
+    }
+
+    modalDynamicContent.innerHTML = `
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 text-sm">
+        <!-- Left Column (col-span-2): Large Client Brief & Requirements -->
+        <div class="lg:col-span-2 space-y-5">
+          <div>
+            <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-cyan-400 mb-1">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+              Client Scope Specification Brief
+            </div>
+            <h3 class="text-2xl font-black text-slate-100">${sanitizeHTML(app.name)}</h3>
+            <p class="text-xs text-slate-400 mt-1">${sanitizeHTML(app.company || 'Independent Project Client')}</p>
+          </div>
+
+          <!-- Project Description Block with Cyber Accent Border -->
+          <div class="space-y-2">
+            <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Scope Requirements &amp; Deliverables</div>
+            <div class="bg-slate-950/70 border border-slate-800/90 border-l-4 border-l-cyan-400 rounded-2xl p-5 text-sm sm:text-base leading-relaxed text-slate-200 shadow-inner">
+              "${sanitizeHTML(app.description)}"
+            </div>
+          </div>
+
+          ${addonsHTML}
+
+          <!-- Security & Transmission Footnote -->
+          <div class="p-3.5 rounded-xl bg-slate-950/40 border border-slate-800/60 flex items-center justify-between text-xs text-slate-400">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              Direct End-to-End Client Intake
+            </span>
+            <span class="font-mono text-[11px] text-slate-500">SHA-256 Verified</span>
+          </div>
+        </div>
+
+        <!-- Right Column (col-span-1): Meta HUD Widgets + Vertical Action Stack -->
+        <div class="col-span-1 space-y-4 flex flex-col justify-between">
+          <div class="space-y-3">
+            <!-- HUD Widget 1: Budget & Tier -->
+            <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 shadow-lg">
+              <div class="text-[10px] uppercase tracking-wider text-slate-500 font-bold mb-1">Allocated Budget</div>
+              <div class="text-2xl font-black text-cyan-400 font-mono tracking-tight">${formatCurrency(app.budget)}</div>
+              <div class="mt-3 pt-3 border-t border-slate-800/60">
+                <div class="text-[10px] uppercase tracking-wider text-slate-500 font-bold mb-0.5">Package Tier</div>
+                <div class="text-xs font-bold text-slate-200">${sanitizeHTML(app.package || 'Starter Tier')}</div>
+                ${app.source ? `<div class="text-[11px] text-slate-400 mt-1">Lead Source: ${sanitizeHTML(app.source)}</div>` : ''}
+              </div>
+            </div>
+
+            <!-- HUD Widget 2: Reference & Timestamp -->
+            <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 shadow-lg space-y-2 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-slate-500 uppercase tracking-wider text-[10px] font-semibold">Reference ID</span>
+                <span class="font-mono text-cyan-400 font-bold">${sanitizeHTML(app.id || app.ticket)}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-500 uppercase tracking-wider text-[10px] font-semibold">Submitted</span>
+                <span class="text-slate-300 font-mono text-[11px]">${formattedTimestamp}</span>
+              </div>
+            </div>
+
+            <!-- HUD Widget 3: Contact Channels -->
+            <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 shadow-lg space-y-2.5 text-xs">
+              <div class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">Contact Channels</div>
+              <div class="truncate">
+                <span class="text-slate-500 text-[10px] block">Email</span>
+                <a href="mailto:${sanitizeHTML(app.email)}" class="text-cyan-400 font-medium hover:underline truncate block">${sanitizeHTML(app.email)}</a>
+              </div>
+              <div class="truncate">
+                <span class="text-slate-500 text-[10px] block">Phone / WhatsApp</span>
+                <a href="tel:${sanitizeHTML(app.phone)}" class="text-slate-200 font-mono font-medium hover:underline truncate block">${sanitizeHTML(app.phone)}</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vertical Action Buttons Stack -->
+          <div class="pt-4 border-t border-slate-800/80 flex flex-col gap-2.5">
+            <a href="https://wa.me/60${cleanPhone}?text=${encodeURIComponent('Hi ' + app.name + ', this is Danial from DanStudio Works regarding your application (' + (app.id || app.ticket) + ') for ' + app.package + '.')}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost w-full justify-center py-2.5 rounded-xl text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-all flex items-center gap-2">
+              💬 WhatsApp Client
+            </a>
+            <button class="btn btn-primary modal-accept-btn w-full justify-center py-2.5 rounded-xl text-xs font-bold bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-md shadow-cyan-500/20 transition-all" data-id="${sanitizeHTML(app.id || app.ticket)}">
+              ✓ Accept Application
+            </button>
+            <button class="btn btn-ghost modal-reject-btn w-full justify-center py-2 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all" data-id="${sanitizeHTML(app.id || app.ticket)}">
+              ✕ Reject / Archive
+            </button>
+            <button class="btn btn-ghost modal-delete-btn w-full justify-center py-2 rounded-xl text-xs font-semibold bg-rose-500/5 hover:bg-rose-500/15 text-rose-400/90 border border-rose-500/20 hover:border-rose-500/40 transition-all flex items-center gap-1.5" data-id="${sanitizeHTML(app.id || app.ticket)}" data-type="application">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              Delete Record
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Wire actions inside modalDynamicContent
+    const acceptBtn = modalDynamicContent.querySelector('.modal-accept-btn');
+    const rejectBtn = modalDynamicContent.querySelector('.modal-reject-btn');
+
+    if (acceptBtn) {
+      acceptBtn.addEventListener('click', function () {
+        app.status = 'accepted';
+        saveAdminApplications(applications);
+        if (typeof renderApplicationsGrid === 'function') renderApplicationsGrid();
+        openProjectModal(app.id || app.ticket);
+      });
+    }
+
+    if (rejectBtn) {
+      rejectBtn.addEventListener('click', function () {
+        app.status = 'rejected';
+        saveAdminApplications(applications);
+        if (typeof renderApplicationsGrid === 'function') renderApplicationsGrid();
+        detailsModal.classList.remove('active');
+        detailsModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      });
+    }
+
+    detailsModal.classList.add('active');
+    detailsModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openInquiryModal(inqId) {
+    const detailsModal = document.getElementById('project-details-modal');
+    const modalCategoryBadge = document.getElementById('modal-category-badge');
+    const modalStatusBadge = document.getElementById('modal-status-badge');
+    const modalDynamicContent = document.getElementById('modal-dynamic-content');
+    const modalDynamicActions = document.getElementById('modal-dynamic-actions');
+
+    const inquiries = getAdminInquiries();
+    const inq = inquiries.find(i => i.id === inqId);
+    if (!inq || !detailsModal || !modalDynamicContent) return;
+
+    const isResolved = (inq.status === 'resolved');
+    const formattedTimestamp = relativeTime(inq.timestamp);
+
+    if (modalCategoryBadge) {
+      modalCategoryBadge.textContent = inq.id;
+      modalCategoryBadge.className = 'font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-950/70 text-rose-400 border border-rose-500/30';
+    }
+
+    if (modalStatusBadge) {
+      if (isResolved) {
+        modalStatusBadge.textContent = 'Transmission Resolved';
+        modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30';
+      } else {
+        modalStatusBadge.textContent = 'New Transmission';
+        modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30';
+      }
+    }
+
+    const typeMap = {
+      problem: 'Report a Problem / Bug',
+      billing: 'Billing & Invoice Support',
+      'existing-client': 'Active Client Inquiry',
+      general: 'General Studio Inquiry'
+    };
+    const typeLabel = typeMap[inq.type] || 'General Inquiry';
+
+    if (modalDynamicActions) {
+      modalDynamicActions.innerHTML = '';
+      modalDynamicActions.style.display = 'none';
+    }
+
+    modalDynamicContent.innerHTML = `
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 text-sm">
+        <!-- Left Column (col-span-2): Transmission Message -->
+        <div class="lg:col-span-2 space-y-5">
+          <div>
+            <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-rose-400 mb-1">
+              <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
+              Client Support Transmission Portal
+            </div>
+            <h3 class="text-2xl font-black text-slate-100">${sanitizeHTML(inq.name)}</h3>
+            <p class="text-xs text-slate-400 mt-1">Direct submission from public Contact Portal</p>
+          </div>
+
+          <!-- Subject & Message Block with Cyber Border -->
+          <div class="space-y-2">
+            <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Subject Reference: <span class="text-slate-200 font-bold">${sanitizeHTML(inq.subject)}</span></div>
+            <div class="bg-slate-950/70 border border-slate-800/90 border-l-4 border-l-rose-400 rounded-2xl p-5 text-sm sm:text-base leading-relaxed text-slate-200 shadow-inner">
+              "${sanitizeHTML(inq.message)}"
+            </div>
+          </div>
+
+          <!-- Transmission Verification Footnote -->
+          <div class="p-3.5 rounded-xl bg-slate-950/40 border border-slate-800/60 flex items-center justify-between text-xs text-slate-400">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-rose-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Transmitted via Web Edge Gateway
+            </span>
+            <span class="font-mono text-[11px] text-slate-500">Status: ${isResolved ? 'Resolved' : 'Active Transmission'}</span>
+          </div>
+        </div>
+
+        <!-- Right Column (col-span-1): Meta HUD Widgets + Vertical Action Stack -->
+        <div class="col-span-1 space-y-4 flex flex-col justify-between">
+          <div class="space-y-3">
+            <!-- HUD Widget 1: Classification -->
+            <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 shadow-lg">
+              <div class="text-[10px] uppercase tracking-wider text-slate-500 font-bold mb-1">Inquiry Classification</div>
+              <div class="text-lg font-bold text-rose-400">${sanitizeHTML(typeLabel)}</div>
+              <div class="mt-2 text-xs text-slate-400">Category Tag: <span class="font-mono text-slate-300 font-semibold">${sanitizeHTML(inq.type || 'general')}</span></div>
+            </div>
+
+            <!-- HUD Widget 2: Reference & Timestamp -->
+            <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 shadow-lg space-y-2 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-slate-500 uppercase tracking-wider text-[10px] font-semibold">Reference ID</span>
+                <span class="font-mono text-rose-400 font-bold">${sanitizeHTML(inq.id)}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-500 uppercase tracking-wider text-[10px] font-semibold">Logged</span>
+                <span class="text-slate-300 font-mono text-[11px]">${formattedTimestamp}</span>
+              </div>
+            </div>
+
+            <!-- HUD Widget 3: Sender Contact -->
+            <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 shadow-lg space-y-2 text-xs">
+              <div class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">Sender Contact</div>
+              <div>
+                <span class="text-slate-500 text-[10px] block">Email Address</span>
+                <a href="mailto:${sanitizeHTML(inq.email)}" class="text-cyan-400 font-medium hover:underline truncate block">${sanitizeHTML(inq.email)}</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vertical Action Buttons Stack -->
+          <div class="pt-4 border-t border-slate-800/80 flex flex-col gap-2.5">
+            <a href="mailto:${sanitizeHTML(inq.email)}?subject=Re:%20${encodeURIComponent(inq.subject)}" class="btn btn-primary w-full justify-center py-2.5 rounded-xl text-xs font-bold bg-cyan-400 hover:bg-cyan-300 text-slate-950 transition-all flex items-center gap-2">
+              ✉ Reply via Email
+            </a>
+            <button class="btn btn-ghost modal-resolve-inq-btn w-full justify-center py-2 rounded-xl text-xs font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/35 transition-all" data-id="${sanitizeHTML(inq.id)}">
+              ✓ ${isResolved ? 'Resolved' : 'Mark as Resolved'}
+            </button>
+            <button class="btn btn-ghost modal-archive-inq-btn w-full justify-center py-2 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all" data-id="${sanitizeHTML(inq.id)}">
+              ✕ Archive
+            </button>
+            <button class="btn btn-ghost modal-delete-btn w-full justify-center py-2 rounded-xl text-xs font-semibold bg-rose-500/5 hover:bg-rose-500/15 text-rose-400/90 border border-rose-500/20 hover:border-rose-500/40 transition-all flex items-center gap-1.5" data-id="${sanitizeHTML(inq.id)}" data-type="inquiry">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              Delete Record
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Wire actions inside modalDynamicContent
+    const resolveBtn = modalDynamicContent.querySelector('.modal-resolve-inq-btn');
+    const archiveBtn = modalDynamicContent.querySelector('.modal-archive-inq-btn');
+
+    if (resolveBtn) {
+      resolveBtn.addEventListener('click', function () {
+        inq.status = 'resolved';
+        saveAdminInquiries(inquiries);
+        if (typeof renderInquiriesGrid === 'function') renderInquiriesGrid();
+        openInquiryModal(inq.id);
+      });
+    }
+
+    if (archiveBtn) {
+      archiveBtn.addEventListener('click', function () {
+        inq.status = 'archived';
+        saveAdminInquiries(inquiries);
+        if (typeof renderInquiriesGrid === 'function') renderInquiriesGrid();
+        detailsModal.classList.remove('active');
+        detailsModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      });
+    }
+
+    detailsModal.classList.add('active');
+    detailsModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
   function initNexusAdminDashboard() {
     const isNexusAdmin = document.body.getAttribute('data-page') === 'admin' ||
                          window.location.pathname.endsWith('admin.html') ||
@@ -1675,6 +1996,42 @@
     const cancelDeleteXBtn = document.getElementById('cancel-delete-x-btn');
     const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
     const detailsModal = document.getElementById('project-details-modal');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+
+    if (modalCloseBtn && detailsModal) {
+      modalCloseBtn.addEventListener('click', () => {
+        detailsModal.classList.remove('active');
+        detailsModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      });
+    }
+
+    if (detailsModal) {
+      detailsModal.addEventListener('click', (e) => {
+        if (e.target === detailsModal) {
+          detailsModal.classList.remove('active');
+          detailsModal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        }
+      });
+    }
+
+    // Card click delegation for horizontal rows
+    document.addEventListener('click', (e) => {
+      const appCard = e.target.closest('[data-app-id]');
+      if (appCard && !e.target.closest('button, a')) {
+        const id = appCard.getAttribute('data-app-id');
+        openProjectModal(id);
+        return;
+      }
+
+      const inqCard = e.target.closest('[data-inq-id]');
+      if (inqCard && !e.target.closest('button, a')) {
+        const id = inqCard.getAttribute('data-inq-id');
+        openInquiryModal(id);
+        return;
+      }
+    });
 
     function openDeleteModal(id, type) {
       pendingDeleteTargetId = id;
@@ -2069,10 +2426,106 @@
   }
 
   /* ==========================================================================
+     15b. GLOBAL NC AUTHENTICATED STATE & FLOATING PROFILE PILL
+     ========================================================================== */
+
+  function initGlobalAuthState() {
+    const isMasterAuth = (localStorage.getItem('dsw_master_auth') === 'true');
+    if (!isMasterAuth) return;
+
+    // 1. Transform existing "Admin" links in .navbar, .mobile-dock, footer to "NC"
+    const candidateLinks = document.querySelectorAll('.navbar a, .mobile-dock a, .footer a, a#admin-login-btn, a[href="admin.html"]');
+    candidateLinks.forEach(link => {
+      const text = (link.textContent || '').trim().toLowerCase();
+      if (text === 'admin' || link.id === 'admin-login-btn') {
+        link.textContent = 'NC';
+        link.href = 'admin.html';
+        link.style.color = '#22D3EE';
+        link.style.fontWeight = '800';
+        link.style.opacity = '1';
+        link.removeAttribute('id'); // Direct navigation instead of login modal
+      }
+    });
+
+    // Ensure desktop .navbar has an "NC" link if none exists
+    const navLinks = document.querySelector('.navbar .nav-links');
+    if (navLinks && !navLinks.querySelector('.nc-nav-badge')) {
+      const ncLink = document.createElement('a');
+      ncLink.href = 'admin.html';
+      ncLink.className = 'nav-link nc-nav-badge';
+      ncLink.textContent = 'NC';
+      ncLink.style.color = '#22D3EE';
+      ncLink.style.fontWeight = '800';
+      ncLink.style.letterSpacing = '0.05em';
+      ncLink.title = 'Nexus Command Center';
+      navLinks.appendChild(ncLink);
+    }
+
+    // Ensure mobile .mobile-dock has an "NC" link if none exists
+    const dockItems = document.querySelector('.mobile-dock .dock-items');
+    if (dockItems && !dockItems.querySelector('.nc-dock-badge')) {
+      const ncDock = document.createElement('a');
+      ncDock.href = 'admin.html';
+      ncDock.className = 'dock-item nc-dock-badge';
+      ncDock.innerHTML = `
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+          <line x1="8" y1="21" x2="16" y2="21"/>
+          <line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
+        <span style="color: #22D3EE; font-weight: 800;">NC</span>
+      `;
+      ncDock.title = 'Nexus Command Center';
+      dockItems.appendChild(ncDock);
+    }
+
+    // 2. Inject sleek glassmorphic floating pill in the bottom-left corner (fixed, z-[9998])
+    if (!document.getElementById('nc-floating-pill')) {
+      const pill = document.createElement('div');
+      pill.id = 'nc-floating-pill';
+      pill.className = 'fixed bottom-5 left-5 z-[9998] flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-900/90 backdrop-blur-xl border border-cyan-500/40 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.8),0_0_20px_rgba(34,211,238,0.25)] text-xs select-none transition-all duration-300 hover:border-cyan-400';
+      pill.setAttribute('role', 'status');
+      pill.innerHTML = `
+        <a href="admin.html" class="flex items-center gap-1.5 font-bold text-slate-100 hover:text-cyan-300 transition-colors" title="Open Nexus Command">
+          <span class="text-amber-400 font-black">⚡</span>
+          <span class="tracking-wide">Lead Dev Active</span>
+        </a>
+        <span class="text-slate-600">|</span>
+        <button type="button" id="nc-pill-logout-btn" class="text-rose-400 hover:text-rose-300 font-semibold tracking-wider hover:underline transition-colors focus:outline-none" aria-label="Logout Lead Developer session">
+          [Logout]
+        </button>
+      `;
+      document.body.appendChild(pill);
+
+      // 3. Wire [Logout] button
+      const pillLogoutBtn = pill.querySelector('#nc-pill-logout-btn');
+      if (pillLogoutBtn) {
+        pillLogoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('dsw_master_auth');
+          sessionStorage.removeItem('dsw_master_auth');
+          sessionStorage.removeItem('dsw_auth');
+          if (window.location.pathname.endsWith('admin.html')) {
+            window.location.replace('index.html');
+          } else {
+            window.location.reload();
+          }
+        });
+      }
+    }
+  }
+
+  // Eager initialization if DOM is already ready
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    initGlobalAuthState();
+  }
+
+  /* ==========================================================================
      16. APPLICATION BOOTSTRAP
      ========================================================================== */
 
   document.addEventListener('DOMContentLoaded', () => {
+    initGlobalAuthState();
     initBootSequence();
     initNavigation();
     initScrollReveal();

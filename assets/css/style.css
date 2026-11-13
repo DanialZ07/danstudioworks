@@ -1588,7 +1588,7 @@ a {
 
 .details-modal-dialog {
   width: 100%;
-  max-width: 680px;
+  max-width: 960px;
   max-height: 90vh;
   overflow-y: auto;
   background: rgba(15, 23, 42, 0.88);
@@ -1667,4 +1667,40 @@ a {
   border-color: rgba(244, 63, 94, 0.5) !important;
   color: #fda4af !important;
   transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   22. GLOBAL NC AUTHENTICATED PROFILE PILL
+   ========================================================================== */
+#nc-floating-pill {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  z-index: 9998;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.4rem 0.95rem;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(34, 211, 238, 0.4);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8), 0 0 20px rgba(34, 211, 238, 0.25);
+  font-size: 0.75rem;
+  color: #F1F5F9;
+  user-select: none;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: all 0.25s ease;
+}
+
+#nc-floating-pill:hover {
+  border-color: rgba(34, 211, 238, 0.7);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8), 0 0 25px rgba(34, 211, 238, 0.35);
+}
+
+@media (max-width: 768px) {
+  #nc-floating-pill {
+    bottom: 5.5rem; /* Elevates pill safely above mobile bottom thumb-dock */
+  }
 }
