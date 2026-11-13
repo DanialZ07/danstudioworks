@@ -62,21 +62,21 @@
     
     <!-- Main Dashboard Area -->
     <rect x="170" y="60" width="406" height="100" rx="12" fill="#1E293B" opacity="0.5" stroke="rgba(255,255,255,0.06)" />
-    <text x="190" y="95" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="700">SRAI Qhalif Integrated System</text>
-    <text x="190" y="118" fill="#22D3EE" font-family="sans-serif" font-size="12" font-weight="600">Student &amp; Yuran Management Engine</text>
+    <text x="190" y="95" fill="#F8FAFC" font-family="sans-serif" font-size="16" font-weight="700">SRAI Qhalif Educational Portal</text>
+    <text x="190" y="118" fill="#22D3EE" font-family="sans-serif" font-size="12" font-weight="600">Official School &amp; Tadika Portal</text>
 
     <!-- Metric Cards -->
     <rect x="170" y="174" width="125" height="80" rx="10" fill="#131B2E" stroke="rgba(34,211,238,0.2)" />
-    <text x="185" y="200" fill="#94A3B8" font-family="sans-serif" font-size="11">Active Students</text>
-    <text x="185" y="232" fill="#FFFFFF" font-family="sans-serif" font-size="20" font-weight="800">1,248</text>
+    <text x="185" y="200" fill="#94A3B8" font-family="sans-serif" font-size="11">Architecture</text>
+    <text x="185" y="232" fill="#FFFFFF" font-family="sans-serif" font-size="17" font-weight="800">Tailwind</text>
 
     <rect x="310" y="174" width="125" height="80" rx="10" fill="#131B2E" stroke="rgba(16,185,129,0.2)" />
-    <text x="185" y="200" x="325" fill="#94A3B8" font-family="sans-serif" font-size="11">Collection Rate</text>
-    <text x="325" y="232" fill="#10B981" font-family="sans-serif" font-size="20" font-weight="800">99.4%</text>
+    <text x="325" y="200" fill="#94A3B8" font-family="sans-serif" font-size="11">MYNIC Domain</text>
+    <text x="325" y="232" fill="#10B981" font-family="sans-serif" font-size="17" font-weight="800">.edu.my</text>
 
     <rect x="450" y="174" width="125" height="80" rx="10" fill="#131B2E" stroke="rgba(217,70,239,0.2)" />
-    <text x="465" y="200" fill="#94A3B8" font-family="sans-serif" font-size="11">Automated Receipt</text>
-    <text x="465" y="232" fill="#D946EF" font-family="sans-serif" font-size="20" font-weight="800">Active</text>
+    <text x="465" y="200" fill="#94A3B8" font-family="sans-serif" font-size="11">Cloudflare DNS</text>
+    <text x="465" y="232" fill="#D946EF" font-family="sans-serif" font-size="17" font-weight="800">Active</text>
 
     <!-- Table preview -->
     <rect x="170" y="268" width="406" height="92" rx="10" fill="#131B2E" opacity="0.8" />
