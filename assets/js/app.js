@@ -588,7 +588,10 @@
           ticket_id: ticket,
           client_name: formDataPayload.name,
           client_email: formDataPayload.email,
+          client_phone: formDataPayload.phone,
           package_tier: formDataPayload.package,
+          budget: formDataPayload.budget || '0',
+          project_details: formDataPayload.description || '',
           status: 'pending',
           created_at: new Date().toISOString()
         };
@@ -988,6 +991,11 @@
         client_name: item.client_name || item.name || '',
         email: item.client_email || item.email || '',
         client_email: item.client_email || item.email || '',
+        phone: item.client_phone || item.phone || '',
+        client_phone: item.client_phone || item.phone || '',
+        budget: item.budget || '0',
+        description: item.project_details || item.description || '',
+        project_details: item.project_details || item.description || '',
         package: item.package_tier || item.package || 'Starter',
         package_tier: item.package_tier || item.package || 'Starter',
         date: item.created_at || item.date || new Date().toISOString(),
