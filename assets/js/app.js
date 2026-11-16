@@ -2497,7 +2497,7 @@
     if (!document.getElementById('nc-floating-pill')) {
       const pill = document.createElement('div');
       pill.id = 'nc-floating-pill';
-      pill.className = 'fixed bottom-5 left-5 z-[9998] flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-rose-950/90 text-rose-400 border border-rose-500/50 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.8),0_0_20px_rgba(244,63,94,0.3)] shadow-rose-500/20 text-xs select-none transition-all duration-300 hover:border-rose-400 backdrop-blur-xl';
+      pill.className = 'fixed bottom-24 left-4 z-[9998] flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-rose-950/90 text-rose-400 border border-rose-500/50 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.8),0_0_20px_rgba(244,63,94,0.3)] shadow-rose-500/20 text-xs select-none transition-all duration-300 hover:border-rose-400 backdrop-blur-xl';
       pill.setAttribute('role', 'status');
       pill.innerHTML = `
         <a href="admin.html" class="flex items-center gap-1.5 font-bold text-rose-300 hover:text-rose-200 transition-colors" title="Open Nexus Command">
