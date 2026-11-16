@@ -1508,6 +1508,13 @@
           Waiting
         </span>
       `;
+    } else if (app.status === 'cancelled') {
+      statusBadgeHTML = `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/30">
+          <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+          Cancelled by Client
+        </span>
+      `;
     } else if (app.status === 'rejected' || app.status === 'archived') {
       statusBadgeHTML = `
         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/30">
@@ -1760,6 +1767,7 @@
     if (!app || !detailsModal || !modalDynamicContent) return;
 
     const isAccepted = (app.status === 'accepted' || app.status === 'approved');
+    const isCancelled = (app.status === 'cancelled');
     const formattedTimestamp = relativeTime(app.date || app.timestamp);
     const cleanPhone = (app.phone || '').replace(/\D/g, '');
 
@@ -1772,6 +1780,9 @@
       if (isAccepted) {
         modalStatusBadge.textContent = 'Slot Accepted';
         modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30';
+      } else if (app.status === 'cancelled') {
+        modalStatusBadge.textContent = 'Cancelled by Client';
+        modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30';
       } else if (app.status === 'rejected' || app.status === 'archived') {
         modalStatusBadge.textContent = 'Application Archived';
         modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30';
@@ -1865,15 +1876,24 @@
 
           <!-- Vertical Action Buttons Stack -->
           <div class="pt-4 border-t border-slate-800/80 flex flex-col gap-2.5">
-            <a href="https://wa.me/60${cleanPhone}?text=${encodeURIComponent('Hi ' + app.name + ', this is Danial from DanStudio Works regarding your application (' + (app.id || app.ticket) + ') for ' + app.package + '.')}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost w-full justify-center py-2.5 rounded-xl text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-all flex items-center gap-2">
-              💬 WhatsApp Client
-            </a>
-            <button class="btn btn-primary modal-accept-btn w-full justify-center py-2.5 rounded-xl text-xs font-bold bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-md shadow-cyan-500/20 transition-all" data-id="${sanitizeHTML(app.id || app.ticket)}">
-              ✓ Accept Application
-            </button>
-            <button class="btn btn-ghost modal-reject-btn w-full justify-center py-2 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all" data-id="${sanitizeHTML(app.id || app.ticket)}">
-              ✕ Reject / Archive
-            </button>
+            ${isCancelled ? `
+              <div class="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs text-center font-mono">
+                Withdrawn by Client
+              </div>
+              <button class="btn btn-ghost modal-reject-btn w-full justify-center py-2.5 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all" data-id="${sanitizeHTML(app.id || app.ticket)}">
+                ✕ Archive Cancelled Ticket
+              </button>
+            ` : `
+              <a href="https://wa.me/60${cleanPhone}?text=${encodeURIComponent('Hi ' + app.name + ', this is Danial from DanStudio Works regarding your application (' + (app.id || app.ticket) + ') for ' + app.package + '.')}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost w-full justify-center py-2.5 rounded-xl text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-all flex items-center gap-2">
+                💬 WhatsApp Client
+              </a>
+              <button class="btn btn-primary modal-accept-btn w-full justify-center py-2.5 rounded-xl text-xs font-bold bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-md shadow-cyan-500/20 transition-all" data-id="${sanitizeHTML(app.id || app.ticket)}">
+                ✓ Accept Application
+              </button>
+              <button class="btn btn-ghost modal-reject-btn w-full justify-center py-2 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all" data-id="${sanitizeHTML(app.id || app.ticket)}">
+                ✕ Reject / Archive
+              </button>
+            `}
           </div>
         </div>
       </div>
@@ -2408,6 +2428,8 @@
         displayStatus = 'Waiting';
       } else if (statusRaw === 'rejected' || statusRaw === 'archived') {
         displayStatus = 'Archived';
+      } else if (statusRaw === 'cancelled') {
+        displayStatus = 'Cancelled';
       } else {
         displayStatus = 'In Review';
       }
@@ -2462,6 +2484,18 @@
         }
         if (queueNumberEl) queueNumberEl.textContent = 'Queue Hold';
         if (subtextEl) subtextEl.textContent = 'Awaiting Slot Availability';
+      } else if (displayStatus === 'Cancelled') {
+        if (statusBadge) {
+          statusBadge.style.background = 'rgba(244, 63, 94, 0.12)';
+          statusBadge.style.borderColor = 'rgba(244, 63, 94, 0.4)';
+          statusBadge.style.color = '#F43F5E';
+        }
+        if (pulseDot) {
+          pulseDot.style.background = '#F43F5E';
+          pulseDot.style.boxShadow = '0 0 10px #F43F5E';
+        }
+        if (queueNumberEl) queueNumberEl.textContent = 'Cancelled';
+        if (subtextEl) subtextEl.textContent = 'Application Withdrawn by Client';
       } else if (displayStatus === 'Archived') {
         if (statusBadge) {
           statusBadge.style.background = 'rgba(239, 68, 68, 0.12)';
@@ -2540,6 +2574,47 @@
       } else {
         if (purgeBadge) {
           purgeBadge.style.display = 'none';
+        }
+      }
+
+      // Client cancellation button handling
+      let cancelBtn = document.getElementById('client-cancel-btn');
+      if (statusRaw === 'pending' || statusRaw === 'new') {
+        if (!cancelBtn) {
+          cancelBtn = document.createElement('button');
+          cancelBtn.id = 'client-cancel-btn';
+          cancelBtn.className = 'mt-4 px-4 py-2 border border-red-500/50 text-red-400 rounded hover:bg-red-500/10 transition-colors text-sm w-full font-semibold';
+          cancelBtn.textContent = 'Cancel Application';
+          const detailsBox = document.getElementById('application-details-box') || document.querySelector('.glass-card');
+          if (detailsBox) detailsBox.appendChild(cancelBtn);
+        }
+        cancelBtn.style.display = 'block';
+        cancelBtn.onclick = async function () {
+          const confirmed = confirm("Are you sure you want to cancel your application?");
+          if (confirmed) {
+            const targetTicketId = (ticketData && (ticketData.ticket_id || ticketData.ticket || ticketData.id)) ? (ticketData.ticket_id || ticketData.ticket || ticketData.id) : activeId;
+            try {
+              await fetch('/api/queue', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ticket_id: targetTicketId, status: 'cancelled' })
+              });
+              if (typeof showToast === 'function') {
+                showToast('Application successfully cancelled.', 'info');
+              }
+            } catch (err) {
+              console.error('Cancellation request failed:', err);
+            }
+            if (typeof renderStatus === 'function') {
+              await renderStatus(targetTicketId);
+            } else {
+              window.location.reload();
+            }
+          }
+        };
+      } else {
+        if (cancelBtn) {
+          cancelBtn.style.display = 'none';
         }
       }
 

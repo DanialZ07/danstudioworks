@@ -47,6 +47,7 @@ export async function onRequestPost(context) {
         <p><strong>Reference ID:</strong> ${body.ticket_id}</p>
         <p>You can monitor your live queue position and production status at any time via the tracker portal:</p>
         <a href="${trackerUrl}" style="display: inline-block; padding: 10px 20px; background: #22d3ee; color: #000; text-decoration: none; font-weight: bold; border-radius: 4px;">Access Live Tracker</a>
+        <p style="margin-top: 15px; font-size: 13px; color: #64748b;">If you need to withdraw or cancel your application, you may do so at any time directly through your tracker link above.</p>
         <p style="margin-top: 30px; font-size: 12px; color: #94a3b8;">DanStudio Works // Nexus Command</p>
       </div>
     `;
@@ -87,6 +88,9 @@ export async function onRequestPatch(context) {
       } else if (body.status === "archived" || body.status === "rejected") {
         subject = `Application Status Update: ${body.ticket_id}`;
         htmlBody = `<div style="font-family: monospace; color: #334155; max-width: 600px;"><h2>Application Archived</h2><p>Hello ${client.client_name},</p><p>Due to current production capacity constraints, we are unable to accept your project at this time. Your ticket has been archived. Thank you for considering DanStudio Works.</p></div>`;
+      } else if (body.status === "cancelled") {
+        subject = "Application Cancelled: " + body.ticket_id;
+        htmlBody = "<div style='font-family: monospace; color: #334155;'><h2 style='color: #f43f5e;'>Application Withdrawn</h2><p>Hello " + client.client_name + ",</p><p>As requested, your project application has been successfully cancelled and removed from the active queue. We hope to work with you in the future.</p></div>";
       }
       
       if (subject && client.client_email) {
