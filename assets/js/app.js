@@ -1611,12 +1611,101 @@
     grid.innerHTML = activeHTML + archivedHTML;
   }
 
+  function renderAdminInquiryCard(inq, isArchived = false) {
+    const isResolved = (inq.status === 'resolved');
+    const formattedTimestamp = relativeTime(inq.timestamp);
+
+    let statusBadge = `
+      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/30">
+        <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
+        New Transmission
+      </span>
+    `;
+    if (isResolved) {
+      statusBadge = `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          Resolved
+        </span>
+      `;
+    } else if (inq.status === 'archived') {
+      statusBadge = `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-500/10 text-slate-400 border border-slate-500/30">
+          Archived
+        </span>
+      `;
+    }
+
+    const typeMap = {
+      problem: 'Report a Problem',
+      billing: 'Billing & Invoice',
+      'existing-client': 'Active Client',
+      general: 'General Inquiry'
+    };
+    const typeLabel = typeMap[inq.type] || 'General Inquiry';
+
+    const cardClasses = isArchived
+      ? 'border-slate-800/50 bg-slate-900/30 opacity-75 hover:opacity-100 hover:border-slate-700'
+      : 'border-slate-800/70 bg-slate-900/50 hover:border-rose-500/40 hover:bg-slate-800/40';
+
+    return `
+      <div class="summary-card inquiry-card flex flex-col md:flex-row items-start md:items-center justify-between p-3.5 sm:p-4 ${cardClasses} border rounded-xl transition-all duration-200 cursor-pointer gap-3" data-inq-id="${sanitizeHTML(inq.id)}">
+        <!-- Left Side: ID, Date, Sender Name, Subject -->
+        <div class="flex items-center gap-3 sm:gap-4 flex-wrap sm:flex-nowrap min-w-0">
+          <span class="font-mono ${isArchived ? 'text-slate-400 bg-slate-900 border-slate-700' : 'text-rose-400 bg-rose-950/70 border-rose-500/30'} font-bold text-xs border px-2.5 py-1 rounded-lg tracking-wider whitespace-nowrap">
+            ${sanitizeHTML(inq.id)}
+          </span>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="font-bold text-slate-100 text-sm truncate">${sanitizeHTML(inq.name)}</span>
+              <span class="text-xs text-slate-400 truncate hidden sm:inline">&bull; ${sanitizeHTML(inq.subject)}</span>
+            </div>
+            <div class="text-[11px] text-slate-500 mt-0.5 flex items-center gap-2">
+              <span>${formattedTimestamp}</span>
+              <span class="text-slate-600 hidden md:inline">|</span>
+              <span class="${isArchived ? 'text-slate-400' : 'text-rose-400/80'} hidden md:inline truncate max-w-[200px]">${sanitizeHTML(typeLabel)}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Status Badge, Classification, and Action Arrow -->
+        <div class="flex items-center gap-3 sm:gap-4 self-end md:self-auto flex-shrink-0">
+          <div class="text-right hidden sm:block">
+            <div class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Classification</div>
+            <div class="font-semibold text-slate-300 text-xs">${sanitizeHTML(typeLabel)}</div>
+          </div>
+          ${statusBadge}
+          <span class="text-xs text-rose-400 font-bold inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform pl-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+        </div>
+      </div>
+    `;
+  }
+
   async function renderInquiriesGrid() {
     const grid = document.getElementById('inquiries-grid');
     if (!grid) return;
 
     const inquiries = await getAdminInquiries();
-    if (!inquiries.length) {
+    const inquiriesCountBadge = document.getElementById('inquiries-count-badge');
+    const inquiriesPillCount = document.getElementById('inquiries-pill-count');
+
+    const activeInquiries = inquiries.filter(i => i.status !== 'archived');
+    const archivedInquiries = inquiries.filter(i => i.status === 'archived');
+
+    if (inquiriesCountBadge) {
+      const activeUnresolved = activeInquiries.filter(i => i.status !== 'resolved');
+      inquiriesCountBadge.textContent = `${activeUnresolved.length} Active Inquir${activeUnresolved.length === 1 ? 'y' : 'ies'}`;
+    }
+    if (inquiriesPillCount) {
+      const activeUnresolved = activeInquiries.filter(i => i.status !== 'resolved');
+      inquiriesPillCount.textContent = `${activeUnresolved.length}`;
+    }
+
+    if (!activeInquiries.length && !archivedInquiries.length) {
       grid.innerHTML = `
         <div class="glass-card text-center py-12 px-6 rounded-2xl border border-slate-800/80 bg-slate-900/40">
           <p class="text-base text-slate-400 font-medium">No client support transmissions logged.</p>
@@ -1625,69 +1714,34 @@
       return;
     }
 
-    grid.innerHTML = inquiries.map(inq => {
-      const isResolved = (inq.status === 'resolved');
-      const formattedTimestamp = relativeTime(inq.timestamp);
-
-      let statusBadge = `
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/30">
-          <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
-          New Transmission
-        </span>
-      `;
-      if (isResolved) {
-        statusBadge = `
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            Resolved
-          </span>
-        `;
-      }
-
-      const typeMap = {
-        problem: 'Report a Problem',
-        billing: 'Billing & Invoice',
-        'existing-client': 'Active Client',
-        general: 'General Inquiry'
-      };
-      const typeLabel = typeMap[inq.type] || 'General Inquiry';
-
-      return `
-        <div class="summary-card inquiry-card flex flex-col md:flex-row items-start md:items-center justify-between p-3.5 sm:p-4 bg-slate-900/50 border border-slate-800/70 hover:border-rose-500/40 rounded-xl hover:bg-slate-800/40 transition-all duration-200 cursor-pointer gap-3" data-inq-id="${sanitizeHTML(inq.id)}">
-          <!-- Left Side: ID, Date, Sender Name, Subject -->
-          <div class="flex items-center gap-3 sm:gap-4 flex-wrap sm:flex-nowrap min-w-0">
-            <span class="font-mono text-rose-400 font-bold text-xs bg-rose-950/70 border border-rose-500/30 px-2.5 py-1 rounded-lg tracking-wider whitespace-nowrap">
-              ${sanitizeHTML(inq.id)}
-            </span>
-            <div class="min-w-0">
-              <div class="flex items-center gap-2 flex-wrap">
-                <span class="font-bold text-slate-100 text-sm truncate">${sanitizeHTML(inq.name)}</span>
-                <span class="text-xs text-slate-400 truncate hidden sm:inline">&bull; ${sanitizeHTML(inq.subject)}</span>
-              </div>
-              <div class="text-[11px] text-slate-500 mt-0.5 flex items-center gap-2">
-                <span>${formattedTimestamp}</span>
-                <span class="text-slate-600 hidden md:inline">|</span>
-                <span class="text-rose-400/80 hidden md:inline truncate max-w-[200px]">${sanitizeHTML(typeLabel)}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right Side: Status Badge, Classification, and Action Arrow -->
-          <div class="flex items-center gap-3 sm:gap-4 self-end md:self-auto flex-shrink-0">
-            <div class="text-right hidden sm:block">
-              <div class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Classification</div>
-              <div class="font-semibold text-slate-300 text-xs">${sanitizeHTML(typeLabel)}</div>
-            </div>
-            ${statusBadge}
-            <span class="text-xs text-rose-400 font-bold inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform pl-1">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </span>
-          </div>
+    let activeHTML = '';
+    if (!activeInquiries.length) {
+      activeHTML = `
+        <div class="glass-card text-center py-8 px-6 rounded-2xl border border-slate-800/80 bg-slate-900/40">
+          <p class="text-base text-slate-400 font-medium">No active client support transmissions in queue.</p>
         </div>
       `;
-    }).join('');
+    } else {
+      activeHTML = activeInquiries.map(inq => renderAdminInquiryCard(inq, false)).join('');
+    }
+
+    let archivedHTML = '';
+    if (archivedInquiries.length > 0) {
+      archivedHTML = `
+        <div class="mt-8 pt-6 border-t border-slate-800/80 flex flex-col space-y-2">
+          <div class="flex items-center justify-between pb-1 px-1">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Archived Inquiries (${archivedInquiries.length})</span>
+            </div>
+            <span class="text-[11px] text-slate-500 font-medium">Historical / Inactive Log</span>
+          </div>
+          ${archivedInquiries.map(inq => renderAdminInquiryCard(inq, true)).join('')}
+        </div>
+      `;
+    }
+
+    grid.innerHTML = activeHTML + archivedHTML;
   }
 
   async function openProjectModal(appId) {
@@ -1976,9 +2030,9 @@
 
           <!-- Vertical Action Buttons Stack -->
           <div class="pt-4 border-t border-slate-800/80 flex flex-col gap-2.5">
-            <a href="mailto:${sanitizeHTML(inq.email)}?subject=Re:%20${encodeURIComponent(inq.subject)}" class="btn btn-primary w-full justify-center py-2.5 rounded-xl text-xs font-bold bg-cyan-400 hover:bg-cyan-300 text-slate-950 transition-all flex items-center gap-2">
+            <button type="button" class="btn btn-primary modal-reply-email-btn w-full justify-center py-2.5 rounded-xl text-xs font-bold bg-cyan-400 hover:bg-cyan-300 text-slate-950 transition-all flex items-center gap-2">
               ✉ Reply via Email
-            </a>
+            </button>
             <button class="btn btn-ghost modal-resolve-inq-btn w-full justify-center py-2 rounded-xl text-xs font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/35 transition-all" data-id="${sanitizeHTML(inq.id)}">
               ✓ ${isResolved ? 'Resolved' : 'Mark as Resolved'}
             </button>
@@ -1991,8 +2045,17 @@
     `;
 
     // Wire actions inside modalDynamicContent
+    const replyEmailBtn = modalDynamicContent.querySelector('.modal-reply-email-btn');
     const resolveBtn = modalDynamicContent.querySelector('.modal-resolve-inq-btn');
     const archiveBtn = modalDynamicContent.querySelector('.modal-archive-inq-btn');
+
+    if (replyEmailBtn) {
+      replyEmailBtn.addEventListener('click', function () {
+        const clientEmail = inq.client_email || inq.email || '';
+        const subject = inq.subject || 'Studio Inquiry';
+        window.location.href = "mailto:" + clientEmail + "?subject=Re: " + encodeURIComponent(subject);
+      });
+    }
 
     if (resolveBtn) {
       resolveBtn.addEventListener('click', async function () {
