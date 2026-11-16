@@ -480,11 +480,11 @@
         return el ? el.value.trim() : '';
       };
 
-      const name = getVal('[name="name"]');
-      const email = getVal('[name="email"]');
-      const phone = getVal('[name="phone"]');
-      const budget = parseFloat(getVal('[name="budget"]')) || 0;
-      const description = getVal('[name="description"]');
+      const name = getVal('#client-name') || getVal('[name="name"]') || getVal('#name');
+      const email = getVal('#client-email') || getVal('[name="email"]') || getVal('#email');
+      const phone = getVal('#client-phone') || getVal('[name="phone"]') || getVal('#phone');
+      const budget = parseFloat(getVal('#client-budget') || getVal('[name="budget"]') || getVal('#budget')) || 0;
+      const description = getVal('#description') || getVal('[name="description"]') || getVal('#scope');
       const consentBox = form.querySelector('#consent-check, #consent, [name="consent"]');
 
       if (!name) isValid = false;
@@ -584,27 +584,40 @@
         showToast(successMessage, 'success', 3500);
 
         // POST the new ticket object directly to /api/queue using fetch()
-        const phoneInput = document.getElementById('phone') || document.getElementById('client-phone');
-        const budgetInput = document.getElementById('budget') || document.getElementById('client-budget');
-        const scopeInput = document.getElementById('scope') || document.getElementById('description');
+        const phoneInput = document.getElementById('client-phone') || document.getElementById('phone') || form.querySelector('[name="phone"]');
+        const budgetInput = document.getElementById('client-budget') || document.getElementById('budget') || form.querySelector('[name="budget"]');
+        const scopeInput = document.getElementById('description') || document.getElementById('scope') || form.querySelector('[name="description"]') || form.querySelector('[name="scope"]');
+        const nameInput = document.getElementById('client-name') || document.getElementById('name') || form.querySelector('[name="name"]');
+        const emailInput = document.getElementById('client-email') || document.getElementById('email') || form.querySelector('[name="email"]');
+        const pkgInput = document.getElementById('selected-package') || form.querySelector('[name="package"]');
 
-        const newTicket = {
+        const clientPhoneVal = phoneInput ? phoneInput.value.trim() : (formDataPayload.phone || '');
+        const clientBudgetVal = budgetInput ? String(budgetInput.value).trim() : String(formDataPayload.budget || '0');
+        const projectDetailsVal = scopeInput ? scopeInput.value.trim() : (formDataPayload.description || '');
+        const clientNameVal = nameInput ? nameInput.value.trim() : (formDataPayload.name || '');
+        const clientEmailVal = emailInput ? emailInput.value.trim() : (formDataPayload.email || '');
+        const packageTierVal = pkgInput ? pkgInput.value.trim() : (formDataPayload.package || 'Starter');
+
+        const newApplication = {
           ticket_id: ticket,
-          client_name: (document.getElementById('name') || document.getElementById('client-name')) ? (document.getElementById('name') || document.getElementById('client-name')).value.trim() : (formDataPayload.name || ''),
-          client_email: (document.getElementById('email') || document.getElementById('client-email')) ? (document.getElementById('email') || document.getElementById('client-email')).value.trim() : (formDataPayload.email || ''),
-          client_phone: phoneInput ? phoneInput.value.trim() : (formDataPayload.phone || ''),
-          package_tier: formDataPayload.package,
-          budget: budgetInput ? String(budgetInput.value).trim() : (String(formDataPayload.budget || '0')),
-          project_details: scopeInput ? scopeInput.value.trim() : (formDataPayload.description || ''),
+          client_name: clientNameVal,
+          client_email: clientEmailVal,
+          client_phone: clientPhoneVal,
+          package_tier: packageTierVal,
+          budget: clientBudgetVal,
+          project_details: projectDetailsVal,
           status: 'pending',
           created_at: new Date().toISOString()
         };
+        const newTicket = newApplication;
+
+        console.log("Transmitting Payload:", newApplication);
 
         try {
           await fetch('/api/queue', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newTicket)
+            body: JSON.stringify(newApplication)
           });
         } catch (err) {
           console.warn('D1 Queue submission error:', err);
@@ -1244,8 +1257,8 @@
             Accepted
           </span>
         `;
-        const cleanPhone = (req.phone || '').replace(/\D/g, '').replace(/^6/, '');
-        const waText = encodeURIComponent(`Hi ${req.name}, this is DanStudio Works. Your project application #${req.id} for "${req.package}" has been accepted! Let's discuss scope and timeline.`);
+        const cleanPhone = (req.client_phone || req.phone || '').replace(/\D/g, '').replace(/^6/, '');
+        const waText = encodeURIComponent(`Hi ${req.client_name || req.name}, this is DanStudio Works. Your project application #${req.ticket_id || req.id} for "${req.package_tier || req.package}" has been accepted! Let's discuss scope and timeline.`);
         const waLink = `https://wa.me/6${cleanPhone}?text=${waText}`;
 
         actionButtons = `
@@ -1299,13 +1312,13 @@
             <div class="flex items-start justify-between gap-3">
               <div>
                 <div class="font-bold text-slate-100 text-base">
-                  ${sanitizeHTML(req.name)}
+                  ${sanitizeHTML(req.client_name || req.name)}
                 </div>
                 <div class="text-xs text-slate-400">${sanitizeHTML(req.company || 'Direct Inquiry')}</div>
               </div>
               <div class="text-right">
                 <div class="text-[11px] uppercase tracking-wider text-slate-500 font-semibold">Budget</div>
-                <div class="font-black text-cyan-400 text-base">${formatCurrency(req.budget)}</div>
+                <div class="font-black text-cyan-400 text-base">${formatCurrency(req.budget || '0')}</div>
               </div>
             </div>
 
@@ -1314,18 +1327,18 @@
               <div class="bg-slate-950/40 border border-slate-800/60 rounded-lg p-2.5">
                 <div class="text-slate-500 font-medium mb-0.5">Contact</div>
                 <div class="text-slate-300 font-medium truncate">${maskEmail(req.email)}</div>
-                <div class="text-slate-400 font-mono mt-0.5">${sanitizeHTML(req.phone)}</div>
+                <div class="text-slate-400 font-mono mt-0.5">${sanitizeHTML(req.client_phone || req.phone || 'Not Provided')}</div>
               </div>
               <div class="bg-slate-950/40 border border-slate-800/60 rounded-lg p-2.5">
                 <div class="text-slate-500 font-medium mb-0.5">Package</div>
-                <div class="text-cyan-300 font-semibold truncate">${sanitizeHTML(req.package)}</div>
+                <div class="text-cyan-300 font-semibold truncate">${sanitizeHTML(req.package_tier || req.package)}</div>
                 ${req.source ? `<div class="text-slate-500 text-[11px] mt-0.5 truncate">Via ${sanitizeHTML(req.source)}</div>` : ''}
               </div>
             </div>
 
             <!-- Project Description -->
             <div class="bg-slate-950/50 border border-slate-800/70 border-l-2 border-l-cyan-400/80 rounded-lg p-3 text-xs leading-relaxed text-slate-300">
-              "${sanitizeHTML(req.description)}"
+              "${sanitizeHTML(req.project_details || req.description || 'No scope provided.')}"
             </div>
 
             <!-- Add-ons -->
@@ -1528,21 +1541,21 @@
       : 'border-slate-800/70 bg-slate-900/50 hover:border-cyan-500/40 hover:bg-slate-800/40';
 
     return `
-      <div class="summary-card flex flex-col md:flex-row items-start md:items-center justify-between p-3.5 sm:p-4 ${cardClasses} border rounded-xl transition-all duration-200 cursor-pointer gap-3" data-app-id="${sanitizeHTML(app.id || app.ticket)}">
+      <div class="summary-card flex flex-col md:flex-row items-start md:items-center justify-between p-3.5 sm:p-4 ${cardClasses} border rounded-xl transition-all duration-200 cursor-pointer gap-3" data-app-id="${sanitizeHTML(app.ticket_id || app.id || app.ticket)}">
         <!-- Left Side: ID, Date, Name, Company -->
         <div class="flex items-center gap-3 sm:gap-4 flex-wrap sm:flex-nowrap min-w-0">
           <span class="font-mono ${isArchived ? 'text-slate-400 bg-slate-900 border-slate-700' : 'text-cyan-400 bg-cyan-950/70 border-cyan-500/30'} font-bold text-xs border px-2.5 py-1 rounded-lg tracking-wider whitespace-nowrap">
-            ${sanitizeHTML(app.id || app.ticket)}
+            ${sanitizeHTML(app.ticket_id || app.id || app.ticket)}
           </span>
           <div class="min-w-0">
             <div class="flex items-center gap-2 flex-wrap">
-              <span class="font-bold text-slate-100 text-sm truncate">${sanitizeHTML(app.name)}</span>
+              <span class="font-bold text-slate-100 text-sm truncate">${sanitizeHTML(app.client_name || app.name)}</span>
               <span class="text-xs text-slate-400 truncate hidden sm:inline">&bull; ${sanitizeHTML(app.company || 'Direct Inquiry')}</span>
             </div>
             <div class="text-[11px] text-slate-500 mt-0.5 flex items-center gap-2">
               <span>${formattedTimestamp}</span>
               <span class="text-slate-600 hidden md:inline">|</span>
-              <span class="${isArchived ? 'text-slate-400' : 'text-cyan-400/80'} hidden md:inline truncate max-w-[200px]">${sanitizeHTML(app.package || 'Starter Tier')}</span>
+              <span class="${isArchived ? 'text-slate-400' : 'text-cyan-400/80'} hidden md:inline truncate max-w-[200px]">${sanitizeHTML(app.package_tier || app.package || 'Starter Tier')}</span>
             </div>
           </div>
         </div>
@@ -1551,7 +1564,7 @@
         <div class="flex items-center gap-3 sm:gap-4 self-end md:self-auto flex-shrink-0">
           <div class="text-right hidden sm:block">
             <div class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Budget</div>
-            <div class="font-black text-slate-200 text-xs">${formatCurrency(app.budget)}</div>
+            <div class="font-black text-slate-200 text-xs">${formatCurrency(app.budget || '0')}</div>
           </div>
           ${statusBadgeHTML}
           <span class="text-xs text-cyan-400 font-bold inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform pl-1">
@@ -1763,16 +1776,17 @@
     const modalDynamicActions = document.getElementById('modal-dynamic-actions');
 
     const applications = await getAdminApplications();
-    const app = applications.find(a => a.id === appId || a.ticket === appId);
+    const app = applications.find(a => a.id === appId || a.ticket === appId || a.ticket_id === appId);
     if (!app || !detailsModal || !modalDynamicContent) return;
 
-    const isAccepted = (app.status === 'accepted' || app.status === 'approved');
-    const isCancelled = (app.status === 'cancelled');
-    const formattedTimestamp = relativeTime(app.date || app.timestamp);
-    const cleanPhone = (app.phone || '').replace(/\D/g, '');
+    const ticket = app;
+    const isAccepted = (ticket.status === 'accepted' || ticket.status === 'approved');
+    const isCancelled = (ticket.status === 'cancelled');
+    const formattedTimestamp = relativeTime(ticket.created_at || ticket.date || ticket.timestamp);
+    const cleanPhone = (ticket.client_phone || ticket.phone || '').replace(/\D/g, '');
 
     if (modalCategoryBadge) {
-      modalCategoryBadge.textContent = app.id || app.ticket;
+      modalCategoryBadge.textContent = ticket.ticket_id || ticket.id || ticket.ticket;
       modalCategoryBadge.className = 'font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-cyan-950/70 text-cyan-400 border border-cyan-500/30';
     }
 
@@ -1780,10 +1794,10 @@
       if (isAccepted) {
         modalStatusBadge.textContent = 'Slot Accepted';
         modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30';
-      } else if (app.status === 'cancelled') {
+      } else if (ticket.status === 'cancelled') {
         modalStatusBadge.textContent = 'Cancelled by Client';
         modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30';
-      } else if (app.status === 'rejected' || app.status === 'archived') {
+      } else if (ticket.status === 'rejected' || ticket.status === 'archived') {
         modalStatusBadge.textContent = 'Application Archived';
         modalStatusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30';
       } else {
@@ -1792,8 +1806,8 @@
       }
     }
 
-    const addonsHTML = (app.addons && app.addons.length)
-      ? `<div class="flex items-center gap-1.5 flex-wrap pt-1"><span class="text-xs text-slate-400 font-medium">Add-Ons:</span> ${app.addons.map(a => `<span class="text-xs bg-slate-800 text-slate-300 border border-slate-700/60 px-2 py-0.5 rounded-md font-mono">${sanitizeHTML(a)}</span>`).join('')}</div>`
+    const addonsHTML = (ticket.addons && ticket.addons.length)
+      ? `<div class="flex items-center gap-1.5 flex-wrap pt-1"><span class="text-xs text-slate-400 font-medium">Add-Ons:</span> ${ticket.addons.map(a => `<span class="text-xs bg-slate-800 text-slate-300 border border-slate-700/60 px-2 py-0.5 rounded-md font-mono">${sanitizeHTML(a)}</span>`).join('')}</div>`
       : '';
 
     if (modalDynamicActions) {
@@ -1810,15 +1824,15 @@
               <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
               Client Scope Specification Brief
             </div>
-            <h3 class="text-2xl font-black text-slate-100">${sanitizeHTML(app.name)}</h3>
-            <p class="text-xs text-slate-400 mt-1">${sanitizeHTML(app.company || 'Independent Project Client')}</p>
+            <h3 class="text-2xl font-black text-slate-100">${sanitizeHTML(ticket.client_name || ticket.name)}</h3>
+            <p class="text-xs text-slate-400 mt-1">${sanitizeHTML(ticket.company || 'Independent Project Client')}</p>
           </div>
 
           <!-- Project Description Block with Cyber Accent Border -->
           <div class="space-y-2">
             <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Scope Requirements &amp; Deliverables</div>
             <div class="bg-slate-950/70 border border-slate-800/90 border-l-4 border-l-cyan-400 rounded-2xl p-5 text-sm sm:text-base leading-relaxed text-slate-200 shadow-inner">
-              "${sanitizeHTML(app.description)}"
+              "${sanitizeHTML(ticket.project_details || 'No scope provided.')}"
             </div>
           </div>
 
@@ -1840,11 +1854,11 @@
             <!-- HUD Widget 1: Budget & Tier -->
             <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 shadow-lg">
               <div class="text-[10px] uppercase tracking-wider text-slate-500 font-bold mb-1">Allocated Budget</div>
-              <div class="text-2xl font-black text-cyan-400 font-mono tracking-tight">${formatCurrency(app.budget)}</div>
+              <div class="text-2xl font-black text-cyan-400 font-mono tracking-tight">${formatCurrency(ticket.budget || '0')}</div>
               <div class="mt-3 pt-3 border-t border-slate-800/60">
                 <div class="text-[10px] uppercase tracking-wider text-slate-500 font-bold mb-0.5">Package Tier</div>
-                <div class="text-xs font-bold text-slate-200">${sanitizeHTML(app.package || 'Starter Tier')}</div>
-                ${app.source ? `<div class="text-[11px] text-slate-400 mt-1">Lead Source: ${sanitizeHTML(app.source)}</div>` : ''}
+                <div class="text-xs font-bold text-slate-200">${sanitizeHTML(ticket.package_tier || ticket.package || 'Starter Tier')}</div>
+                ${ticket.source ? `<div class="text-[11px] text-slate-400 mt-1">Lead Source: ${sanitizeHTML(ticket.source)}</div>` : ''}
               </div>
             </div>
 
@@ -1852,7 +1866,7 @@
             <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 shadow-lg space-y-2 text-xs">
               <div class="flex items-center justify-between">
                 <span class="text-slate-500 uppercase tracking-wider text-[10px] font-semibold">Reference ID</span>
-                <span class="font-mono text-cyan-400 font-bold">${sanitizeHTML(app.id || app.ticket)}</span>
+                <span class="font-mono text-cyan-400 font-bold">${sanitizeHTML(ticket.ticket_id || ticket.id || ticket.ticket)}</span>
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-slate-500 uppercase tracking-wider text-[10px] font-semibold">Submitted</span>
@@ -1865,11 +1879,11 @@
               <div class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">Contact Channels</div>
               <div class="truncate">
                 <span class="text-slate-500 text-[10px] block">Email</span>
-                <a href="mailto:${sanitizeHTML(app.email)}" class="text-cyan-400 font-medium hover:underline truncate block">${sanitizeHTML(app.email)}</a>
+                <a href="mailto:${sanitizeHTML(ticket.client_email || ticket.email)}" class="text-cyan-400 font-medium hover:underline truncate block">${sanitizeHTML(ticket.client_email || ticket.email)}</a>
               </div>
               <div class="truncate">
                 <span class="text-slate-500 text-[10px] block">Phone / WhatsApp</span>
-                <a href="tel:${sanitizeHTML(app.phone)}" class="text-slate-200 font-mono font-medium hover:underline truncate block">${sanitizeHTML(app.phone)}</a>
+                <a href="tel:${sanitizeHTML(ticket.client_phone || '')}" class="text-slate-200 font-mono font-medium hover:underline truncate block">${sanitizeHTML(ticket.client_phone || 'Not Provided')}</a>
               </div>
             </div>
           </div>
@@ -1880,17 +1894,17 @@
               <div class="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs text-center font-mono">
                 Withdrawn by Client
               </div>
-              <button class="btn btn-ghost modal-reject-btn w-full justify-center py-2.5 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all" data-id="${sanitizeHTML(app.id || app.ticket)}">
+              <button class="btn btn-ghost modal-reject-btn w-full justify-center py-2.5 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all" data-id="${sanitizeHTML(ticket.ticket_id || ticket.id || ticket.ticket)}">
                 ✕ Archive Cancelled Ticket
               </button>
             ` : `
-              <a href="https://wa.me/60${cleanPhone}?text=${encodeURIComponent('Hi ' + app.name + ', this is Danial from DanStudio Works regarding your application (' + (app.id || app.ticket) + ') for ' + app.package + '.')}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost w-full justify-center py-2.5 rounded-xl text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-all flex items-center gap-2">
+              <a href="https://wa.me/60${cleanPhone}?text=${encodeURIComponent('Hi ' + (ticket.client_name || ticket.name) + ', this is Danial from DanStudio Works regarding your application (' + (ticket.ticket_id || ticket.id || ticket.ticket) + ') for ' + (ticket.package_tier || ticket.package) + '.')}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost w-full justify-center py-2.5 rounded-xl text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-all flex items-center gap-2">
                 💬 WhatsApp Client
               </a>
-              <button class="btn btn-primary modal-accept-btn w-full justify-center py-2.5 rounded-xl text-xs font-bold bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-md shadow-cyan-500/20 transition-all" data-id="${sanitizeHTML(app.id || app.ticket)}">
+              <button class="btn btn-primary modal-accept-btn w-full justify-center py-2.5 rounded-xl text-xs font-bold bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-md shadow-cyan-500/20 transition-all" data-id="${sanitizeHTML(ticket.ticket_id || ticket.id || ticket.ticket)}">
                 ✓ Accept Application
               </button>
-              <button class="btn btn-ghost modal-reject-btn w-full justify-center py-2 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all" data-id="${sanitizeHTML(app.id || app.ticket)}">
+              <button class="btn btn-ghost modal-reject-btn w-full justify-center py-2 rounded-xl text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all" data-id="${sanitizeHTML(ticket.ticket_id || ticket.id || ticket.ticket)}">
                 ✕ Reject / Archive
               </button>
             `}
@@ -1902,7 +1916,7 @@
     // Wire actions inside modalDynamicContent
     const acceptBtn = modalDynamicContent.querySelector('.modal-accept-btn');
     const rejectBtn = modalDynamicContent.querySelector('.modal-reject-btn');
-    const ticketId = app.ticket_id || app.id || app.ticket;
+    const ticketId = ticket.ticket_id || ticket.id || ticket.ticket;
 
     if (acceptBtn) {
       acceptBtn.addEventListener('click', async function () {
@@ -2531,14 +2545,14 @@
       // Inject extra ticket context if present
       if (ticketData) {
         const nameEl = document.getElementById('status-name');
-        if (nameEl && ticketData.name) nameEl.textContent = ticketData.name;
+        if (nameEl && (ticketData.client_name || ticketData.name)) nameEl.textContent = ticketData.client_name || ticketData.name;
 
         const companyEl = document.getElementById('status-company');
         if (companyEl && ticketData.company) companyEl.textContent = ticketData.company;
 
         const budgetEl = document.getElementById('status-budget');
-        if (budgetEl && ticketData.budget) {
-          budgetEl.textContent = formatCurrency(ticketData.budget);
+        if (budgetEl && (ticketData.budget !== undefined)) {
+          budgetEl.textContent = formatCurrency(ticketData.budget || '0');
         }
 
         const dateEl = document.getElementById('status-date');
