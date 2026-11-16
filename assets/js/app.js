@@ -175,31 +175,22 @@
       }, { passive: true });
     }
 
-    /* Auto-highlight active navigation link based on current path with cyan text styling */
-    let currentPath = window.location.pathname.split('/').pop().split('?')[0].split('#')[0];
-    if (!currentPath || currentPath === '' || currentPath === '/') {
-      currentPath = 'index.html';
-    }
+    // Set Active Navigation State
+    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
 
-    const navLinks = document.querySelectorAll('.navbar .nav-link, .mobile-dock .dock-item');
-    navLinks.forEach(link => {
-      const href = link.getAttribute('href');
-      if (!href) return;
-      const targetPage = href.split('/').pop().split('?')[0].split('#')[0];
-
-      const isMatch = (targetPage === currentPath) ||
-                      (currentPath === 'index.html' && (targetPage === '' || targetPage === 'index.html'));
-
-      if (isMatch) {
+    // Desktop Nav
+    document.querySelectorAll('.navbar .nav-link').forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === currentPath) {
         link.classList.add('active');
-        if (targetPage !== 'admin.html') {
-          link.style.color = '#22D3EE';
-        }
-      } else {
-        link.classList.remove('active');
-        if (targetPage !== 'admin.html') {
-          link.style.color = '';
-        }
+      }
+    });
+
+    // Mobile Dock
+    document.querySelectorAll('.mobile-dock .dock-item').forEach(item => {
+      item.classList.remove('active');
+      if (item.getAttribute('href') === currentPath) {
+        item.classList.add('active');
       }
     });
   }
@@ -2812,6 +2803,25 @@
      ========================================================================== */
 
   document.addEventListener('DOMContentLoaded', () => {
+    // Set Active Navigation State
+    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+    
+    // Desktop Nav
+    document.querySelectorAll('.navbar .nav-link').forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === currentPath) {
+        link.classList.add('active');
+      }
+    });
+
+    // Mobile Dock
+    document.querySelectorAll('.mobile-dock .dock-item').forEach(item => {
+      item.classList.remove('active');
+      if (item.getAttribute('href') === currentPath) {
+        item.classList.add('active');
+      }
+    });
+
     initGlobalAuthState();
     initHeroAuroraParallax();
     syncPublicCapacityBadge();
