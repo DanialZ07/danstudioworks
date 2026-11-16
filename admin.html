@@ -429,22 +429,58 @@
       runAdminBootSequence();
 
       /* --- 2. Data Store Synchronization --- */
-      function getApplications() {
-        try { return JSON.parse(localStorage.getItem('dsw_requests')) || []; } 
-        catch (_) { return []; }
+      async function getApplications() {
+        try {
+          const res = await fetch('/api/requests');
+          if (res.ok) {
+            const data = await res.json();
+            return Array.isArray(data) ? data : (typeof data === 'string' ? JSON.parse(data) : []);
+          }
+          throw new Error('Network error');
+        } catch (_) {
+          try { return JSON.parse(localStorage.getItem('dsw_requests')) || []; } 
+          catch (_) { return []; }
+        }
       }
 
-      function saveApplications(apps) {
-        localStorage.setItem('dsw_requests', JSON.stringify(apps));
+      async function saveApplications(apps) {
+        try { localStorage.setItem('dsw_requests', JSON.stringify(apps)); } catch (_) {}
+        try {
+          await fetch('/api/requests', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(apps)
+          });
+        } catch (err) {
+          console.warn('Requests API save error:', err);
+        }
       }
 
-      function getInquiries() {
-        try { return JSON.parse(localStorage.getItem('danstudio_inquiries')) || []; } 
-        catch (_) { return []; }
+      async function getInquiries() {
+        try {
+          const res = await fetch('/api/inquiries');
+          if (res.ok) {
+            const data = await res.json();
+            return Array.isArray(data) ? data : (typeof data === 'string' ? JSON.parse(data) : []);
+          }
+          throw new Error('Network error');
+        } catch (_) {
+          try { return JSON.parse(localStorage.getItem('danstudio_inquiries')) || []; } 
+          catch (_) { return []; }
+        }
       }
 
-      function saveInquiries(inqs) {
-        localStorage.setItem('danstudio_inquiries', JSON.stringify(inqs));
+      async function saveInquiries(inqs) {
+        try { localStorage.setItem('danstudio_inquiries', JSON.stringify(inqs)); } catch (_) {}
+        try {
+          await fetch('/api/inquiries', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(inqs)
+          });
+        } catch (err) {
+          console.warn('Inquiries API save error:', err);
+        }
       }
 
       /* --- 4. Format Helpers --- */
@@ -520,10 +556,10 @@
       const pendingCountBadge = document.getElementById('pending-count-badge');
       const projectsPillCount = document.getElementById('projects-pill-count');
 
-      function renderApplicationsGrid() {
+      async function renderApplicationsGrid() {
         if (!applicationsGrid) return;
 
-        const applications = getApplications();
+        const applications = await getApplications();
         const pendingApps = applications.filter(a => a.status === 'pending' || a.status === 'new');
 
         if (pendingCountBadge) {
@@ -611,10 +647,10 @@
       const inquiriesCountBadge = document.getElementById('inquiries-count-badge');
       const inquiriesPillCount = document.getElementById('inquiries-pill-count');
 
-      function renderInquiriesGrid() {
+      async function renderInquiriesGrid() {
         if (!inquiriesGrid) return;
 
-        const inquiries = getInquiries();
+        const inquiries = await getInquiries();
         const activeInquiries = inquiries.filter(i => i.status !== 'resolved' && i.status !== 'archived');
 
         if (inquiriesCountBadge) {
@@ -734,8 +770,8 @@
       });
 
       // Open Modal for Project Application
-      function openProjectModal(appId) {
-        const applications = getApplications();
+      async function openProjectModal(appId) {
+        const applications = await getApplications();
         const app = applications.find(a => a.id === appId || a.ticket === appId);
         if (!app) return;
 
@@ -871,19 +907,19 @@
         }
 
         if (acceptBtn) {
-          acceptBtn.addEventListener('click', function () {
+          acceptBtn.addEventListener('click', async function () {
             app.status = 'accepted';
-            saveApplications(applications);
-            renderApplicationsGrid();
+            await saveApplications(applications);
+            await renderApplicationsGrid();
             openProjectModal(app.id || app.ticket);
           });
         }
 
         if (rejectBtn) {
-          rejectBtn.addEventListener('click', function () {
+          rejectBtn.addEventListener('click', async function () {
             app.status = 'rejected';
-            saveApplications(applications);
-            renderApplicationsGrid();
+            await saveApplications(applications);
+            await renderApplicationsGrid();
             closeModal();
           });
         }
@@ -892,8 +928,8 @@
       }
 
       // Open Modal for Support Inquiry
-      function openInquiryModal(inqId) {
-        const inquiries = getInquiries();
+      async function openInquiryModal(inqId) {
+        const inquiries = await getInquiries();
         const inq = inquiries.find(i => i.id === inqId);
         if (!inq) return;
 
@@ -1019,19 +1055,19 @@
         }
 
         if (resolveBtn) {
-          resolveBtn.addEventListener('click', function () {
+          resolveBtn.addEventListener('click', async function () {
             inq.status = 'resolved';
-            saveInquiries(inquiries);
-            renderInquiriesGrid();
+            await saveInquiries(inquiries);
+            await renderInquiriesGrid();
             openInquiryModal(inq.id);
           });
         }
 
         if (archiveBtn) {
-          archiveBtn.addEventListener('click', function () {
+          archiveBtn.addEventListener('click', async function () {
             inq.status = 'archived';
-            saveInquiries(inquiries);
-            renderInquiriesGrid();
+            await saveInquiries(inquiries);
+            await renderInquiriesGrid();
             closeModal();
           });
         }
@@ -1077,24 +1113,24 @@
       }
 
       if (confirmDeleteBtn) {
-        confirmDeleteBtn.addEventListener('click', function () {
+        confirmDeleteBtn.addEventListener('click', async function () {
           if (!pendingDeleteId || !pendingDeleteType) {
             closeDeleteConfirm();
             return;
           }
 
           if (pendingDeleteType === 'application') {
-            const apps = getApplications();
+            const apps = await getApplications();
             const updated = apps.filter(a => (a.id || a.ticket) !== pendingDeleteId);
-            saveApplications(updated);
+            await saveApplications(updated);
+            await renderApplicationsGrid();
             window.location.reload();
-            renderApplicationsGrid();
           } else if (pendingDeleteType === 'inquiry') {
-            const inqs = getInquiries();
+            const inqs = await getInquiries();
             const updated = inqs.filter(i => i.id !== pendingDeleteId);
-            saveInquiries(updated);
+            await saveInquiries(updated);
+            await renderInquiriesGrid();
             window.location.reload();
-            renderInquiriesGrid();
           }
 
           closeDeleteConfirm();
@@ -1104,21 +1140,21 @@
 
       /* --- 9. Event Delegation for Summary Card Clicks --- */
       if (applicationsGrid) {
-        applicationsGrid.addEventListener('click', function (e) {
+        applicationsGrid.addEventListener('click', async function (e) {
           const card = e.target.closest('[data-app-id]');
           if (card) {
             const appId = card.getAttribute('data-app-id');
-            openProjectModal(appId);
+            await openProjectModal(appId);
           }
         });
       }
 
       if (inquiriesGrid) {
-        inquiriesGrid.addEventListener('click', function (e) {
+        inquiriesGrid.addEventListener('click', async function (e) {
           const card = e.target.closest('[data-inq-id]');
           if (card) {
             const inqId = card.getAttribute('data-inq-id');
-            openInquiryModal(inqId);
+            await openInquiryModal(inqId);
           }
         });
       }

@@ -528,14 +528,14 @@
         submitBtn.textContent = 'Submitting to Queue...';
       }
 
-      function handleSuccessfulResponse(responseData) {
+      async function handleSuccessfulResponse(responseData) {
         // Hide the form
         form.style.display = 'none';
 
         // Retrieve live database before displaying success message
         let currentRequests = [];
         try {
-          currentRequests = JSON.parse(localStorage.getItem('dsw_requests')) || [];
+          currentRequests = await getApplications();
         } catch (_) {
           currentRequests = [];
         }
@@ -603,13 +603,13 @@
 
         currentRequests = currentRequests.filter(r => r.id !== ticket && r.ticket !== ticket);
         currentRequests.push(newSubmission);
-        localStorage.setItem('dsw_requests', JSON.stringify(currentRequests));
+        await saveApplications(currentRequests);
 
         // Sync Global HUD telemetry immediately
         if (typeof syncPublicCapacityBadge === 'function') {
-          syncPublicCapacityBadge();
+          await syncPublicCapacityBadge();
         } else if (typeof window.syncPublicCapacityBadge === 'function') {
-          window.syncPublicCapacityBadge();
+          await window.syncPublicCapacityBadge();
         }
 
         // Wait exactly 3000ms using setTimeout, then redirect window.location.href to status.html?ticket=${ticket}
@@ -633,14 +633,14 @@
         }
         return response.json();
       })
-      .then(responseData => {
-        handleSuccessfulResponse(responseData);
+      .then(async responseData => {
+        await handleSuccessfulResponse(responseData);
       })
-      .catch(error => {
+      .catch(async error => {
         console.warn('Worker endpoint fallback triggered:', error);
         // Resilient fallback: simulate API success with ticket ID
         const fallbackTicket = 'DS-' + Math.floor(1000 + Math.random() * 9000);
-        handleSuccessfulResponse({
+        await handleSuccessfulResponse({
           success: true,
           ticket: fallbackTicket
         });
@@ -652,9 +652,33 @@
      10b. LOCAL INQUIRY ROUTING & SUPPORT FORM HANDLER
      ========================================================================== */
 
-  function getInquiries() {
-    try { return JSON.parse(localStorage.getItem('danstudio_inquiries')) || []; } 
-    catch (_) { return []; }
+  async function getInquiries() {
+    try {
+      const res = await fetch('/api/inquiries');
+      if (res.ok) {
+        const data = await res.json();
+        return Array.isArray(data) ? data : (typeof data === 'string' ? JSON.parse(data) : []);
+      }
+      throw new Error('Network error');
+    } catch (_) {
+      try { return JSON.parse(localStorage.getItem('danstudio_inquiries')) || []; } 
+      catch (e) { return []; }
+    }
+  }
+
+  async function saveInquiries(inqs) {
+    try {
+      localStorage.setItem('danstudio_inquiries', JSON.stringify(inqs));
+    } catch (_) {}
+    try {
+      await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(inqs)
+      });
+    } catch (err) {
+      console.warn('Inquiries API save error:', err);
+    }
   }
 
   function initSupportForm() {
@@ -663,7 +687,7 @@
 
     const successMsg = document.getElementById('support-success-msg');
 
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
       const typeEl = form.querySelector('#inquiry-type') || form.querySelector('[name="type"]');
@@ -695,17 +719,12 @@
         status: 'new'
       };
 
-      // Retrieve existing or initialize empty array
-      let existingInquiries = [];
-      try {
-        existingInquiries = JSON.parse(localStorage.getItem('danstudio_inquiries')) || [];
-      } catch (_) {
-        existingInquiries = [];
-      }
+      // Retrieve existing or initialize empty array from live database
+      let existingInquiries = await getInquiries();
 
-      // Prepend the new submission directly into localStorage
+      // Prepend the new submission directly into live database
       existingInquiries.unshift(inquiryObj);
-      localStorage.setItem('danstudio_inquiries', JSON.stringify(existingInquiries));
+      await saveInquiries(existingInquiries);
 
       // Visual Transition
       form.style.display = 'none';
@@ -957,16 +976,40 @@
      11. DEVELOPER QUEUE CONSOLE DASHBOARD
      ========================================================================== */
 
-  function getApplications() {
+  async function getApplications() {
     try {
-      return JSON.parse(localStorage.getItem('dsw_requests')) || [];
+      const res = await fetch('/api/requests');
+      if (res.ok) {
+        const data = await res.json();
+        return Array.isArray(data) ? data : (typeof data === 'string' ? JSON.parse(data) : []);
+      }
+      throw new Error('Network error');
     } catch (_) {
-      return [];
+      try {
+        return JSON.parse(localStorage.getItem('dsw_requests')) || [];
+      } catch (e) {
+        return [];
+      }
     }
   }
 
-  function getRequests() {
-    return getApplications();
+  async function saveApplications(apps) {
+    try {
+      localStorage.setItem('dsw_requests', JSON.stringify(apps));
+    } catch (_) {}
+    try {
+      await fetch('/api/requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(apps)
+      });
+    } catch (err) {
+      console.warn('Requests API save error:', err);
+    }
+  }
+
+  async function getRequests() {
+    return await getApplications();
   }
 
   let consoleSort = 'newest'; // 'newest' | 'budget'
@@ -1072,11 +1115,11 @@
     }
   }
 
-  function renderDevConsole() {
+  async function renderDevConsole() {
     const consoleEl = document.getElementById('dev-console');
     if (!consoleEl) return;
 
-    const allRequests = getRequests();
+    const allRequests = await getRequests();
 
     /* Update Metrics Counters */
     const counts = { new: 0, waiting: 0, accepted: 0, rejected: 0 };
@@ -1385,19 +1428,19 @@
     });
 
     /* Event Delegation for Card Action Buttons (Accept, Hold, Reject, Restore) */
-    consoleEl.addEventListener('click', (e) => {
+    consoleEl.addEventListener('click', async (e) => {
       const actionBtn = e.target.closest('[data-action]');
       if (!actionBtn) return;
 
       const reqId = actionBtn.getAttribute('data-id');
       const newStatus = actionBtn.getAttribute('data-action');
 
-      const requests = getRequests();
+      const requests = await getRequests();
       const targetReq = requests.find(r => r.id === reqId);
       if (targetReq) {
         targetReq.status = newStatus;
-        localStorage.setItem('dsw_requests', JSON.stringify(requests));
-        renderDevConsole();
+        await saveApplications(requests);
+        await renderDevConsole();
         showToast(`Request #${reqId} moved to ${newStatus}.`, 'info');
       }
     });
@@ -1410,31 +1453,27 @@
   let pendingDeleteTargetId = null;
   let pendingDeleteTargetType = null; // 'application' | 'inquiry'
 
-  function getAdminApplications() {
-    return getApplications();
+  async function getAdminApplications() {
+    return await getApplications();
   }
 
-  function saveAdminApplications(data) {
-    try {
-      localStorage.setItem('dsw_requests', JSON.stringify(data));
-    } catch (_) {}
+  async function saveAdminApplications(data) {
+    await saveApplications(data);
   }
 
-  function getAdminInquiries() {
-    return getInquiries();
+  async function getAdminInquiries() {
+    return await getInquiries();
   }
 
-  function saveAdminInquiries(data) {
-    try {
-      localStorage.setItem('danstudio_inquiries', JSON.stringify(data));
-    } catch (_) {}
+  async function saveAdminInquiries(data) {
+    await saveInquiries(data);
   }
 
-  function renderApplicationsGrid() {
+  async function renderApplicationsGrid() {
     const grid = document.getElementById('applications-grid');
     if (!grid) return;
 
-    const apps = getAdminApplications();
+    const apps = await getAdminApplications();
     if (!apps.length) {
       grid.innerHTML = `
         <div class="glass-card text-center py-12 px-6 rounded-2xl border border-slate-800/80 bg-slate-900/40">
@@ -1512,11 +1551,11 @@
     }).join('');
   }
 
-  function renderInquiriesGrid() {
+  async function renderInquiriesGrid() {
     const grid = document.getElementById('inquiries-grid');
     if (!grid) return;
 
-    const inquiries = getAdminInquiries();
+    const inquiries = await getAdminInquiries();
     if (!inquiries.length) {
       grid.innerHTML = `
         <div class="glass-card text-center py-12 px-6 rounded-2xl border border-slate-800/80 bg-slate-900/40">
@@ -1591,14 +1630,14 @@
     }).join('');
   }
 
-  function openProjectModal(appId) {
+  async function openProjectModal(appId) {
     const detailsModal = document.getElementById('project-details-modal');
     const modalCategoryBadge = document.getElementById('modal-category-badge');
     const modalStatusBadge = document.getElementById('modal-status-badge');
     const modalDynamicContent = document.getElementById('modal-dynamic-content');
     const modalDynamicActions = document.getElementById('modal-dynamic-actions');
 
-    const applications = getAdminApplications();
+    const applications = await getAdminApplications();
     const app = applications.find(a => a.id === appId || a.ticket === appId);
     if (!app || !detailsModal || !modalDynamicContent) return;
 
@@ -1731,19 +1770,19 @@
     const rejectBtn = modalDynamicContent.querySelector('.modal-reject-btn');
 
     if (acceptBtn) {
-      acceptBtn.addEventListener('click', function () {
+      acceptBtn.addEventListener('click', async function () {
         app.status = 'accepted';
-        saveAdminApplications(applications);
-        if (typeof renderApplicationsGrid === 'function') renderApplicationsGrid();
+        await saveAdminApplications(applications);
+        if (typeof renderApplicationsGrid === 'function') await renderApplicationsGrid();
         openProjectModal(app.id || app.ticket);
       });
     }
 
     if (rejectBtn) {
-      rejectBtn.addEventListener('click', function () {
+      rejectBtn.addEventListener('click', async function () {
         app.status = 'rejected';
-        saveAdminApplications(applications);
-        if (typeof renderApplicationsGrid === 'function') renderApplicationsGrid();
+        await saveAdminApplications(applications);
+        if (typeof renderApplicationsGrid === 'function') await renderApplicationsGrid();
         detailsModal.classList.remove('active');
         detailsModal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
@@ -1755,14 +1794,14 @@
     document.body.style.overflow = 'hidden';
   }
 
-  function openInquiryModal(inqId) {
+  async function openInquiryModal(inqId) {
     const detailsModal = document.getElementById('project-details-modal');
     const modalCategoryBadge = document.getElementById('modal-category-badge');
     const modalStatusBadge = document.getElementById('modal-status-badge');
     const modalDynamicContent = document.getElementById('modal-dynamic-content');
     const modalDynamicActions = document.getElementById('modal-dynamic-actions');
 
-    const inquiries = getAdminInquiries();
+    const inquiries = await getAdminInquiries();
     const inq = inquiries.find(i => i.id === inqId);
     if (!inq || !detailsModal || !modalDynamicContent) return;
 
@@ -1885,19 +1924,19 @@
     const archiveBtn = modalDynamicContent.querySelector('.modal-archive-inq-btn');
 
     if (resolveBtn) {
-      resolveBtn.addEventListener('click', function () {
+      resolveBtn.addEventListener('click', async function () {
         inq.status = 'resolved';
-        saveAdminInquiries(inquiries);
-        if (typeof renderInquiriesGrid === 'function') renderInquiriesGrid();
+        await saveAdminInquiries(inquiries);
+        if (typeof renderInquiriesGrid === 'function') await renderInquiriesGrid();
         openInquiryModal(inq.id);
       });
     }
 
     if (archiveBtn) {
-      archiveBtn.addEventListener('click', function () {
+      archiveBtn.addEventListener('click', async function () {
         inq.status = 'archived';
-        saveAdminInquiries(inquiries);
-        if (typeof renderInquiriesGrid === 'function') renderInquiriesGrid();
+        await saveAdminInquiries(inquiries);
+        if (typeof renderInquiriesGrid === 'function') await renderInquiriesGrid();
         detailsModal.classList.remove('active');
         detailsModal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
@@ -1943,18 +1982,18 @@
     }
 
     // Card click delegation for horizontal rows
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', async (e) => {
       const appCard = e.target.closest('[data-app-id]');
       if (appCard && !e.target.closest('button, a')) {
         const id = appCard.getAttribute('data-app-id');
-        openProjectModal(id);
+        await openProjectModal(id);
         return;
       }
 
       const inqCard = e.target.closest('[data-inq-id]');
       if (inqCard && !e.target.closest('button, a')) {
         const id = inqCard.getAttribute('data-inq-id');
-        openInquiryModal(id);
+        await openInquiryModal(id);
         return;
       }
     });
@@ -2003,26 +2042,26 @@
     }
 
     if (confirmDeleteBtn) {
-      confirmDeleteBtn.addEventListener('click', () => {
+      confirmDeleteBtn.addEventListener('click', async () => {
         if (!pendingDeleteTargetId || !pendingDeleteTargetType) {
           closeDeleteModal();
           return;
         }
 
         if (pendingDeleteTargetType === 'application') {
-          const apps = getAdminApplications();
+          const apps = await getAdminApplications();
           const filtered = apps.filter(a => (a.id || a.ticket) !== pendingDeleteTargetId);
-          saveAdminApplications(filtered);
-          window.location.reload();
-          if (typeof renderApplicationsGrid === 'function') renderApplicationsGrid();
+          await saveAdminApplications(filtered);
+          if (typeof renderApplicationsGrid === 'function') await renderApplicationsGrid();
           showToast(`Application #${pendingDeleteTargetId} permanently deleted.`, 'info');
-        } else if (pendingDeleteTargetType === 'inquiry') {
-          const inqs = getAdminInquiries();
-          const filtered = inqs.filter(i => i.id !== pendingDeleteTargetId);
-          saveAdminInquiries(filtered);
           window.location.reload();
-          if (typeof renderInquiriesGrid === 'function') renderInquiriesGrid();
+        } else if (pendingDeleteTargetType === 'inquiry') {
+          const inqs = await getAdminInquiries();
+          const filtered = inqs.filter(i => i.id !== pendingDeleteTargetId);
+          await saveAdminInquiries(filtered);
+          if (typeof renderInquiriesGrid === 'function') await renderInquiriesGrid();
           showToast(`Inquiry #${pendingDeleteTargetId} permanently deleted.`, 'info');
+          window.location.reload();
         }
 
         closeDeleteModal();
@@ -2041,14 +2080,14 @@
      13. GLOBAL PROJECT COUNTER & CAPACITY TELEMETRY (HOMEPAGE)
      ========================================================================== */
 
-  function syncPublicCapacityBadge() {
+  async function syncPublicCapacityBadge() {
     let requests = [];
     try {
-      const raw = localStorage.getItem('dsw_requests');
-      if (raw) {
-        requests = JSON.parse(raw);
-      } else if (typeof getRequests === 'function') {
-        requests = getRequests();
+      if (typeof getApplications === 'function') {
+        requests = await getApplications();
+      } else {
+        const raw = localStorage.getItem('dsw_requests');
+        requests = raw ? JSON.parse(raw) : [];
       }
     } catch (_) {
       requests = [];
@@ -2154,8 +2193,8 @@
   // Expose syncPublicCapacityBadge globally for cross-module invocations
   window.syncPublicCapacityBadge = syncPublicCapacityBadge;
 
-  function initProjectCounter() {
-    syncPublicCapacityBadge();
+  async function initProjectCounter() {
+    await syncPublicCapacityBadge();
   }
 
   /* ==========================================================================
@@ -2271,13 +2310,17 @@
       clientModal.classList.add('opacity-100', 'visible', 'pointer-events-auto');
     }
 
-    function renderStatus(lookupTicketId) {
+    async function renderStatus(lookupTicketId) {
       const activeId = lookupTicketId || ticketId;
 
-      // Read dsw_requests from localStorage to find the matching ticket data
+      // Read dsw_requests from live database or fallback
       let requests = [];
       try {
-        requests = JSON.parse(localStorage.getItem('dsw_requests')) || [];
+        if (typeof getApplications === 'function') {
+          requests = await getApplications();
+        } else {
+          requests = JSON.parse(localStorage.getItem('dsw_requests')) || [];
+        }
       } catch (_) {
         requests = [];
       }
@@ -2457,7 +2500,7 @@
     // Wire ticket lookup search form
     const lookupForm = document.getElementById('ticket-lookup-form');
     if (lookupForm) {
-      lookupForm.addEventListener('submit', (e) => {
+      lookupForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const searchInput = document.getElementById('ticket-search-input');
         const query = searchInput ? searchInput.value.trim() : '';
@@ -2469,7 +2512,7 @@
         if (window.history && window.history.replaceState) {
           window.history.replaceState(null, '', `status.html?ticket=${encodeURIComponent(query)}`);
         }
-        renderStatus(query);
+        await renderStatus(query);
       });
     }
 
@@ -2496,8 +2539,8 @@
         refreshBtn.style.opacity = '0.6';
         refreshBtn.disabled = true;
         refreshBtn.textContent = 'Checking Live Edge...';
-        setTimeout(() => {
-          renderStatus();
+        setTimeout(async () => {
+          await renderStatus();
           refreshBtn.style.opacity = '1';
           refreshBtn.disabled = false;
           refreshBtn.innerHTML = `
