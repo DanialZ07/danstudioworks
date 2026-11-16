@@ -583,27 +583,25 @@
 
         showToast(successMessage, 'success', 3500);
 
-        // Store new application into live database array
-        const newSubmission = {
-          id: ticket,
-          ticket: ticket,
-          name: formDataPayload.name,
-          email: formDataPayload.email,
-          phone: formDataPayload.phone,
-          company: formDataPayload.company,
-          package: formDataPayload.package,
-          budget: formDataPayload.budget,
-          description: formDataPayload.description,
-          source: formDataPayload.source,
-          addons: addons,
-          date: new Date().toISOString(),
-          status: 'new',
-          queueNumber: userQueuePosition
+        // POST the new ticket object directly to /api/queue using fetch()
+        const newTicket = {
+          ticket_id: ticket,
+          client_name: formDataPayload.name,
+          client_email: formDataPayload.email,
+          package_tier: formDataPayload.package,
+          status: 'pending',
+          created_at: new Date().toISOString()
         };
 
-        currentRequests = currentRequests.filter(r => r.id !== ticket && r.ticket !== ticket);
-        currentRequests.push(newSubmission);
-        await saveApplications(currentRequests);
+        try {
+          await fetch('/api/queue', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newTicket)
+          });
+        } catch (err) {
+          console.warn('D1 Queue submission error:', err);
+        }
 
         // Sync Global HUD telemetry immediately
         if (typeof syncPublicCapacityBadge === 'function') {
@@ -978,33 +976,40 @@
 
   async function getApplications() {
     try {
-      const res = await fetch('/api/requests');
-      if (res.ok) {
-        const data = await res.json();
-        return Array.isArray(data) ? data : (typeof data === 'string' ? JSON.parse(data) : []);
-      }
-      throw new Error('Network error');
-    } catch (_) {
-      try {
-        return JSON.parse(localStorage.getItem('dsw_requests')) || [];
-      } catch (e) {
-        return [];
-      }
+      const res = await fetch('/api/queue');
+      const data = await res.json();
+      if (!Array.isArray(data)) return [];
+      return data.map(item => ({
+        ...item,
+        id: item.ticket_id || item.id,
+        ticket: item.ticket_id || item.ticket || item.id,
+        ticket_id: item.ticket_id || item.id || item.ticket,
+        name: item.client_name || item.name || '',
+        client_name: item.client_name || item.name || '',
+        email: item.client_email || item.email || '',
+        client_email: item.client_email || item.email || '',
+        package: item.package_tier || item.package || 'Starter',
+        package_tier: item.package_tier || item.package || 'Starter',
+        date: item.created_at || item.date || new Date().toISOString(),
+        created_at: item.created_at || item.date || new Date().toISOString(),
+        status: item.status || 'pending'
+      }));
+    } catch (e) {
+      return [];
     }
   }
 
-  async function saveApplications(apps) {
+  async function updateQueueTicketStatus(ticketId, status) {
     try {
-      localStorage.setItem('dsw_requests', JSON.stringify(apps));
-    } catch (_) {}
-    try {
-      await fetch('/api/requests', {
-        method: 'POST',
+      const res = await fetch('/api/queue', {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(apps)
+        body: JSON.stringify({ ticket_id: ticketId, status: status })
       });
+      return await res.json();
     } catch (err) {
-      console.warn('Requests API save error:', err);
+      console.warn('Queue PATCH status update error:', err);
+      return { success: false };
     }
   }
 
@@ -1435,14 +1440,17 @@
       const reqId = actionBtn.getAttribute('data-id');
       const newStatus = actionBtn.getAttribute('data-action');
 
-      const requests = await getRequests();
-      const targetReq = requests.find(r => r.id === reqId);
-      if (targetReq) {
-        targetReq.status = newStatus;
-        await saveApplications(requests);
-        await renderDevConsole();
-        showToast(`Request #${reqId} moved to ${newStatus}.`, 'info');
+      try {
+        await fetch('/api/queue', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ticket_id: reqId, status: newStatus })
+        });
+      } catch (err) {
+        console.warn('Queue PATCH status update error:', err);
       }
+      await renderDevConsole();
+      showToast(`Request #${reqId} moved to ${newStatus}.`, 'info');
     });
   }
 
@@ -1768,20 +1776,35 @@
     // Wire actions inside modalDynamicContent
     const acceptBtn = modalDynamicContent.querySelector('.modal-accept-btn');
     const rejectBtn = modalDynamicContent.querySelector('.modal-reject-btn');
+    const ticketId = app.ticket_id || app.id || app.ticket;
 
     if (acceptBtn) {
       acceptBtn.addEventListener('click', async function () {
-        app.status = 'accepted';
-        await saveAdminApplications(applications);
+        try {
+          await fetch('/api/queue', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ticket_id: ticketId, status: 'accepted' })
+          });
+        } catch (err) {
+          console.warn('Queue PATCH status update error:', err);
+        }
         if (typeof renderApplicationsGrid === 'function') await renderApplicationsGrid();
-        openProjectModal(app.id || app.ticket);
+        await openProjectModal(ticketId);
       });
     }
 
     if (rejectBtn) {
       rejectBtn.addEventListener('click', async function () {
-        app.status = 'rejected';
-        await saveAdminApplications(applications);
+        try {
+          await fetch('/api/queue', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ticket_id: ticketId, status: 'rejected' })
+          });
+        } catch (err) {
+          console.warn('Queue PATCH status update error:', err);
+        }
         if (typeof renderApplicationsGrid === 'function') await renderApplicationsGrid();
         detailsModal.classList.remove('active');
         detailsModal.setAttribute('aria-hidden', 'true');
@@ -2049,11 +2072,17 @@
         }
 
         if (pendingDeleteTargetType === 'application') {
-          const apps = await getAdminApplications();
-          const filtered = apps.filter(a => (a.id || a.ticket) !== pendingDeleteTargetId);
-          await saveAdminApplications(filtered);
+          try {
+            await fetch('/api/queue', {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ ticket_id: pendingDeleteTargetId, status: 'archived' })
+            });
+          } catch (err) {
+            console.warn('Queue PATCH archive error:', err);
+          }
           if (typeof renderApplicationsGrid === 'function') await renderApplicationsGrid();
-          showToast(`Application #${pendingDeleteTargetId} permanently deleted.`, 'info');
+          showToast(`Application #${pendingDeleteTargetId} permanently archived.`, 'info');
           window.location.reload();
         } else if (pendingDeleteTargetType === 'inquiry') {
           const inqs = await getAdminInquiries();
@@ -2074,6 +2103,10 @@
         }
       });
     }
+
+    // Initial render for Nexus Admin
+    renderApplicationsGrid();
+    renderInquiriesGrid();
   }
 
   /* ==========================================================================
@@ -2313,31 +2346,23 @@
     async function renderStatus(lookupTicketId) {
       const activeId = lookupTicketId || ticketId;
 
-      // Read dsw_requests from live database or fallback
+      // Read tickets from D1 queue database
       let requests = [];
       try {
-        if (typeof getApplications === 'function') {
-          requests = await getApplications();
-        } else {
-          requests = JSON.parse(localStorage.getItem('dsw_requests')) || [];
-        }
+        requests = await getApplications();
       } catch (_) {
         requests = [];
       }
 
-      // Fallback to getRequests() if localStorage is empty
-      if (!requests.length && typeof getRequests === 'function') {
-        requests = getRequests();
-      }
-
       const ticketData = requests.find(r =>
+        (r.ticket_id && String(r.ticket_id).trim().toLowerCase() === activeId.toLowerCase()) ||
         (r.ticket && String(r.ticket).trim().toLowerCase() === activeId.toLowerCase()) ||
         (r.id && String(r.id).trim().toLowerCase() === activeId.toLowerCase())
       );
 
       // Determine ID, Package, Status
-      const displayId = (ticketData && (ticketData.ticket || ticketData.id)) ? (ticketData.ticket || ticketData.id) : activeId;
-      const displayPackage = (ticketData && ticketData.package) ? ticketData.package : 'Starter';
+      const displayId = (ticketData && (ticketData.ticket_id || ticketData.ticket || ticketData.id)) ? (ticketData.ticket_id || ticketData.ticket || ticketData.id) : activeId;
+      const displayPackage = (ticketData && (ticketData.package_tier || ticketData.package)) ? (ticketData.package_tier || ticketData.package) : 'Starter';
 
       // Map status to "In Review", "Waiting", or "Accepted"
       let displayStatus = 'In Review';
