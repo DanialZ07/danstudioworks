@@ -138,33 +138,33 @@
       <div class="aurora-orb magenta-orb"></div>
     </div>
 
-    <div class="hero-content container relative z-10">
+    <div class="hero-content container relative z-10 px-4 sm:px-6 md:px-8">
       <!-- Live Studio Telemetry HUD -->
-      <div id="telemetry-hud" class="relative overflow-hidden backdrop-blur-xl bg-[#0B0F19]/80 border border-cyan-500/30 rounded-2xl p-6 w-full max-w-3xl mx-auto mb-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_0_40px_rgba(34,211,238,0.1)] group transition-transform hover:scale-[1.02] cursor-default">
+      <div id="telemetry-hud" class="relative overflow-hidden backdrop-blur-xl bg-[#0B0F19]/80 border border-cyan-500/30 rounded-2xl p-6 w-full max-w-3xl mx-auto mb-8 flex flex-col md:flex-row text-center md:text-left items-center justify-between gap-6 shadow-[0_0_40px_rgba(34,211,238,0.1)] group transition-transform hover:scale-[1.02] cursor-default">
         <!-- Holographic Scanner Sweep -->
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent w-[200%] animate-hologram-sweep pointer-events-none"></div>
         
         <!-- Left: Status Core -->
-        <div class="flex items-center gap-4 relative z-10">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 relative z-10">
           <div class="relative flex items-center justify-center w-12 h-12">
             <div id="reactor-ring" class="absolute inset-0 rounded-full border-2 border-dashed border-cyan-400 animate-[spin_4s_linear_infinite]"></div>
             <div id="reactor-core" class="w-6 h-6 rounded-full bg-cyan-400 shadow-[0_0_15px_#22D3EE] animate-pulse"></div>
           </div>
-          <div class="text-left">
+          <div class="text-center md:text-left">
             <div class="text-[10px] text-cyan-400 font-mono tracking-widest uppercase mb-1">Live Studio Telemetry</div>
             <div class="text-lg font-black text-slate-100 uppercase tracking-wide">Production Status</div>
           </div>
         </div>
 
         <!-- Right: Massive Data Blocks -->
-        <div class="flex items-center gap-6 relative z-10 w-full md:w-auto">
+        <div class="flex flex-col md:flex-row gap-4 md:gap-6 w-full md:w-auto items-center justify-center relative z-10">
           <!-- Active Project -->
-          <div class="flex-1 md:flex-none">
+          <div class="flex-1 md:flex-none flex flex-col items-center md:items-start">
             <div class="text-[10px] text-slate-400 font-mono tracking-widest uppercase mb-1">Active Slots</div>
             <div class="text-2xl font-black text-slate-100 flex items-baseline gap-1">
               <span id="hud-active-count" class="text-cyan-400">0</span><span class="text-sm text-slate-500">/ 1</span>
             </div>
-            <div class="w-full md:w-24 h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden border border-slate-700">
+            <div class="w-36 md:w-24 h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden border border-slate-700">
               <div id="hud-active-bar" class="h-full bg-cyan-400 transition-all duration-1000 w-0 shadow-[0_0_10px_#22D3EE]"></div>
             </div>
           </div>
@@ -173,12 +173,12 @@
           <div class="hidden md:block w-px h-12 bg-slate-700/50"></div>
 
           <!-- Waitlist Queue -->
-          <div class="flex-1 md:flex-none">
+          <div class="flex-1 md:flex-none flex flex-col items-center md:items-start">
             <div class="text-[10px] text-slate-400 font-mono tracking-widest uppercase mb-1">Waitlist Queue</div>
             <div class="text-2xl font-black text-slate-100 flex items-baseline gap-1">
               <span id="hud-queue-count" class="text-cyan-400">0</span><span class="text-sm text-slate-500">/ 3</span>
             </div>
-            <div class="w-full md:w-24 h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden border border-slate-700 flex gap-0.5">
+            <div class="w-36 md:w-24 h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden border border-slate-700 flex gap-0.5">
               <!-- 3 Segments for Queue -->
               <div class="hud-queue-segment h-full flex-1 bg-slate-800 transition-colors duration-500"></div>
               <div class="hud-queue-segment h-full flex-1 bg-slate-800 transition-colors duration-500 delay-100"></div>
@@ -189,13 +189,13 @@
       </div>
 
       <!-- Main Headline -->
-      <h1 class="hero-title reveal">
+      <h1 class="hero-title reveal text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight">
         We Build Digital Experiences <br>
         <span class="gradient-text">That Move.</span>
       </h1>
 
       <!-- Subtitle -->
-      <p class="hero-subtitle reveal">
+      <p class="hero-subtitle reveal text-sm md:text-base">
         DanStudio Works is an elite solo studio based in Malaysia. We architect luminous websites, high-conversion web apps, and bespoke digital identities with uncompromised precision.
       </p>
 
@@ -226,11 +226,11 @@
   <!-- ======================================================================
        STUDIO PHILOSOPHY & CORE VALUES
        ====================================================================== -->
-  <section class="section container">
+  <section class="section container px-4 sm:px-6 md:px-8">
     <div class="text-center reveal" style="margin-bottom: 3.5rem;">
       <span class="card-tag">Studio Philosophy</span>
       <h2 style="font-size: 2.5rem; font-weight: 800; margin-top: 0.5rem;">Engineered Elegance. Measured Results.</h2>
-      <p style="color: #94A3B8; max-width: 650px; margin: 0.75rem auto 0;">
+      <p class="text-sm md:text-base text-slate-400 max-w-2xl mx-auto mt-3">
         We don't do mass-volume generic sites. Every project accepted into our private queue receives bespoke handcrafted design, sub-second load performance, and modern motion.
       </p>
     </div>
@@ -238,21 +238,21 @@
     <div class="grid-3 reveal">
       <div class="glass-card" style="padding: 2.25rem;">
         <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;">Silk &amp; Aurora Visuals</h3>
-        <p style="color: #94A3B8; font-size: 0.925rem; line-height: 1.6;">
+        <p class="text-sm md:text-base text-slate-400 leading-relaxed">
           Deep midnight foundations infused with luminous cyan and magenta accents. Designed to stop scrollers and make your brand unforgettable.
         </p>
       </div>
 
       <div class="glass-card" style="padding: 2.25rem;">
         <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;">Private Queue Model</h3>
-        <p style="color: #94A3B8; font-size: 0.925rem; line-height: 1.6;">
+        <p class="text-sm md:text-base text-slate-400 leading-relaxed">
           Zero public WhatsApp spam. Prospective clients submit detailed applications into our queue console. When approved, we open dedicated direct lines.
         </p>
       </div>
 
       <div class="glass-card" style="padding: 2.25rem;">
         <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;">Sub-Second Speed</h3>
-        <p style="color: #94A3B8; font-size: 0.925rem; line-height: 1.6;">
+        <p class="text-sm md:text-base text-slate-400 leading-relaxed">
           Hand-coded architecture optimized for Cloudflare edge deployment. No heavy plugins, no render bottlenecks — just blazing fast response times.
         </p>
       </div>
@@ -262,7 +262,7 @@
   <!-- ======================================================================
        FEATURED PROJECT TEASER: SRAI QHALIF
        ====================================================================== -->
-  <section class="section container">
+  <section class="section container px-4 sm:px-6 md:px-8">
     <div class="glass-card reveal" style="padding: 3rem; position: relative; overflow: hidden; border: 1px solid rgba(34, 211, 238, 0.25);">
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; align-items: center;">
         
@@ -275,7 +275,7 @@
             SRAI Qhalif <br>
             <span class="gradient-text">Official Educational Portal</span>
           </h3>
-          <p style="color: #94A3B8; font-size: 1rem; line-height: 1.6; margin-bottom: 1rem;">
+          <p class="text-sm md:text-base text-slate-400 leading-relaxed mb-4">
             A fully responsive, multi-page official educational portal for Sekolah Rendah Agama Integrasi Qhalif &amp; Tadika Sinar Bestari. Engineered using HTML5, vanilla JavaScript, and Tailwind CSS with custom Islamic geometric styling, glassmorphic navigation, Lightbox facility galleries, and direct WhatsApp / Google Forms enrollment routing.
           </p>
           <div style="color: #64748B; font-size: 0.85rem; margin-bottom: 1.5rem;">
@@ -310,12 +310,12 @@
   <!-- ======================================================================
        CALL TO ACTION BANNER: INTAKE QUEUE
        ====================================================================== -->
-  <section class="section container">
+  <section class="section container px-4 sm:px-6 md:px-8">
     <div class="glass-card reveal" style="text-align: center; padding: 4rem 2rem; background: radial-gradient(circle at 50% 0%, rgba(34, 211, 238, 0.15), transparent 70%), var(--bg-secondary); border: 1px solid rgba(34, 211, 238, 0.25);">
       <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem;">
         Ready to Elevate Your Digital Benchmark?
       </h2>
-      <p style="color: #94A3B8; max-width: 580px; margin: 0 auto 2rem; font-size: 1.05rem;">
+      <p class="text-sm md:text-base text-slate-400 max-w-xl mx-auto mb-8">
         We take on a strictly limited roster of 3–4 clients per month to guarantee bespoke attention. Apply directly to our queue to secure your slot.
       </p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
@@ -329,7 +329,7 @@
        FOOTER
        ====================================================================== -->
   <footer class="footer">
-    <div class="container footer-content" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+    <div class="container footer-content px-4 sm:px-6 md:px-8" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
       <div style="display: flex; align-items: center; gap: 14px;">
         <img src="assets/images/branding/logo_landscape_layout_transparent.png" alt="DanStudio Works" style="height: 45px; width: auto; display: block;">
         <span style="color: #64748B; font-size: 0.85rem;">— Precision Digital Engineering</span>
@@ -341,7 +341,7 @@
         <a href="packages.html" style="color: #94A3B8;">Packages</a>
       </div>
     </div>
-    <div class="container footer-copyright" style="text-align: center; color: #64748B; font-size: 0.8rem; margin-top: 2rem;">
+    <div class="container footer-copyright px-4 sm:px-6 md:px-8" style="text-align: center; color: #64748B; font-size: 0.8rem; margin-top: 2rem;">
       © 2026 DanStudio Works. All rights reserved. Precision-crafted in Malaysia. <a href="#" id="admin-login-btn" style="opacity: 0.3; text-decoration: none; color: inherit; margin-left: 10px; font-size: 0.85rem;">Admin</a>
     </div>
   </footer>

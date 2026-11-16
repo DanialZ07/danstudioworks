@@ -171,6 +171,13 @@ h1, h2, h3, h4, h5, h6 {
 
 p {
   color: var(--text-secondary);
+  font-size: 0.875rem; /* text-sm default on mobile */
+}
+
+@media (min-width: 768px) {
+  p {
+    font-size: 1rem; /* text-base on md screens and above */
+  }
 }
 
 a {
@@ -199,8 +206,22 @@ a {
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
 .section {
@@ -415,6 +436,7 @@ a {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-pill);
   z-index: 1000;
   box-shadow: var(--shadow-lg);
@@ -460,6 +482,9 @@ a {
 }
 
 @media (max-width: 768px) {
+  body {
+    padding-bottom: 90px !important;
+  }
   .navbar {
     display: none !important;
   }
@@ -519,10 +544,16 @@ a {
 }
 
 .hero-title {
-  font-size: clamp(2.5rem, 5vw, 4.25rem);
+  font-size: clamp(2.25rem, 5vw, 4.25rem);
   font-weight: 900;
   line-height: 1.1;
   margin-bottom: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: 2.25rem; /* text-4xl */
+  }
 }
 
 .hero-subtitle {
@@ -788,15 +819,16 @@ a {
 }
 
 .modal {
-  width: 100%;
+  width: 92%;
   max-width: 680px;
   background: var(--bg-secondary);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-xl);
   padding: 2.5rem;
   position: relative;
-  max-height: 90vh;
+  max-height: 85vh;
   overflow-y: auto;
+  margin: 0 auto;
   box-shadow: var(--shadow-lg);
   transform: translateY(16px);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1587,10 +1619,11 @@ a {
 }
 
 .details-modal-dialog {
-  width: 100%;
+  width: 92%;
   max-width: 960px;
-  max-height: 90vh;
+  max-height: 85vh;
   overflow-y: auto;
+  margin: 0 auto;
   background: rgba(15, 23, 42, 0.88);
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 40px rgba(34, 211, 238, 0.15);
@@ -1630,9 +1663,13 @@ a {
   pointer-events: auto;
 }
 
-#admin-login-modal .admin-login-card {
-  width: 100%;
+#admin-login-modal .admin-login-card,
+.admin-login-card {
+  width: 92%;
   max-width: 440px;
+  max-height: 85vh;
+  overflow-y: auto;
+  margin: 0 auto;
   background: rgba(15, 23, 42, 0.94);
   border: 1px solid rgba(34, 211, 238, 0.35);
   box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 35px rgba(34, 211, 238, 0.2);
@@ -1647,6 +1684,20 @@ a {
 #admin-login-modal.active .admin-login-card {
   transform: scale(1);
   opacity: 1;
+}
+
+/* Modal Responsive Media Queries for Mobile Screens */
+@media (max-width: 768px) {
+  .details-modal-dialog,
+  .admin-login-card,
+  #admin-login-modal .admin-login-card,
+  .modal {
+    width: 92% !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+    margin: 0 auto !important;
+    padding: 1.5rem !important;
+  }
 }
 
 /* ==========================================================================
