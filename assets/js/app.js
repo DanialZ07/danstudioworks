@@ -584,14 +584,18 @@
         showToast(successMessage, 'success', 3500);
 
         // POST the new ticket object directly to /api/queue using fetch()
+        const phoneInput = document.getElementById('phone') || document.getElementById('client-phone');
+        const budgetInput = document.getElementById('budget') || document.getElementById('client-budget');
+        const scopeInput = document.getElementById('scope') || document.getElementById('description');
+
         const newTicket = {
           ticket_id: ticket,
-          client_name: formDataPayload.name,
-          client_email: formDataPayload.email,
-          client_phone: formDataPayload.phone,
+          client_name: (document.getElementById('name') || document.getElementById('client-name')) ? (document.getElementById('name') || document.getElementById('client-name')).value.trim() : (formDataPayload.name || ''),
+          client_email: (document.getElementById('email') || document.getElementById('client-email')) ? (document.getElementById('email') || document.getElementById('client-email')).value.trim() : (formDataPayload.email || ''),
+          client_phone: phoneInput ? phoneInput.value.trim() : (formDataPayload.phone || ''),
           package_tier: formDataPayload.package,
-          budget: formDataPayload.budget || '0',
-          project_details: formDataPayload.description || '',
+          budget: budgetInput ? String(budgetInput.value).trim() : (String(formDataPayload.budget || '0')),
+          project_details: scopeInput ? scopeInput.value.trim() : (formDataPayload.description || ''),
           status: 'pending',
           created_at: new Date().toISOString()
         };
@@ -2259,11 +2263,12 @@
      ========================================================================== */
 
   function initStatusPage() {
-    // Check if the current page is status.html. If not, return early.
+    // Check if the current page is status.html or /status. If not, return early.
     const isStatusPage = document.querySelector('main[data-page="status"]') !== null ||
                          document.body.getAttribute('data-page') === 'status' ||
                          window.location.pathname.split('/').pop().split('?')[0].split('#')[0] === 'status.html' ||
-                         window.location.pathname.endsWith('status.html');
+                         window.location.pathname.split('/').pop().split('?')[0].split('#')[0] === 'status' ||
+                         window.location.pathname.includes('status');
 
     if (!isStatusPage) return;
 
@@ -2284,14 +2289,18 @@
     }
 
     if (!ticketParam || ticketParam.trim() === '') {
-      window.location.href = 'index.html';
-      return;
+      const searchInput = document.getElementById('ticket-search-input') || document.getElementById('tracker-input');
+      if (!searchInput) {
+        window.location.href = 'index.html';
+        return;
+      }
+      ticketParam = '';
     }
 
     let ticketId = ticketParam.trim();
 
     // Auto-fill ticket search input if available
-    const searchInput = document.getElementById('ticket-search-input');
+    const searchInput = document.getElementById('ticket-search-input') || document.getElementById('tracker-input');
     if (searchInput && ticketId) {
       searchInput.value = ticketId;
     }
@@ -2544,14 +2553,20 @@
       }
     }
 
-    renderStatus();
+    if (ticketId) {
+      renderStatus(ticketId);
+    } else {
+      renderStatus();
+    }
 
     // Wire ticket lookup search form
     const lookupForm = document.getElementById('ticket-lookup-form');
+    const searchBtn = document.getElementById('ticket-search-btn') || document.getElementById('tracker-btn');
+
     if (lookupForm) {
       lookupForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const searchInput = document.getElementById('ticket-search-input');
+        const searchInput = document.getElementById('ticket-search-input') || document.getElementById('tracker-input');
         const query = searchInput ? searchInput.value.trim() : '';
         if (!query) {
           showToast('Please enter a ticket reference to track.', 'warning');
@@ -2563,6 +2578,24 @@
         }
         await renderStatus(query);
       });
+    }
+
+    if (searchBtn && lookupForm) {
+      searchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        lookupForm.dispatchEvent(new Event('submit', { cancelable: true }));
+      });
+    }
+
+    // Auto-Load Tracker from Email Link (?ticket= parameter in URL)
+    const emailTicketParam = urlParams.get('ticket');
+    if (emailTicketParam) {
+      const trackerSearchInput = document.getElementById('ticket-search-input') || document.getElementById('tracker-input');
+      const trackerSearchBtn = document.getElementById('ticket-search-btn') || document.getElementById('tracker-btn');
+      if (trackerSearchInput && trackerSearchBtn) {
+        trackerSearchInput.value = emailTicketParam;
+        trackerSearchBtn.click(); // Automatically trigger the lookup
+      }
     }
 
     // Modal background click dismiss
