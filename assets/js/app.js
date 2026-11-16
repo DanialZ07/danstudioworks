@@ -2180,18 +2180,109 @@
 
     if (!isStatusPage) return;
 
-    // Extract the ?ticket= parameter from the URL. If missing, redirect to index.html.
+    // Extract the ?ticket= parameter from the URL. If missing, check recent submissions before deflecting.
     const urlParams = new URLSearchParams(window.location.search);
-    const ticketParam = urlParams.get('ticket');
+    let ticketParam = urlParams.get('ticket');
+
+    if (!ticketParam || ticketParam.trim() === '') {
+      let recentRequests = [];
+      try {
+        recentRequests = JSON.parse(localStorage.getItem('dsw_requests')) || [];
+      } catch (_) {
+        recentRequests = [];
+      }
+      if (recentRequests.length > 0 && (recentRequests[0].ticket || recentRequests[0].id)) {
+        ticketParam = recentRequests[0].ticket || recentRequests[0].id;
+      }
+    }
 
     if (!ticketParam || ticketParam.trim() === '') {
       window.location.href = 'index.html';
       return;
     }
 
-    const ticketId = ticketParam.trim();
+    let ticketId = ticketParam.trim();
 
-    function renderStatus() {
+    // Auto-fill ticket search input if available
+    const searchInput = document.getElementById('ticket-search-input');
+    if (searchInput && ticketId) {
+      searchInput.value = ticketId;
+    }
+
+    // Master Client Status Modal references & controls
+    const clientModal = document.getElementById('client-status-modal');
+    const clientModalContent = document.getElementById('client-status-modal-content');
+
+    function hideClientModal() {
+      if (!clientModal) return;
+      clientModal.classList.remove('opacity-100', 'visible', 'pointer-events-auto');
+      clientModal.classList.add('opacity-0', 'invisible', 'pointer-events-none');
+    }
+
+    function showClientModal(type) {
+      if (!clientModal || !clientModalContent) return;
+
+      const templateId = type === 'accepted' ? 'template-status-accepted' : 'template-status-rejected';
+      const templateEl = document.getElementById(templateId);
+
+      if (templateEl && templateEl.content) {
+        clientModalContent.innerHTML = '';
+        clientModalContent.appendChild(templateEl.content.cloneNode(true));
+      } else if (type === 'accepted') {
+        clientModalContent.innerHTML = `
+          <div class="glass-card text-center p-6 sm:p-8" style="background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(16, 185, 129, 0.4); box-shadow: 0 0 40px rgba(16, 185, 129, 0.2), 0 25px 50px -12px rgba(0, 0, 0, 0.8); border-radius: 20px;">
+            <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); border: 2px solid #10B981; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 0 25px rgba(16, 185, 129, 0.35);">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <h3 style="font-size: 1.75rem; font-weight: 800; color: #10B981; margin-bottom: 0.75rem; letter-spacing: -0.02em;">
+              Slot Confirmed
+            </h3>
+            <p style="color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin-bottom: 1.75rem;">
+              Slot Confirmed. Your project application has been officially accepted into the DanStudio Works production queue. Lead Dev will initiate direct contact shortly.
+            </p>
+            <button type="button" class="btn btn-primary client-modal-close-btn" style="background: linear-gradient(135deg, #10B981, #059669); border-color: #10B981; width: 100%; justify-content: center;">
+              Acknowledge &amp; View Details
+            </button>
+          </div>
+        `;
+      } else {
+        clientModalContent.innerHTML = `
+          <div class="glass-card text-center p-6 sm:p-8" style="background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(244, 63, 94, 0.4); box-shadow: 0 0 40px rgba(244, 63, 94, 0.2), 0 25px 50px -12px rgba(0, 0, 0, 0.8); border-radius: 20px;">
+            <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(244, 63, 94, 0.15); border: 2px solid #F43F5E; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 0 25px rgba(244, 63, 94, 0.35);">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </div>
+            <h3 style="font-size: 1.75rem; font-weight: 800; color: #F43F5E; margin-bottom: 0.75rem; letter-spacing: -0.02em;">
+              Application Archived
+            </h3>
+            <p style="color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin-bottom: 1.75rem;">
+              Application Archived. Due to current production capacity constraints, we are unable to accept this project at this time. This ticket page will be permanently purged from the system in 24 hours.
+            </p>
+            <button type="button" class="btn btn-ghost client-modal-close-btn" style="border-color: rgba(244, 63, 94, 0.5); color: #FB7185; width: 100%; justify-content: center;">
+              Acknowledge Notice
+            </button>
+          </div>
+        `;
+      }
+
+      // Wire close buttons inside newly populated template
+      const closeBtns = clientModal.querySelectorAll('.client-modal-close-btn');
+      closeBtns.forEach(btn => {
+        btn.addEventListener('click', hideClientModal);
+      });
+
+      // Show modal with transition
+      clientModal.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
+      clientModal.classList.add('opacity-100', 'visible', 'pointer-events-auto');
+    }
+
+    function renderStatus(lookupTicketId) {
+      const activeId = lookupTicketId || ticketId;
+
       // Read dsw_requests from localStorage to find the matching ticket data
       let requests = [];
       try {
@@ -2206,30 +2297,30 @@
       }
 
       const ticketData = requests.find(r =>
-        (r.ticket && String(r.ticket).trim().toLowerCase() === ticketId.toLowerCase()) ||
-        (r.id && String(r.id).trim().toLowerCase() === ticketId.toLowerCase())
+        (r.ticket && String(r.ticket).trim().toLowerCase() === activeId.toLowerCase()) ||
+        (r.id && String(r.id).trim().toLowerCase() === activeId.toLowerCase())
       );
 
       // Determine ID, Package, Status
-      const displayId = (ticketData && (ticketData.ticket || ticketData.id)) ? (ticketData.ticket || ticketData.id) : ticketId;
+      const displayId = (ticketData && (ticketData.ticket || ticketData.id)) ? (ticketData.ticket || ticketData.id) : activeId;
       const displayPackage = (ticketData && ticketData.package) ? ticketData.package : 'Starter';
 
       // Map status to "In Review", "Waiting", or "Accepted"
       let displayStatus = 'In Review';
-      if (ticketData && ticketData.status) {
-        const s = String(ticketData.status).toLowerCase();
-        if (s === 'accepted' || s === 'approved') {
-          displayStatus = 'Accepted';
-        } else if (s === 'waiting' || s === 'hold') {
-          displayStatus = 'Waiting';
-        } else if (s === 'rejected' || s === 'archived') {
-          displayStatus = 'Archived';
-        } else {
-          displayStatus = 'In Review';
-        }
+      const app = ticketData;
+      const statusRaw = (app && app.status ? String(app.status).toLowerCase() : 'pending');
+
+      if (statusRaw === 'accepted' || statusRaw === 'approved') {
+        displayStatus = 'Accepted';
+      } else if (statusRaw === 'waiting' || statusRaw === 'hold') {
+        displayStatus = 'Waiting';
+      } else if (statusRaw === 'rejected' || statusRaw === 'archived') {
+        displayStatus = 'Archived';
+      } else {
+        displayStatus = 'In Review';
       }
 
-      // Inject the ticket data (ID, Package, Status) into the HTML elements created in Step 1
+      // Inject the ticket data (ID, Package, Status) into the HTML elements
       const ticketIdEl = document.getElementById('status-ticket-id');
       if (ticketIdEl) {
         ticketIdEl.textContent = displayId;
@@ -2331,9 +2422,81 @@
           });
         }
       }
+
+      // Auto-Purge UI Logic: if rejected, add countdown / purge badge
+      let purgeBadge = document.getElementById('status-purge-badge');
+      if (statusRaw === 'rejected' || statusRaw === 'archived') {
+        if (!purgeBadge) {
+          purgeBadge = document.createElement('div');
+          purgeBadge.id = 'status-purge-badge';
+          purgeBadge.className = 'mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold tracking-wider';
+          purgeBadge.style.background = 'rgba(244, 63, 94, 0.15)';
+          purgeBadge.style.border = '1px solid rgba(244, 63, 94, 0.45)';
+          purgeBadge.style.color = '#FB7185';
+          purgeBadge.style.boxShadow = '0 0 15px rgba(244, 63, 94, 0.25)';
+
+          const badgeContainer = document.getElementById('status-subtext')?.parentNode || document.getElementById('status-ticket-id')?.parentNode;
+          if (badgeContainer) {
+            badgeContainer.appendChild(purgeBadge);
+          }
+        }
+        purgeBadge.innerHTML = `
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: #F43F5E; box-shadow: 0 0 8px #F43F5E; animation: pulse 1.5s infinite;"></span>
+          <span>STATUS: ARCHIVED (PURGING IN 24H)</span>
+        `;
+        purgeBadge.style.display = 'inline-flex';
+      } else {
+        if (purgeBadge) {
+          purgeBadge.style.display = 'none';
+        }
+      }
+
+      // Evaluate app.status for modal popup presentation
+      if (statusRaw === 'accepted' || statusRaw === 'approved') {
+        showClientModal('accepted');
+      } else if (statusRaw === 'rejected' || statusRaw === 'archived') {
+        showClientModal('rejected');
+      } else {
+        hideClientModal();
+      }
     }
 
     renderStatus();
+
+    // Wire ticket lookup search form
+    const lookupForm = document.getElementById('ticket-lookup-form');
+    if (lookupForm) {
+      lookupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const searchInput = document.getElementById('ticket-search-input');
+        const query = searchInput ? searchInput.value.trim() : '';
+        if (!query) {
+          showToast('Please enter a ticket reference to track.', 'warning');
+          return;
+        }
+        ticketId = query;
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, '', `status.html?ticket=${encodeURIComponent(query)}`);
+        }
+        renderStatus(query);
+      });
+    }
+
+    // Modal background click dismiss
+    if (clientModal) {
+      clientModal.addEventListener('click', (e) => {
+        if (e.target === clientModal) {
+          hideClientModal();
+        }
+      });
+    }
+
+    // Modal Esc key dismiss
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && clientModal && !clientModal.classList.contains('invisible')) {
+        hideClientModal();
+      }
+    });
 
     // Live refresh button interaction
     const refreshBtn = document.getElementById('refresh-status-btn');

@@ -102,6 +102,12 @@
       <p class="text-sm md:text-base text-slate-400 max-w-2xl mx-auto mt-3">
         Real-time queue verification and direct developer intake status console.
       </p>
+
+      <!-- Ticket Search Bar -->
+      <form id="ticket-lookup-form" class="flex flex-col sm:flex-row gap-2 max-w-md mx-auto mt-6" onsubmit="return false;">
+        <input type="text" id="ticket-search-input" class="form-input flex-1" placeholder="Enter Ticket (e.g. DS-4921)..." style="font-family: monospace; text-transform: uppercase;">
+        <button type="submit" id="ticket-search-btn" class="btn btn-primary" style="white-space: nowrap;">Track Ticket</button>
+      </form>
     </div>
 
     <!-- Main Live Tracker Glass Card -->
@@ -247,6 +253,54 @@
       © 2026 DanStudio Works. All rights reserved. Precision-crafted in Malaysia. <a href="#" id="admin-login-btn" style="opacity: 0.3; text-decoration: none; color: inherit; margin-left: 10px; font-size: 0.85rem;">Admin</a>
     </div>
   </footer>
+
+  <!-- ======================================================================
+       CLIENT STATUS MODAL (ACCEPTED / REJECTED STATES)
+       ====================================================================== -->
+  <div id="client-status-modal" class="fixed inset-0 z-[99999] flex items-center justify-center p-4 backdrop-blur-xl bg-[#07080E]/90 opacity-0 invisible pointer-events-none transition-all duration-300">
+    <div id="client-status-modal-content" class="w-full max-w-lg"></div>
+  </div>
+
+  <!-- Accepted Template (Hidden by default) -->
+  <template id="template-status-accepted">
+    <div class="glass-card text-center p-6 sm:p-8" style="background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(16, 185, 129, 0.4); box-shadow: 0 0 40px rgba(16, 185, 129, 0.2), 0 25px 50px -12px rgba(0, 0, 0, 0.8); border-radius: 20px;">
+      <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); border: 2px solid #10B981; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 0 25px rgba(16, 185, 129, 0.35);">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h3 style="font-size: 1.75rem; font-weight: 800; color: #10B981; margin-bottom: 0.75rem; letter-spacing: -0.02em;">
+        Slot Confirmed
+      </h3>
+      <p style="color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin-bottom: 1.75rem;">
+        Slot Confirmed. Your project application has been officially accepted into the DanStudio Works production queue. Lead Dev will initiate direct contact shortly.
+      </p>
+      <button type="button" class="btn btn-primary client-modal-close-btn" style="background: linear-gradient(135deg, #10B981, #059669); border-color: #10B981; width: 100%; justify-content: center;">
+        Acknowledge &amp; View Details
+      </button>
+    </div>
+  </template>
+
+  <!-- Rejected Template (Hidden by default) -->
+  <template id="template-status-rejected">
+    <div class="glass-card text-center p-6 sm:p-8" style="background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(244, 63, 94, 0.4); box-shadow: 0 0 40px rgba(244, 63, 94, 0.2), 0 25px 50px -12px rgba(0, 0, 0, 0.8); border-radius: 20px;">
+      <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(244, 63, 94, 0.15); border: 2px solid #F43F5E; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 0 25px rgba(244, 63, 94, 0.35);">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </div>
+      <h3 style="font-size: 1.75rem; font-weight: 800; color: #F43F5E; margin-bottom: 0.75rem; letter-spacing: -0.02em;">
+        Application Archived
+      </h3>
+      <p style="color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin-bottom: 1.75rem;">
+        Application Archived. Due to current production capacity constraints, we are unable to accept this project at this time. This ticket page will be permanently purged from the system in 24 hours.
+      </p>
+      <button type="button" class="btn btn-ghost client-modal-close-btn" style="border-color: rgba(244, 63, 94, 0.5); color: #FB7185; width: 100%; justify-content: center;">
+        Acknowledge Notice
+      </button>
+    </div>
+  </template>
 
   <!-- Core Client Interaction Scripts -->
   <script src="assets/js/app.js"></script>

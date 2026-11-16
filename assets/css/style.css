@@ -1979,6 +1979,14 @@ a {
 .fixed { position: fixed; }
 .inset-0 { inset: 0; }
 .pointer-events-none { pointer-events: none; }
+.pointer-events-auto { pointer-events: auto; }
+.opacity-0 { opacity: 0; }
+.opacity-100 { opacity: 1; }
+.invisible { visibility: hidden; }
+.visible { visibility: visible; }
+.transition-all { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.duration-300 { transition-duration: 300ms; }
+.bg-\[\#07080E\]\/90 { background-color: rgba(7, 8, 14, 0.9); }
 .overflow-hidden { overflow: hidden; }
 .overflow-x-auto { overflow-x: auto; }
 .overflow-y-auto { overflow-y: auto; }
