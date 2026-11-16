@@ -175,19 +175,31 @@
       }, { passive: true });
     }
 
-    /* Auto-highlight active navigation pill based on current path */
-    const currentPath = window.location.pathname.split('/').pop().split('?')[0].split('#')[0] || 'index.html';
-    const navLinks = document.querySelectorAll('.nav-link, .dock-item');
+    /* Auto-highlight active navigation link based on current path with cyan text styling */
+    let currentPath = window.location.pathname.split('/').pop().split('?')[0].split('#')[0];
+    if (!currentPath || currentPath === '' || currentPath === '/') {
+      currentPath = 'index.html';
+    }
 
+    const navLinks = document.querySelectorAll('.navbar .nav-link, .mobile-dock .dock-item');
     navLinks.forEach(link => {
       const href = link.getAttribute('href');
       if (!href) return;
       const targetPage = href.split('/').pop().split('?')[0].split('#')[0];
 
-      if (targetPage === currentPath || (currentPath === '' && targetPage === 'index.html')) {
+      const isMatch = (targetPage === currentPath) ||
+                      (currentPath === 'index.html' && (targetPage === '' || targetPage === 'index.html'));
+
+      if (isMatch) {
         link.classList.add('active');
+        if (targetPage !== 'admin.html') {
+          link.style.color = '#22D3EE';
+        }
       } else {
         link.classList.remove('active');
+        if (targetPage !== 'admin.html') {
+          link.style.color = '';
+        }
       }
     });
   }
@@ -1993,12 +2005,14 @@
           const apps = getAdminApplications();
           const filtered = apps.filter(a => (a.id || a.ticket) !== pendingDeleteTargetId);
           saveAdminApplications(filtered);
+          window.location.reload();
           if (typeof renderApplicationsGrid === 'function') renderApplicationsGrid();
           showToast(`Application #${pendingDeleteTargetId} permanently deleted.`, 'info');
         } else if (pendingDeleteTargetType === 'inquiry') {
           const inqs = getAdminInquiries();
           const filtered = inqs.filter(i => i.id !== pendingDeleteTargetId);
           saveAdminInquiries(filtered);
+          window.location.reload();
           if (typeof renderInquiriesGrid === 'function') renderInquiriesGrid();
           showToast(`Inquiry #${pendingDeleteTargetId} permanently deleted.`, 'info');
         }
@@ -2469,11 +2483,11 @@
         dockNcLink.href = 'admin.html';
         dockNcLink.className = 'dock-item';
         dockNcLink.innerHTML = `
-          <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2">
+          <svg class="dock-icon text-rose-400" viewBox="0 0 24 24" fill="none" stroke="#F43F5E" stroke-width="2">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
           </svg>
-          <span class="nc-active-indicator">⚡ NC</span>
+          <span class="nc-active-indicator text-rose-400" style="color: #FB7185;">⚡ NC</span>
         `;
         mobileDock.appendChild(dockNcLink);
       }
@@ -2483,14 +2497,14 @@
     if (!document.getElementById('nc-floating-pill')) {
       const pill = document.createElement('div');
       pill.id = 'nc-floating-pill';
-      pill.className = 'fixed bottom-5 left-5 z-[9998] flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-900/90 backdrop-blur-xl border border-cyan-500/40 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.8),0_0_20px_rgba(34,211,238,0.25)] text-xs select-none transition-all duration-300 hover:border-cyan-400';
+      pill.className = 'fixed bottom-5 left-5 z-[9998] flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-rose-950/90 text-rose-400 border border-rose-500/50 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.8),0_0_20px_rgba(244,63,94,0.3)] shadow-rose-500/20 text-xs select-none transition-all duration-300 hover:border-rose-400 backdrop-blur-xl';
       pill.setAttribute('role', 'status');
       pill.innerHTML = `
-        <a href="admin.html" class="flex items-center gap-1.5 font-bold text-slate-100 hover:text-cyan-300 transition-colors" title="Open Nexus Command">
-          <span class="text-amber-400 font-black">⚡</span>
-          <span class="tracking-wide">Lead Dev Active</span>
+        <a href="admin.html" class="flex items-center gap-1.5 font-bold text-rose-300 hover:text-rose-200 transition-colors" title="Open Nexus Command">
+          <span class="text-rose-500 font-black">⚡</span>
+          <span class="tracking-wide text-rose-400">Lead Dev Active</span>
         </a>
-        <span class="text-slate-600">|</span>
+        <span class="text-rose-900/60">|</span>
         <button type="button" id="nc-pill-logout-btn" class="text-rose-400 hover:text-rose-300 font-semibold tracking-wider hover:underline transition-colors focus:outline-none" aria-label="Logout Lead Developer session">
           [Logout]
         </button>
