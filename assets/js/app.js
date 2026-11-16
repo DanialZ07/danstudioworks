@@ -538,8 +538,26 @@
       }
 
       function handleSuccessfulResponse(responseData) {
-        // Hide the form and show clean text message: "Application Completed. Generating your personal live queue link..."
+        // Hide the form
         form.style.display = 'none';
+
+        // Retrieve live database before displaying success message
+        let currentRequests = [];
+        try {
+          currentRequests = JSON.parse(localStorage.getItem('dsw_requests')) || [];
+        } catch (_) {
+          currentRequests = [];
+        }
+
+        // Calculate exact number of users currently in the waiting list
+        let currentQueueCount = currentRequests.filter(r => r.status === 'pending' || r.status === 'new').length;
+        let userQueuePosition = currentQueueCount + 1;
+
+        // Secure ticket reference ID
+        const ticket = (responseData && responseData.ticket) ? responseData.ticket : ('DS-' + Math.floor(1000 + Math.random() * 9000));
+        if (responseData) responseData.ticket = ticket;
+
+        const successMessage = `Application Completed. You are position #${userQueuePosition} in the waitlist.`;
 
         if (successPanel) {
           successPanel.innerHTML = `
@@ -549,10 +567,10 @@
                 <path d="M12 2a10 10 0 0 1 10 10" stroke="#22D3EE" stroke-linecap="round" fill="none"></path>
               </svg>
             </div>
-            <h2 id="queue-status-heading" style="font-size: 1.85rem; font-weight: 800; margin-bottom: 0.75rem; color: #F1F5F9;">Application Completed. Generating your personal live queue link...</h2>
+            <h2 id="queue-status-heading" style="font-size: 1.85rem; font-weight: 800; margin-bottom: 0.75rem; color: #F1F5F9;">Application Completed. You are position #${userQueuePosition} in the waitlist.</h2>
             <div style="display: inline-flex; align-items: center; gap: 10px; padding: 0.85rem 1.75rem; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(34,211,238,0.3); margin-top: 1rem;">
               <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #22D3EE; box-shadow: 0 0 10px #22D3EE;"></span>
-              <span style="font-size: 0.9rem; color: #F1F5F9; font-weight: 500;">Securing ticket reference &bull; Redirecting in 3 seconds...</span>
+              <span style="font-size: 0.9rem; color: #F1F5F9; font-weight: 500;">Securing ticket reference &bull; Position #${userQueuePosition} &bull; Redirecting in 3 seconds...</span>
             </div>
           `;
           successPanel.style.display = 'block';
@@ -568,16 +586,13 @@
             msgContainer.style.fontWeight = '700';
             form.parentNode.insertBefore(msgContainer, form);
           }
-          msgContainer.textContent = 'Application Completed. Generating your personal live queue link...';
+          msgContainer.textContent = successMessage;
           msgContainer.style.display = 'block';
         }
 
-        showToast('Application Completed. Generating your personal live queue link...', 'info', 3000);
+        showToast(successMessage, 'success', 3500);
 
-        // Store in localStorage for status.html & admin console
-        const ticket = (responseData && responseData.ticket) ? responseData.ticket : ('DS-' + Math.floor(1000 + Math.random() * 9000));
-        responseData.ticket = ticket;
-
+        // Store new application into live database array
         const newSubmission = {
           id: ticket,
           ticket: ticket,
@@ -592,20 +607,23 @@
           addons: addons,
           date: new Date().toISOString(),
           status: 'new',
-          queueNumber: (responseData && responseData.queueNumber) || 2
+          queueNumber: userQueuePosition
         };
 
-        let existing = [];
-        try {
-          existing = JSON.parse(localStorage.getItem('dsw_requests')) || [];
-        } catch (_) {}
-        existing = existing.filter(r => r.id !== ticket && r.ticket !== ticket);
-        existing.unshift(newSubmission);
-        localStorage.setItem('dsw_requests', JSON.stringify(existing));
+        currentRequests = currentRequests.filter(r => r.id !== ticket && r.ticket !== ticket);
+        currentRequests.push(newSubmission);
+        localStorage.setItem('dsw_requests', JSON.stringify(currentRequests));
 
-        // Wait exactly 3000ms using setTimeout, then redirect window.location.href to status.html?ticket=${responseData.ticket}
+        // Sync Global HUD telemetry immediately
+        if (typeof syncPublicCapacityBadge === 'function') {
+          syncPublicCapacityBadge();
+        } else if (typeof window.syncPublicCapacityBadge === 'function') {
+          window.syncPublicCapacityBadge();
+        }
+
+        // Wait exactly 3000ms using setTimeout, then redirect window.location.href to status.html?ticket=${ticket}
         setTimeout(() => {
-          window.location.href = `status.html?ticket=${responseData.ticket}`;
+          window.location.href = `status.html?ticket=${ticket}`;
         }, 3000);
       }
 
@@ -633,8 +651,7 @@
         const fallbackTicket = 'DS-' + Math.floor(1000 + Math.random() * 9000);
         handleSuccessfulResponse({
           success: true,
-          ticket: fallbackTicket,
-          queueNumber: 2
+          ticket: fallbackTicket
         });
       });
     });
@@ -2143,6 +2160,9 @@
     });
   }
 
+  // Expose syncPublicCapacityBadge globally for cross-module invocations
+  window.syncPublicCapacityBadge = syncPublicCapacityBadge;
+
   function initProjectCounter() {
     syncPublicCapacityBadge();
   }
@@ -2283,7 +2303,10 @@
           pulseDot.style.boxShadow = '0 0 10px #22D3EE';
         }
         if (queueNumberEl) {
-          queueNumberEl.textContent = (ticketData && ticketData.queueNumber) ? `#${ticketData.queueNumber} in Queue` : '#2 in Queue';
+          const liveQueuePos = (ticketData && ticketData.queueNumber)
+            ? ticketData.queueNumber
+            : (requests.filter(r => (r.status || '').toLowerCase() === 'pending' || (r.status || '').toLowerCase() === 'new').length || 1);
+          queueNumberEl.textContent = `#${liveQueuePos} in Queue`;
         }
         if (subtextEl) subtextEl.textContent = 'Evaluation in Progress';
       }
