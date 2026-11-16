@@ -404,25 +404,6 @@
   }
 
   /* ==========================================================================
-     10. GENERAL SUPPORT FORM (contact.html)
-     ========================================================================== */
-
-  function initSupportForm() {
-    const supportForm = document.getElementById('support-contact-form');
-    if (!supportForm) return;
-
-    supportForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const successMsg = document.getElementById('support-success-msg');
-      if (successMsg) {
-        successMsg.style.display = 'block';
-      }
-      supportForm.reset();
-      showToast('Support inquiry dispatched. We will reply to your email shortly.', 'success');
-    });
-  }
-
-  /* ==========================================================================
      09. PRIVATE APPLICATION QUEUE SUBMISSION FORM
      ========================================================================== */
 
@@ -651,40 +632,9 @@
      10b. LOCAL INQUIRY ROUTING & SUPPORT FORM HANDLER
      ========================================================================== */
 
-  const DEFAULT_INQUIRIES = [
-    {
-      id: 'INQ-4819',
-      name: 'Muhamad Arif',
-      email: 'arif@techvanguard.my',
-      type: 'problem',
-      subject: 'DNS Routing latency on staging preview',
-      message: 'We noticed the DNS propagation for staging.danstudioworks.com is experiencing intermittent TTL timeouts on Telekom Malaysia fiber routes. Could you check the edge DNS config?',
-      timestamp: new Date(Date.now() - 3600000 * 5).toISOString(),
-      status: 'new'
-    },
-    {
-      id: 'INQ-5120',
-      name: 'Melissa Wong',
-      email: 'melissa@lumina-aesthetic.com',
-      type: 'billing',
-      subject: 'Request for official e-Invoicing tax receipt',
-      message: 'Hi DanStudio team, our finance department requires the LHDN-compliant e-invoice receipt for Milestone 1 payment. Please send across the PDF breakdown.',
-      timestamp: new Date(Date.now() - 3600000 * 22).toISOString(),
-      status: 'new'
-    }
-  ];
-
   function getInquiries() {
-    try {
-      let stored = JSON.parse(localStorage.getItem('danstudio_inquiries'));
-      if (!stored || !Array.isArray(stored) || !stored.length) {
-        localStorage.setItem('danstudio_inquiries', JSON.stringify(DEFAULT_INQUIRIES));
-        return DEFAULT_INQUIRIES;
-      }
-      return stored;
-    } catch (_) {
-      return DEFAULT_INQUIRIES;
-    }
+    try { return JSON.parse(localStorage.getItem('danstudio_inquiries')) || []; } 
+    catch (_) { return []; }
   }
 
   function initSupportForm() {
@@ -725,7 +675,7 @@
         status: 'new'
       };
 
-      // Retrieve existing or initialize defaults
+      // Retrieve existing or initialize empty array
       let existingInquiries = [];
       try {
         existingInquiries = JSON.parse(localStorage.getItem('danstudio_inquiries')) || [];
@@ -733,11 +683,7 @@
         existingInquiries = [];
       }
 
-      if (!existingInquiries.length) {
-        existingInquiries = [...DEFAULT_INQUIRIES];
-      }
-
-      // Prepend the new submission
+      // Prepend the new submission directly into localStorage
       existingInquiries.unshift(inquiryObj);
       localStorage.setItem('danstudio_inquiries', JSON.stringify(existingInquiries));
 
@@ -991,48 +937,16 @@
      11. DEVELOPER QUEUE CONSOLE DASHBOARD
      ========================================================================== */
 
-  /** Retrieve queue submissions or initialize with realistic sample data if empty */
-  function getRequests() {
+  function getApplications() {
     try {
-      const raw = localStorage.getItem('dsw_requests');
-      if (!raw) {
-        const seedData = [
-          {
-            id: 'DS-1082',
-            name: 'Ustaz Haziq Al-Fatah',
-            email: 'haziq@sraiqhalif.edu.my',
-            phone: '0199272635',
-            company: 'SRAI Qhalif Academy',
-            package: 'Catalog / Booking System (RM 3,000 - 4,500)',
-            budget: 4200,
-            description: 'Require automated yuran school fee collection system with instant digital WhatsApp receipts and class attendance logging.',
-            source: 'Client Referral',
-            addons: ['Domain Setup', 'Priority Delivery'],
-            date: new Date(Date.now() - 3600000 * 4).toISOString(),
-            status: 'new'
-          },
-          {
-            id: 'DS-2045',
-            name: 'Sarah Tan',
-            email: 'sarah.tan@artisanroasters.my',
-            phone: '0123884920',
-            company: 'Artisan Coffee Roasters',
-            package: 'SME Corporate (RM 1,800 - 2,500)',
-            budget: 2500,
-            description: 'Overhaul corporate site with dark silk & aurora theme, menu showcase, and lead inquiry form.',
-            source: 'Twitter / X',
-            addons: ['Logo Design', 'Social Media Kit'],
-            date: new Date(Date.now() - 3600000 * 24).toISOString(),
-            status: 'waiting'
-          }
-        ];
-        localStorage.setItem('dsw_requests', JSON.stringify(seedData));
-        return seedData;
-      }
-      return JSON.parse(raw) || [];
+      return JSON.parse(localStorage.getItem('dsw_requests')) || [];
     } catch (_) {
       return [];
     }
+  }
+
+  function getRequests() {
+    return getApplications();
   }
 
   let consoleSort = 'newest'; // 'newest' | 'budget'
@@ -1477,11 +1391,7 @@
   let pendingDeleteTargetType = null; // 'application' | 'inquiry'
 
   function getAdminApplications() {
-    try {
-      const raw = localStorage.getItem('dsw_requests');
-      if (raw) return JSON.parse(raw);
-    } catch (_) {}
-    return [];
+    return getApplications();
   }
 
   function saveAdminApplications(data) {
@@ -1491,11 +1401,7 @@
   }
 
   function getAdminInquiries() {
-    try {
-      const raw = localStorage.getItem('danstudio_inquiries');
-      if (raw) return JSON.parse(raw);
-    } catch (_) {}
-    return [];
+    return getInquiries();
   }
 
   function saveAdminInquiries(data) {
