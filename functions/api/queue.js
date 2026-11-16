@@ -51,13 +51,9 @@ export async function onRequestPost(context) {
         <p style="margin-top: 30px; font-size: 12px; color: #94a3b8;">DanStudio Works // Nexus Command</p>
       </div>
     `;
-    // Run in background without blocking the response
+    // Strictly await email dispatch so Cloudflare doesn't terminate early
     if (body.client_email) {
-      if (typeof context.waitUntil === 'function') {
-        context.waitUntil(sendEmailNotification(body.client_email, `Application Received: ${body.ticket_id}`, htmlBody));
-      } else {
-        await sendEmailNotification(body.client_email, `Application Received: ${body.ticket_id}`, htmlBody);
-      }
+      await sendEmailNotification(body.client_email, "Application Received: " + body.ticket_id, htmlBody);
     }
 
     return new Response(JSON.stringify({ success: true }), { headers: { "Content-Type": "application/json" } });

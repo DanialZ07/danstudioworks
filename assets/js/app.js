@@ -514,11 +514,14 @@
         name: name,
         email: email,
         phone: phone,
-        company: getVal('[name="company"]') || 'Independent Brand',
+        client_phone: phone,
+        company: (document.querySelector('[name="company"]') || document.getElementById('client-company'))?.value.trim() || 'Independent Brand',
         package: pkgValue,
+        package_tier: pkgValue,
         budget: budget,
         description: description,
-        source: getVal('[name="source"]') || 'Direct',
+        project_details: description,
+        source: (document.querySelector('[name="source"]') || document.getElementById('client-source'))?.value.trim() || 'Direct',
         addons: addons
       };
 
@@ -584,19 +587,19 @@
         showToast(successMessage, 'success', 3500);
 
         // POST the new ticket object directly to /api/queue using fetch()
-        const phoneInput = document.getElementById('client-phone') || document.getElementById('phone') || form.querySelector('[name="phone"]');
-        const budgetInput = document.getElementById('client-budget') || document.getElementById('budget') || form.querySelector('[name="budget"]');
-        const scopeInput = document.getElementById('description') || document.getElementById('scope') || form.querySelector('[name="description"]') || form.querySelector('[name="scope"]');
-        const nameInput = document.getElementById('client-name') || document.getElementById('name') || form.querySelector('[name="name"]');
-        const emailInput = document.getElementById('client-email') || document.getElementById('email') || form.querySelector('[name="email"]');
-        const pkgInput = document.getElementById('selected-package') || form.querySelector('[name="package"]');
+        const phoneInput = document.querySelector('[name="phone"]') || document.getElementById('client-phone') || document.getElementById('phone');
+        const budgetInput = document.querySelector('[name="budget"]') || document.getElementById('client-budget') || document.getElementById('budget');
+        const scopeInput = document.querySelector('[name="description"]') || document.getElementById('description') || document.getElementById('scope');
+        const nameInput = document.querySelector('[name="name"]') || document.getElementById('client-name') || document.getElementById('name');
+        const emailInput = document.querySelector('[name="email"]') || document.getElementById('client-email') || document.getElementById('email');
+        const pkgInput = document.querySelector('[name="package"]') || document.getElementById('selected-package');
 
-        const clientPhoneVal = phoneInput ? phoneInput.value.trim() : (formDataPayload.phone || '');
+        const clientPhoneVal = phoneInput ? phoneInput.value.trim() : (formDataPayload.client_phone || formDataPayload.phone || '');
         const clientBudgetVal = budgetInput ? String(budgetInput.value).trim() : String(formDataPayload.budget || '0');
-        const projectDetailsVal = scopeInput ? scopeInput.value.trim() : (formDataPayload.description || '');
+        const projectDetailsVal = scopeInput ? scopeInput.value.trim() : (formDataPayload.project_details || formDataPayload.description || '');
         const clientNameVal = nameInput ? nameInput.value.trim() : (formDataPayload.name || '');
         const clientEmailVal = emailInput ? emailInput.value.trim() : (formDataPayload.email || '');
-        const packageTierVal = pkgInput ? pkgInput.value.trim() : (formDataPayload.package || 'Starter');
+        const packageTierVal = pkgInput ? pkgInput.value.trim() : (formDataPayload.package_tier || formDataPayload.package || 'Starter');
 
         const newApplication = {
           ticket_id: ticket,
