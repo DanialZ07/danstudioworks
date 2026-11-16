@@ -139,19 +139,19 @@
 
     <div class="hero-content container relative z-10 px-4 sm:px-6 md:px-8">
       <!-- Live Studio Telemetry HUD -->
-      <div id="telemetry-hud" class="relative overflow-hidden backdrop-blur-xl bg-[#0B0F19]/80 border border-cyan-500/30 rounded-2xl p-6 w-full max-w-3xl mx-auto mb-8 flex flex-col md:flex-row text-center md:text-left items-center justify-between gap-6 shadow-[0_0_40px_rgba(34,211,238,0.1)] group transition-transform hover:scale-[1.02] cursor-default">
+      <div id="telemetry-hud" class="relative overflow-hidden backdrop-blur-xl bg-[#0B0F19]/80 border border-cyan-500/30 rounded-2xl p-4 md:p-6 w-full max-w-3xl mx-auto mb-8 flex flex-col md:flex-row text-center md:text-left items-center justify-between gap-4 md:gap-6 shadow-[0_0_40px_rgba(34,211,238,0.1)] group transition-transform hover:scale-[1.02] cursor-default">
         <!-- Holographic Scanner Sweep -->
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent w-[200%] animate-hologram-sweep pointer-events-none"></div>
         
         <!-- Left: Status Core -->
         <div class="flex flex-col md:flex-row items-center justify-center gap-4 relative z-10">
-          <div class="relative flex items-center justify-center w-12 h-12">
+          <div class="relative flex items-center justify-center w-8 h-8 md:w-12 md:h-12">
             <div id="reactor-ring" class="absolute inset-0 rounded-full border-2 border-dashed border-cyan-400 animate-[spin_4s_linear_infinite]"></div>
-            <div id="reactor-core" class="w-6 h-6 rounded-full bg-cyan-400 shadow-[0_0_15px_#22D3EE] animate-pulse"></div>
+            <div id="reactor-core" class="w-4 h-4 md:w-6 md:h-6 rounded-full bg-cyan-400 shadow-[0_0_15px_#22D3EE] animate-pulse"></div>
           </div>
           <div class="text-center md:text-left">
             <div class="text-[10px] text-cyan-400 font-mono tracking-widest uppercase mb-1">Live Studio Telemetry</div>
-            <div class="text-lg font-black text-slate-100 uppercase tracking-wide">Production Status</div>
+            <div class="text-base md:text-lg font-black text-slate-100 uppercase tracking-wide">Production Status</div>
           </div>
         </div>
 
@@ -160,7 +160,7 @@
           <!-- Active Project -->
           <div class="flex-1 md:flex-none flex flex-col items-center md:items-start">
             <div class="text-[10px] text-slate-400 font-mono tracking-widest uppercase mb-1">Active Slots</div>
-            <div class="text-2xl font-black text-slate-100 flex items-baseline gap-1">
+            <div class="text-xl md:text-2xl font-black text-slate-100 flex items-baseline gap-1">
               <span id="hud-active-count" class="text-cyan-400">0</span><span class="text-sm text-slate-500">/ 1</span>
             </div>
             <div class="w-36 md:w-24 h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden border border-slate-700">
@@ -174,7 +174,7 @@
           <!-- Waitlist Queue -->
           <div class="flex-1 md:flex-none flex flex-col items-center md:items-start">
             <div class="text-[10px] text-slate-400 font-mono tracking-widest uppercase mb-1">Waitlist Queue</div>
-            <div class="text-2xl font-black text-slate-100 flex items-baseline gap-1">
+            <div class="text-xl md:text-2xl font-black text-slate-100 flex items-baseline gap-1">
               <span id="hud-queue-count" class="text-cyan-400">0</span><span class="text-sm text-slate-500">/ 3</span>
             </div>
             <div class="w-36 md:w-24 h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden border border-slate-700 flex gap-0.5">

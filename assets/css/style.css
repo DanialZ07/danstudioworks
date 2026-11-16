@@ -1862,9 +1862,6 @@ a {
 .mobile-dock .dock-item[href="admin.html"].active svg {
   filter: drop-shadow(0 0 6px #F43F5E) !important;
 }
-    text-shadow: 0 0 8px #22D3EE;
-  }
-}
 
 /* ==========================================================================
    24. INTERACTIVE AURORA GRID BACKGROUND ANIMATION
@@ -1897,9 +1894,6 @@ a {
 .aurora-orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(120px);
-  -webkit-filter: blur(120px);
-  opacity: 0.45;
   pointer-events: none;
   will-change: transform;
   animation: slow-drift 12s ease-in-out infinite;
@@ -1907,19 +1901,42 @@ a {
 
 .cyan-orb {
   background-color: #06b6d4; /* bg-cyan-500 */
-  width: 500px;
-  height: 500px;
+  width: 250px;
+  height: 250px;
   top: -10%;
   left: -5%;
+  filter: blur(80px);
+  -webkit-filter: blur(80px);
+  opacity: 0.3;
 }
 
 .magenta-orb {
   background-color: #d946ef; /* bg-fuchsia-500 */
-  width: 400px;
-  height: 400px;
+  width: 200px;
+  height: 200px;
   bottom: -10%;
   right: -5%;
+  filter: blur(80px);
+  -webkit-filter: blur(80px);
+  opacity: 0.3;
   animation: slow-drift-magenta 14s ease-in-out infinite;
+}
+
+@media (min-width: 768px) {
+  .cyan-orb {
+    width: 500px;
+    height: 500px;
+    filter: blur(120px);
+    -webkit-filter: blur(120px);
+    opacity: 0.4;
+  }
+  .magenta-orb {
+    width: 400px;
+    height: 400px;
+    filter: blur(120px);
+    -webkit-filter: blur(120px);
+    opacity: 0.4;
+  }
 }
 
 @keyframes slow-drift {
@@ -2299,6 +2316,13 @@ a {
   .md\:break-normal { word-break: normal; overflow-wrap: normal; }
   .md\:gap-4 { gap: 1rem; }
   .md\:gap-6 { gap: 1.5rem; }
+  .md\:p-6 { padding: 1.5rem; }
+  .md\:w-6 { width: 1.5rem; }
+  .md\:h-6 { height: 1.5rem; }
+  .md\:w-12 { width: 3rem; }
+  .md\:h-12 { height: 3rem; }
+  .md\:text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+  .md\:text-2xl { font-size: 1.5rem; line-height: 2rem; }
   .md\:py-24 { padding-top: 6rem; padding-bottom: 6rem; }
   .md\:px-8 { padding-left: 2rem; padding-right: 2rem; }
   .md\:text-base { font-size: 1rem; line-height: 1.5rem; }
