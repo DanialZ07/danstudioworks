@@ -38,7 +38,7 @@ export async function onRequestPost(context) {
       body.created_at
     ).run();
 
-    const trackerUrl = new URL(context.request.url).origin + "/status.html";
+    const trackerUrl = new URL(context.request.url).origin + "/status?ticket=" + body.ticket_id;
     const htmlBody = `
       <div style="font-family: monospace; color: #334155; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #0f172a;">Transmission Received</h2>
